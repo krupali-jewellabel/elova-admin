@@ -9,7 +9,7 @@ const WebsitePreferences = ({ avatar, name, location, works }) => {
  
   return (
     <Card>
-      <CardContent className="flex flex-wrap gap-5 items-center justify-between">
+      {/* <CardContent className="flex flex-wrap gap-5 items-center justify-between">
         <div className="flex items-center flex-wrap gap-3.5">
           <AvatarSingle
             className={avatar?.className}
@@ -52,14 +52,7 @@ const WebsitePreferences = ({ avatar, name, location, works }) => {
         </div>
         <div className="flex items-center flex-wrap gap-5 lg:gap-12">
           <Card className="p-2.5">
-            {/* <ScrollArea> */}
-            <div className="flex items-center gap-7.5 w-80 mb-2">
-              {/* {[works].map((work, index) => {
-                return renderItem(work, index);
-              })} */}
-            </div>
-            {/* <ScrollBar orientation="horizontal" /> */}
-            {/* </ScrollArea> */}
+          
           </Card>
           <Button mode="link" underlined="dashed">
             <Link href="#">View Profile</Link>
@@ -68,7 +61,7 @@ const WebsitePreferences = ({ avatar, name, location, works }) => {
             <BadgeCheck size={16} /> Work with me
           </Button>
         </div>
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 };

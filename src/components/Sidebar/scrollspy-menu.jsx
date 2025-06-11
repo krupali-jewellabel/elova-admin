@@ -1,21 +1,27 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
-const ScrollspyMenu = ({ items, onClick }) => {
+const ScrollspyMenu = ({ items, onClick, activeItem }) => {
   const buildAnchor = (item, index, indent = false) => {
+    const isActive = item.target === activeItem;
+    console.log("isActive", isActive);
     return (
       <div
         key={index}
         data-scrollspy-anchor={item.target}
-        data-active={item.active}
+        data-active={isActive}
         className={cn(
-          'cursor-pointer flex items-center rounded-lg ps-2.5 pe-2.5 py-1.5 border border-transparent text-accent-foreground hover:text-primary data-[active=true]:bg-accent data-[active=true]:text-primary data-[active=true]:font-medium',
-          indent ? 'gap-3.5' : 'gap-1.5',
+          "cursor-pointer flex items-center rounded-lg ps-2.5 pe-2.5 py-1.5 border border-transparent text-accent-foreground hover:text-primary data-[active=true]:bg-accent data-[active=true]:text-primary data-[active=true]:font-medium",
+          indent ? "gap-3.5" : "gap-1.5"
         )}
         onClick={() => onClick?.(item.target)}
       >
-        <span className="flex w-1.5 relative before:absolute start-px rtl:-start-[5px] before:top-0 before:size-1.5 before:rounded-full before:-translate-x-2/4 before:-translate-y-2/4 before:bg-muted data-[active=true]:before:bg-primary"></span>
+        <span
+          className={cn(
+            "flex w-1.5 relative before:absolute start-px rtl:-start-[5px] before:top-0 before:size-1.5 before:rounded-full before:-translate-x-2/4 before:-translate-y-2/4 before:bg-muted data-[active=true]:before:bg-primary"
+          )}
+        ></span>
         {item.title}
       </div>
     );

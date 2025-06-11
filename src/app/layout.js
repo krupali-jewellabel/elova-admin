@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
         <div className="flex h-screen">
-          <div className="w-[280px]">
+          <div className="lg:w-[280px]">
             <Sidebar />
           </div>
           <main className="flex-1 overflow-auto p-6">{children}</main>

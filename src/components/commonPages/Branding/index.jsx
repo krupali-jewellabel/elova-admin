@@ -24,7 +24,7 @@ const Branding = () => {
       <div className="text-center mb-[32px] text-xl font-medium leading-none">
         Branding & Logo
       </div>
-      <div className="grid gap-5 lg:gap-7.5 xl:w-[38.75rem] mx-auto">
+      <div className="grid gap-5 lg:gap-7.5 xl:w-[38.75rem] w-full mx-auto">
         <CardContent className="grid gap-5">
           <div className="flex flex-wrap justify-between gap-5">
             <div className="flex flex-col">
@@ -185,8 +185,11 @@ const Branding = () => {
               placeholder="Contact Number"
             />
           </div>
-
-          <Button className="w-full">Next</Button>
+          <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
+            <Button variant="ghost">Save Draft</Button>
+            <Button variant="outline">Previous</Button>
+            <Button>Next</Button>
+          </div>
         </CardContent>
       </div>
     </Card>
