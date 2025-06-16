@@ -51,7 +51,7 @@ body {
   font-family: var(--font-inter), sans-serif;
 }
 
-/* @layer base {
+@layer base {
   table,
   table thead,
   table tbody,
@@ -64,7 +64,7 @@ body {
   *:focus-visible {
     @apply outline-ring rounded-xs shadow-none outline-2 outline-offset-3 transition-none!;
   }
-} */
+}
 
 /** Custom Font Size **/
 @theme {

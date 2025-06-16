@@ -1,15 +1,11 @@
 import React from 'react'
-import WebsitePreferences from '@/components/commonPages/WebsitePreferences'
-
+import FinalReview from '@/components/commonPages/FinalReview/final-review'
 export const page = () => {
   return (
     <>
-
-    <WebsitePreferences/>
+        <FinalReview />
     </>
   )
 }
 
 export default page
-
-

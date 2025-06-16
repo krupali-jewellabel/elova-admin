@@ -15,6 +15,7 @@ const MENU_ITEMS = [
   "product-categories",
   "stock-selections",
   "margin-setup",
+  "store-settings-launch-prep",
   "final-review",
 ];
 
