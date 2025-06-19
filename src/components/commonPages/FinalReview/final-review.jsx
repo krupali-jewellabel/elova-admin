@@ -1,9 +1,13 @@
-import React from 'react'
-import { CARD_DATA } from './constant'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/ui/cards/card'
-import { Button } from '@/components/common/ui/button'
+import React from "react";
+import { CARD_DATA } from "./constant";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/common/ui/cards/card";
+import { Button } from "@/components/common/ui/button";
 import Link from "next/link";
-
 
 export const FinalReview = () => {
   return (
@@ -11,7 +15,7 @@ export const FinalReview = () => {
       <CardHeader className={"text-lg justify-center"}>Review</CardHeader>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {CARD_DATA.map((card, index) => (
-          <Card key={index} className="bg-white shadow-sm border rounded-md">
+          <Card key={index}>
             <CardHeader className="flex items-center justify-between">
               <CardTitle className="font-bold">{card.title}</CardTitle>
               {/* <Button className="text-sm">Edit</Button> */}
@@ -38,11 +42,11 @@ export const FinalReview = () => {
           </Button>
         </Link>
         <Link href="#" className="w-full sm:w-auto">
-          <Button className="w-full sm:w-auto bg-[#F15A29] text-white">Next</Button>
+          <Button>Submit</Button>
         </Link>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default FinalReview
+export default FinalReview;

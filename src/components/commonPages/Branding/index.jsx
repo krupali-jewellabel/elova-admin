@@ -1,28 +1,38 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/common/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/common/ui/cards/card";
+import { Card, CardContent } from "@/components/common/ui/cards/card";
 import { Input, InputWrapper } from "@/components/common/ui/input";
 import { Label } from "@/components/common/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/common/ui/select";
 import { ImageIcon, SquareMousePointer } from "lucide-react";
-import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/common/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useCrudApi } from "@/hooks/useCrudApi";
 
 const Branding = () => {
+  const [stepData, setStepData] = useState(null);
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("");
 
   const handleFileClick = () => {
     if (fileInputRef.current) {
@@ -38,163 +48,250 @@ const Branding = () => {
     }
   };
 
+  const { fetchAll } = useCrudApi("/api/onboarding/branding");
+  const PackageSchema = z.object({
+    name: z
+      .string()
+      .nonempty({ message: "Name is required." })
+      .min(2, { message: "Name must be at least 2 characters long." })
+      .max(50, { message: "Name must not exceed 50 characters." }),
+  });
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchAll();
+      setStepData(res.data || []);
+    } catch (err) {
+      console.log(err.message || "Error fetching data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log(stepData, "stepData");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const form = useForm({
+    resolver: zodResolver(PackageSchema),
+    defaultValues: { name: "" },
+  });
+
+  {
+    loading && <p>Loading...</p>;
+  }
   return (
-    <Card className="pb-2.5 w-full h-full justify-center">
-      <div className="text-center mb-[32px] text-xl font-medium leading-none">
-        Branding & Logo
-      </div>
-      <div className="grid gap-5 lg:gap-7.5 xl:w-[38.75rem] w-full mx-auto">
-        <CardContent className="grid gap-5">
-          {/* Logo Upload */}
-          <div className="flex flex-wrap justify-between gap-5">
-            <div className="flex flex-col">
-              <div className="text-mono text-sm font-medium">Company Logo</div>
-              <span className="text-secondary-foreground text-sm">
-                Emblematic Corporate Identity Symbol
-              </span>
-            </div>
-            <div className="flex flex-wrap sm:flex-nowrap gap-5 lg:gap-7.5 max-w-96 w-full">
-              <div
-                className="flex bg-center w-full p-5 lg:p-7 bg-no-repeat bg-[length:550px] border border-input rounded-xl border-dashed branding-bg cursor-pointer"
-                onClick={handleFileClick}
-              >
-                <div className="flex flex-col place-items-center place-content-center text-center rounded-xl w-full">
-                  <div className="flex items-center mb-2.5">
-                    <div className="relative size-11 shrink-0">
-                      <svg
-                        className="w-full h-full stroke-orange-200 fill-white dark:stroke-orange-950 dark:fill-orange-950/30"
-                        width="44"
-                        height="48"
-                        viewBox="0 0 44 48"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M16 2.4641C19.7128 0.320509 24.2872 0.320508 28 2.4641L37.6506 8.0359C41.3634 10.1795 43.6506 14.141 43.6506 
-                          18.4282V29.5718C43.6506 33.859 41.3634 37.8205 37.6506 39.9641L28 45.5359C24.2872 47.6795 19.7128 47.6795 16 45.5359L6.34937 
+    <Card className="pb-2.5 w-full h-auto justify-center">
+      <Form {...form}>
+        <div className="text-center mt-[40px] text-xl font-medium leading-none">
+          {stepData?.name}
+        </div>
+        <div className="grid gap-5 lg:gap-7.5 xl:w-[38.75rem] w-full mx-auto">
+          <form>
+            <CardContent className="grid gap-5">
+              {stepData?.questions?.map((q) => (
+                <div
+                  key={q.id}
+                  className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5"
+                >
+                  {q.answer_type === "file" && (
+                    <div className="flex flex-wrap justify-between gap-5">
+                      <div className="flex flex-col">
+                        <div className="text-mono text-sm font-medium">
+                          {q.question_text}
+                        </div>
+                        <span className="text-secondary-foreground text-sm">
+                          {q.question_label}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap sm:flex-nowrap gap-5 lg:gap-7.5 max-w-96 w-full">
+                        <div
+                          className="flex bg-center w-full p-5 lg:p-7 bg-no-repeat bg-[length:550px] border border-input rounded-xl border-dashed branding-bg cursor-pointer"
+                          onClick={handleFileClick}
+                        >
+                          <div className="flex flex-col place-items-center place-content-center text-center rounded-xl w-full">
+                            <div className="flex items-center mb-2.5">
+                              <div className="relative size-11 shrink-0">
+                                <svg
+                                  className="w-full h-full stroke-orange-200 fill-white"
+                                  width="44"
+                                  height="48"
+                                  viewBox="0 0 44 48"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M16 2.4641C19.7128 0.320509 24.2872 0.320508 28 2.4641L37.6506 8.0359C41.3634 10.1795 43.6506 14.141 43.6506
+                          18.4282V29.5718C43.6506 33.859 41.3634 37.8205 37.6506 39.9641L28 45.5359C24.2872 47.6795 19.7128 47.6795 16 45.5359L6.34937
                           39.9641C2.63655 37.8205 0.349365 33.859 0.349365 29.5718V18.4282C0.349365 14.141 2.63655 10.1795 6.34937 8.0359L16 2.4641Z"
-                        />
-                        <path
-                          d="M16.25 2.89711C19.8081 0.842838 24.1919 0.842837 27.75 2.89711L37.4006 8.46891C40.9587 10.5232 43.1506 14.3196 43.1506 
-                          18.4282V29.5718C43.1506 33.6804 40.9587 37.4768 37.4006 39.5311L27.75 45.1029C24.1919 47.1572 19.8081 47.1572 16.25 45.1029L6.59937 
+                                  />
+                                  <path
+                                    d="M16.25 2.89711C19.8081 0.842838 24.1919 0.842837 27.75 2.89711L37.4006 8.46891C40.9587 10.5232 43.1506 14.3196 43.1506
+                          18.4282V29.5718C43.1506 33.6804 40.9587 37.4768 37.4006 39.5311L27.75 45.1029C24.1919 47.1572 19.8081 47.1572 16.25 45.1029L6.59937
                           39.5311C3.04125 37.4768 0.849365 33.6803 0.849365 29.5718V18.4282C0.849365 14.3196 3.04125 10.5232 6.59937 8.46891L16.25 2.89711Z"
-                          stroke=""
-                          strokeOpacity="0.2"
-                        />
-                      </svg>
-                      <div className="absolute left-2/4 top-2/4 -translate-y-2/4 -translate-x-2/4">
-                        <ImageIcon className="text-xl ps-px text-orange-400" />
+                                    stroke=""
+                                    strokeOpacity="0.2"
+                                  />
+                                </svg>
+                                <div className="absolute left-2/4 top-2/4 -translate-y-2/4 -translate-x-2/4">
+                                  <ImageIcon className="text-xl ps-px text-primary" />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-mono text-xs font-medium hover:text-primary-active mb-px">
+                              Click or Drag & Drop
+                            </div>
+                            <span className="text-xs text-secondary-foreground text-nowrap">
+                              SVG, PNG, JPG (max. 800x400)
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              ref={fileInputRef}
+                              onChange={handleFileChange}
+                              className="hidden"
+                            />
+                          </div>
+                        </div>
+
+                        {previewUrl && (
+                          <img
+                            src={previewUrl}
+                            className="h-[130px] w-[130px] mt-2 rounded object-contain"
+                          />
+                        )}
                       </div>
                     </div>
-                  </div>
-                  <div className="text-mono text-xs font-medium hover:text-primary-active mb-px">
-                    Click or Drag & Drop
-                  </div>
-                  <span className="text-xs text-secondary-foreground text-nowrap">
-                    SVG, PNG, JPG (max. 800x400)
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
+                  )}
+
+                  {q.answer_type === "color_picker" && (
+                    <div className="flex w-full justify-between gap-5">
+                      <div className="flex flex-col">
+                        <div className="text-mono text-sm font-medium">
+                          {q.question_text}
+                        </div>
+                        <span className="text-secondary-foreground text-sm">
+                          {q.question_label}
+                        </span>
+                      </div>
+                      <InputWrapper className="w-52 relative">
+                        <input
+                          type="color"
+                          id={`color-input-${q.id || 1}`}
+                          className="absolute w-0 h-0 opacity-0 pointer-events-none"
+                          value={selectedColor}
+                          onChange={(e) => {
+                            setSelectedColor(e.target.value);
+                            console.log("Color selected:", e.target.value);
+                          }}
+                        />
+                        <Button
+                          variant="dim"
+                          mode="icon"
+                          className=""
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log("Button clicked");
+                            const colorInput = document.getElementById(
+                              `color-input-${q.id || 1}`
+                            );
+                            if (colorInput) {
+                              console.log("Triggering color input click");
+                              colorInput.click();
+                            } else {
+                              console.error("Color input not found");
+                            }
+                          }}
+                        >
+                          <SquareMousePointer
+                            size={16}
+                            style={{ color: selectedColor }}
+                          />
+                        </Button>
+                        <Input type="text" value={selectedColor} readOnly />
+                      </InputWrapper>
+                    </div>
+                  )}
+
+                  {q.answer_type === "text" && (
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel> {q.question_text}</FormLabel>
+                          <FormControl>
+                            <Input placeholder={q.question_label} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {q.answer_type === "dropdown" && (
+                    <FormField
+                      control={form.control}
+                      name="landing_form_question_id"
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel>{q.question_text}</FormLabel>
+                          <FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder={q.question_label} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  {q.options.length === 0 ? (
+                                    <div className="text-center text-gray-500">
+                                      No options available
+                                    </div>
+                                  ) : (
+                                    q.options?.map((que) => (
+                                      <SelectItem
+                                        key={que.id}
+                                        value={String(que.value)}
+                                      >
+                                        {que.label}
+                                      </SelectItem>
+                                    ))
+                                  )}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </div>
+              ))}
 
+              <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
+                <Button variant="ghost">Save Draft</Button>
+                <Button variant="outline">Previous</Button>
+                <Button
+                  onClick={() => {
+                    console.log("Form Submitted", formValues);
+                  }}
+                >
+                  Next
+                </Button>
               </div>
-              {previewUrl && (
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  className="h-[150px] mt-2 rounded"
-                />
-              )}
-              <img
-                src="/images/hex-lab.svg"
-                className="h-[35px] mt-2"
-                alt="image"
-              />
-            </div>
-          </div>
-
-      
-          <div className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5">
-            <Label className="flex w-full">Brand Color</Label>
-            {["Primary", "Secondary"].map((label) => (
-              <div key={label} className="flex w-full justify-between gap-5">
-                <div className="flex flex-col">
-                  <div className="text-mono text-sm font-medium">
-                    {label} Color
-                  </div>
-                  <span className="text-secondary-foreground text-sm">
-                    Signature Palette Branding Element
-                  </span>
-                </div>
-                <InputWrapper className="w-52">
-                  <Button variant="dim" mode="icon" className="-me-2">
-                    <SquareMousePointer size={16} className="text-green-500" />
-                  </Button>
-                  <Input type="text" />
-                </InputWrapper>
-              </div>
-            ))}
-          </div>
-
-         
-          <div className="w-full">
-            <div className="flex flex-col items-baseline gap-2.5">
-              <Label className="flex w-full items-center gap-1">Font Style</Label>
-              <Select defaultValue="1">
-                <SelectTrigger>
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Modern / Elegant / Playful / Custom</SelectItem>
-                  <SelectItem value="2">Option 2</SelectItem>
-                  <SelectItem value="3">Option 3</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="w-full">
-            <div className="flex flex-col items-baseline gap-2.5">
-              <Label className="flex w-full items-center gap-1">Tone of Voice</Label>
-              <Select defaultValue="1">
-                <SelectTrigger>
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Modern / Elegant / Playful / Custom</SelectItem>
-                  <SelectItem value="2">Option 2</SelectItem>
-                  <SelectItem value="3">Option 3</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-         
-          <div className="flex flex-col items-baseline gap-2.5">
-            <Label className="flex w-full">Tagline or Slogan (Optional)</Label>
-            <Input type="text" placeholder="Tagline or Slogan" />
-          </div>
-
-        
-          <div className="flex flex-col items-baseline gap-2.5">
-            <Label className="flex w-full">
-              Contact Number (WhatsApp Preferred)
-            </Label>
-            <Input type="text" placeholder="Contact Number" />
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
-            <Button variant="ghost">Save Draft</Button>
-            <Button variant="outline">Previous</Button>
-            <Button>Next</Button>
-          </div>
-        </CardContent>
-      </div>
+            </CardContent>
+          </form>
+        </div>
+      </Form>
     </Card>
   );
 };

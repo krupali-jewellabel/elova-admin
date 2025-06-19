@@ -7,19 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollspyMenu } from "./scrollspy-menu";
 import { cn } from "@/lib/utils";
 
-const MENU_ITEMS = [
-  "welcome",
-  "business-details",
-  "branding",
-  "website-preferences",
-  "product-categories",
-  "stock-selections",
-  "margin-setup",
-  "store-settings-launch-prep",
-  "final-review",
-];
-
-export function Sidebar() {
+export function Sidebar({ sideBarMenus }) {
   const [active, setActive] = useState("welcome");
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -30,7 +18,7 @@ export function Sidebar() {
     router.push(`/${target}`);
   };
 
-  const items = MENU_ITEMS.map((key) => ({
+  const items = sideBarMenus.map((key) => ({
     title: key.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
     target: key,
     active: key === active,

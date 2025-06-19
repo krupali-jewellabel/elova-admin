@@ -1,114 +1,163 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/common/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/common/ui/cards/card";
+import { Card, CardContent } from "@/components/common/ui/cards/card";
 import { Input } from "@/components/common/ui/input";
-import { Label } from "@/components/common/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/common/ui/select";
-import React, { useEffect, useState } from "react";
+import { useCrudApi } from "@/hooks/useCrudApi";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/common/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const BusinessDetails = () => {
-  const [message, setMessage] = useState("");
+  const [stepData, setStepData] = useState(null);
+  const [formValues, setFormValues] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { fetchAll } = useCrudApi("/api/onboarding/business-details");
+  const PackageSchema = z.object({
+    name: z
+      .string()
+      .nonempty({ message: "Name is required." })
+      .min(2, { message: "Name must be at least 2 characters long." })
+      .max(50, { message: "Name must not exceed 50 characters." }),
+  });
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchAll();
+      setStepData(res.data || []);
+    } catch (err) {
+      setError(err.message || "Error fetching data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log(stepData, "stepData");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/hello");
-      const data = await res.json();
-      setMessage(data.message);
-    };
-
     fetchData();
   }, []);
 
-  console.log("message", message);
+  const form = useForm({
+    resolver: zodResolver(PackageSchema),
+    defaultValues: { name: "" },
+  });
+
   return (
     <Card className="pb-2.5 w-full h-full justify-center">
-      <div className="text-center mb-[32px] text-xl font-medium leading-none">
-        Business Details
-      </div>
-      <div className="grid gap-5 lg:gap-7.5 xl:w-[38.75rem] w-full mx-auto">
-        <CardContent className="grid gap-5">
-          <div className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5">
-            <Label className="flex w-full">
-              What is your official business name?
-            </Label>
-            <Input
-              type="text"
-              // value={nameInput}
-              // onChange={(e) => setNameInput(e.target.value)}
-              placeholder="e.g., Sparkle Gems Pvt. Ltd."
-            />
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <Form {...form}>
+          {" "}
+          <div className="text-center mb-[32px] text-xl font-medium leading-none">
+            {stepData?.name}
           </div>
-          <div className="w-full">
-            <div className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5">
-              <Label className="flex w-full items-center gap-1">
-                What type of business do you run?
-              </Label>
-              <Select defaultValue="1">
-                <SelectTrigger>
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Spain</SelectItem>
-                  <SelectItem value="2">Option 2</SelectItem>
-                  <SelectItem value="3">Option 3</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5">
-            <Label className="flex w-full">
-              Your GSTIN / PAN (for India only)
-            </Label>
-            <Input type="text" placeholder="e.g., 27ABCDE1234F1Z5" />
-          </div>
-          <div className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5">
-            <Label className="flex w-full">Business Email Address</Label>
-            <Input
-              type="text"
-              // value={emailInput}
-              // onChange={(e) => setEmailInput(e.target.value)}
-              placeholder="email@email.com"
-            />
-          </div>
-          <div className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5">
-            <Label className="flex w-full">
-              Contact Number (WhatsApp Preferred)
-            </Label>
-            <Input
-              type="text"
-              // value={addressInput}
-              // onChange={(e) => setAddressInput(e.target.value)}
-              placeholder="Contact Number"
-            />
-          </div>
-          <div className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5">
-            <Label className="flex w-full">Business Address</Label>
-            <Input
-              type="text"
-              // value={addressInput}
-              // onChange={(e) => setAddressInput(e.target.value)}
-              placeholder="Address"
-            />
-          </div>
+          <div className="grid gap-5 lg:gap-7.5 xl:w-[38.75rem] w-full mx-auto">
+            <form>
+              <CardContent className="grid gap-5">
+                {stepData?.questions?.map((q) => (
+                  <div
+                    key={q.id}
+                    className="flex flex-col items-baseline flex-wrap lg:flex-nowrap gap-2.5"
+                  >
+                    {q.answer_type === "text" && (
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormLabel> {q.question_text}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder={q.question_label}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
 
-          <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
-            <Button variant="ghost">Save Draft</Button>
-            <Button variant="outline">Previous</Button>
-            <Button>Next</Button>
+                    {q.answer_type === "dropdown" && (
+                      <FormField
+                        control={form.control}
+                        name="landing_form_question_id"
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormLabel>{q.question_text}</FormLabel>
+                            <FormControl>
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder={q.question_label} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    {q.options.length === 0 ? (
+                                      <div className="text-center text-gray-500">
+                                        No options available
+                                      </div>
+                                    ) : (
+                                      q.options?.map((que) => (
+                                        <SelectItem
+                                          key={que.id}
+                                          value={String(que.value)}
+                                        >
+                                          {que.label}
+                                        </SelectItem>
+                                      ))
+                                    )}
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                ))}
+
+                <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
+                  <Button variant="ghost">Save Draft</Button>
+                  <Button variant="outline">Previous</Button>
+                  <Button
+                    onClick={() => {
+                      console.log("Form Submitted", formValues);
+                    }}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </CardContent>
+            </form>
           </div>
-        </CardContent>
-      </div>
+        </Form>
+      )}
     </Card>
   );
 };

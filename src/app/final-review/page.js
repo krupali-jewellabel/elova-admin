@@ -1,11 +1,7 @@
-import React from 'react'
-import FinalReview from '@/components/commonPages/FinalReview/final-review'
+import React from "react";
+import FinalReview from "@/components/commonPages/FinalReview/final-review";
 export const page = () => {
-  return (
-    <>
-        <FinalReview />
-    </>
-  )
-}
+  return <FinalReview />;
+};
 
-export default page
+export default page;

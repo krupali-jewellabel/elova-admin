@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar/Sidebar";
+import { MENU_ITEMS } from "@/services/constant";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,7 +22,7 @@ export default function RootLayout({ children }) {
       <body className={`${inter.variable} antialiased`}>
         <div className="flex h-screen">
           <div className="lg:w-[280px]">
-            <Sidebar />
+            <Sidebar sideBarMenus={MENU_ITEMS} />
           </div>
           <main className="flex-1 overflow-auto p-6">{children}</main>
         </div>
