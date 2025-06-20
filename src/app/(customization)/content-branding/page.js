@@ -1,9 +1,7 @@
-import React from 'react'
-
+import React from "react";
+import ContentandBranding from "@/components/commonPages/Customization/ContentandBranding";
 const page = () => {
-  return (
-    <div>page</div>
-  )
-}
+  return <ContentandBranding />;
+};
 
-export default page
+export default page;

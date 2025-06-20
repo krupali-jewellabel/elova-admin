@@ -1,8 +1,8 @@
 import React from 'react'
-
+import PoliciesandCustomerAssurance from '@/components/commonPages/Customization/PoliciesandCustomerAssurance'
 const page = () => {
   return (
-    <div>page</div>
+    <PoliciesandCustomerAssurance />
   )
 }
 
