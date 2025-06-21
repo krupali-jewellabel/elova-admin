@@ -18,7 +18,6 @@ export const FinalReview = () => {
           <Card key={index}>
             <CardHeader className="flex items-center justify-between">
               <CardTitle className="font-bold">{card.title}</CardTitle>
-              {/* <Button className="text-sm">Edit</Button> */}
               <Button mode="link" underlined="dashed">
                 <Link href="#">Edit</Link>
               </Button>
@@ -29,7 +28,6 @@ export const FinalReview = () => {
           </Card>
         ))}
       </div>
-
       <div className="flex flex-col sm:flex-row justify-end gap-2 md:gap-3 mb-5 mr-3 mt-5">
         <Link href="#" className="w-full sm:w-auto">
           <Button variant="outline" className="w-full sm:w-auto">

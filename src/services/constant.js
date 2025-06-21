@@ -9,3 +9,11 @@ export const MENU_ITEMS = [
   "store-settings-launch-prep",
   "final-review",
 ];
+
+// export const MENU_ITEMS_2 = [
+//   "website-theme & layout-customization",
+//   "content-branding",
+//   "policies & customer-assurance",
+//   "product-shipping-experience",
+//   "customer-engagement",
+// ]

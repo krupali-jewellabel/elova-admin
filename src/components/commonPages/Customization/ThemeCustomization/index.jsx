@@ -19,19 +19,25 @@ import { Checkbox } from "@/components/common/ui/checkbox";
 
 export const ThemeCustomization = () => {
   const [selectedId, setSelectedId] = useState(null);
+  const [bannerPreviewImage, setBannerPreviewImage] = useState(null);
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [productPreviewImage, setProductPreviewImage] = useState(null);
+  const [showProductModal, setShowProductModal] = useState(false);
 
   return (
     <Card>
       <h2 className="text-center text-2xl font-semibold mb-6 mt-5">
         Website Theme & Layout Customization
       </h2>
-      <div className="flex flex-col space-y-4 ps-5">
-        <ToolbarHeading className="font-semibold text-lg">
-          Homepage Banner Preference
-        </ToolbarHeading>
-        <ToolbarDescription>
-          What type of banner would you like on your homepage?
-        </ToolbarDescription>
+      <div className="flex flex-col space-y-4 ps-7">
+        <div className="space-y-2">
+          <ToolbarHeading className="font-semibold text-lg">
+            Homepage Banner Preference
+          </ToolbarHeading>
+          <ToolbarDescription>
+            What type of banner would you like on your homepage?
+          </ToolbarDescription>
+        </div>
       </div>
       {BANNER_PREFERENCE?.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-6">
@@ -40,8 +46,12 @@ export const ThemeCustomization = () => {
             return (
               <Card
                 key={work.id}
-                onClick={() => setSelectedId(work.id)}
-                className={`relative rounded-lg group cursor-pointer overflow-hidden border-2 transition-all duration-300 ${
+                onClick={() => {
+                  setSelectedId(work.id);
+                  setBannerPreviewImage(work.image);
+                  setShowBannerModal(true);
+                }}
+                className={`relative rounded-lg group cursor-pointer overflow-hidden border-2 ${
                   isSelected ? "border-primary" : "border-transparent"
                 }`}
               >
@@ -51,8 +61,6 @@ export const ThemeCustomization = () => {
                       src="/images/customization/right symbol.svg"
                       alt="Selected"
                       className="w-8 h-8"
-                      key={work.id}
-                      onClick={() => setSelectedId(work.id)}
                     />
                   </div>
                 )}
@@ -82,27 +90,45 @@ export const ThemeCustomization = () => {
           })}
         </div>
       )}
-      <div className="flex flex-col space-y-4 ps-5">
+      {showBannerModal && bannerPreviewImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg max-w-2xl w-full relative">
+            <button
+              onClick={() => setShowBannerModal(false)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl font-bold"
+            >
+              &times;
+            </button>
+            <h3 className="text-lg font-semibold mb-4">Preview Banner</h3>
+            <img
+              src={bannerPreviewImage}
+              alt="Banner Preview"
+              className="w-full h-auto rounded border"
+            />
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col space-y-2 ps-7">
         <ToolbarHeading className="font-semibold text-lg">
           Featured Collections Display
         </ToolbarHeading>
         <ToolbarDescription>
           Which collections should be highlighted on the homepage?
         </ToolbarDescription>
-      </div>{" "}
-      <div className="p-6">
-        <div className="grid grid-cols-2 gap-4">
+      </div>
+      <div className="ps-5 mt-2">
+        <div className="grid grid-cols-2">
           {FEATURED_COLLECTIONS.map((item) => (
-            <Card key={item.id} className="p-4 cursor-pointer w-[540px] h-14">
+            <div key={item.id} className="p-2">
               <span className="text-sm font-medium text-foreground flex gap-3">
                 <Checkbox />
                 {item.title}
               </span>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
-      <div className="flex flex-col space-y-4 ps-5">
+      <div className="flex flex-col space-y-2 ps-7 mt-3.5">
         <ToolbarHeading className="font-semibold text-lg">
           Product Display Style
         </ToolbarHeading>
@@ -117,8 +143,12 @@ export const ThemeCustomization = () => {
             return (
               <div
                 key={work.id}
-                onClick={() => setSelectedId(work.id)}
-                className={`relative rounded-lg group cursor-pointer overflow-hidden border-2 transition-all duration-300 ${
+                onClick={() => {
+                  setSelectedId(work.id);
+                  setProductPreviewImage(work.image);
+                  setShowProductModal(true);
+                }}
+                className={`relative rounded-lg group cursor-pointer overflow-hidden border-2  ${
                   isSelected ? "border-primary" : "border-transparent"
                 }`}
               >
@@ -128,8 +158,6 @@ export const ThemeCustomization = () => {
                       src="/images/customization/right symbol.svg"
                       alt="Selected"
                       className="w-8 h-8"
-                      key={work.id}
-                      onClick={() => setSelectedId(work.id)}
                     />
                   </div>
                 )}
@@ -159,43 +187,63 @@ export const ThemeCustomization = () => {
           })}
         </div>
       )}
-      <div className="flex flex-col space-y-4 ps-5">
+      {showProductModal && productPreviewImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg max-w-2xl w-full relative">
+            <button
+              onClick={() => setShowProductModal(false)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl font-bold"
+            >
+              &times;
+            </button>
+            <h3 className="text-lg font-semibold mb-4">
+              Preview Product Display
+            </h3>
+            <img
+              src={productPreviewImage}
+              alt="Product Preview"
+              className="w-full h-auto rounded border"
+            />
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col space-y-2 ps-7">
         <ToolbarHeading className="font-semibold text-lg">
           Navigation Menu Structure
         </ToolbarHeading>
         <ToolbarDescription>
           Which categories should appear in your main navigation?
         </ToolbarDescription>
-      </div>{" "}
-      <div className="p-6">
-        <div className="grid grid-cols-3 gap-4">
+      </div>
+      <div className="ps-5 mt-2">
+        <div className="grid grid-cols-3">
           {NAVIGATION_MENU_STRUCTURE.map((item, index) => (
-            <Card key={item.id || index} className="p-4 cursor-pointer h-14">
+            <div key={item.id || index} className="p-2">
               <span className="text-sm font-medium text-foreground flex justify-space-between gap-3">
                 <Checkbox />
                 {item.title}
               </span>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
-      <div className="flex flex-col space-y-4 ps-5">
+      <div className="flex flex-col space-y-2 ps-7 mt-3.5">
         <ToolbarHeading className="font-semibold text-lg">
           Footer Content
         </ToolbarHeading>
         <ToolbarDescription>
           What would you like to include in your website footer?
         </ToolbarDescription>
-      </div>{" "}
-      <div className="p-6">
+      </div>
+      <div className="ps-5 mt-2">
         <div className="grid grid-cols-3 gap-4">
           {FOOTER_CONTENT.map((item, index) => (
-            <Card key={item.id || index} className="p-4 cursor-pointer h-14">
+            <div key={item.id || index} className="p-2">
               <span className="text-sm font-medium text-foreground flex justify-space-between gap-3">
                 <Checkbox />
                 {item.title}
               </span>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

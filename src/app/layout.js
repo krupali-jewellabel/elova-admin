@@ -23,6 +23,7 @@ export default function RootLayout({ children }) {
         <div className="flex h-screen">
           <div className="lg:w-[280px]">
             <Sidebar sideBarMenus={MENU_ITEMS} />
+            {/* <Sidebar sideBarMenus={MENU_ITEMS_2} /> */}
           </div>
           <main className="flex-1 overflow-auto p-6">{children}</main>
         </div>
@@ -30,3 +31,5 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+

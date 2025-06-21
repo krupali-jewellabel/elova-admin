@@ -35,7 +35,7 @@ export const ContentandBranding = () => {
             name="brandStory"
             render={({ field }) => (
               <FormItem>
-                <span className="text-base font-medium text-mono">
+                <span className="text-base font-medium text-mono ps-0">
                   Brand Story
                 </span>
                 <FormControl>
