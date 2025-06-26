@@ -39,7 +39,7 @@ export const FinalReview = () => {
             Previous
           </Button>
         </Link>
-        <Link href="#" className="w-full sm:w-auto">
+        <Link href="/theme-customization" className="w-full sm:w-auto">
           <Button>Submit</Button>
         </Link>
       </div>

@@ -3,7 +3,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Checkbox } from "@/components/common/ui/checkbox";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/common/ui/cards/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from "@/components/common/ui/cards/card";
 import { Button } from "@/components/common/ui/button";
 import { Label } from "@/components/common/ui/label";
 import { Slider, SliderThumb } from "@/components/common/ui/slider";
@@ -15,10 +20,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/common/ui/select";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/components/common/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/common/ui/radio-group";
 import { PRICE_LIST } from "./constant";
 import CustomMarginProducts from "./custom-margin-products";
 
@@ -71,8 +73,6 @@ const MarginSetup = () => {
   const [isLabourCustom, setIsLabourCustom] = useState(true);
   const [diamondTier, setDiamondTier] = useState("intermediate");
 
-
-
   const RadioGroupField = ({ label, value, onChange, options }) => (
     <div className="flex items-center gap-6">
       <Label className="text-sm font-medium whitespace-nowrap">{label}</Label>
@@ -84,10 +84,9 @@ const MarginSetup = () => {
         {options.map((opt) => (
           <div key={opt.id} className="flex items-center space-x-2">
             <RadioGroupItem value={opt.value} id={opt.id} />
-            <Label htmlFor={opt.id}
-              className="text-xs font-medium"
-            >
-              {opt.label}</Label>
+            <Label htmlFor={opt.id} className="text-xs font-medium">
+              {opt.label}
+            </Label>
           </div>
         ))}
       </RadioGroup>
@@ -188,11 +187,15 @@ const MarginSetup = () => {
 
       <div className="flex flex-col md:flex-row justify-end items-end gap-3 mt-8 px-4">
         <Link href="#" className="w-full md:w-auto">
-          <Button variant="outline" className="w-full">Save Draft</Button>
+          <Button variant="outline" className="w-full">
+            Save Draft
+          </Button>
         </Link>
 
         <Link href="#" className="w-full md:w-auto">
-          <Button variant="outline" className="w-full bg-[#F1F1F2]">Previous</Button>
+          <Button variant="outline" className="w-full bg-[#F1F1F2]">
+            Previous
+          </Button>
         </Link>
 
         <Link href="#" className="w-full md:w-auto">
@@ -205,9 +208,6 @@ const MarginSetup = () => {
   );
 };
 
-
-
-// === PRODUCT CARD ===
 const MarginCard = ({
   id,
   productImg,
@@ -241,55 +241,75 @@ const MarginCard = ({
             <div className="grid grid-cols-2 gap-4 pb-4">
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Design Number
-                <p className="text-[14px] font-[500] text-foreground">{designNo}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {designNo}
+                </p>
               </div>
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Category
-                <p className="text-[14px] font-[500] text-foreground">{category}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {category}
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Diamond Store Price
-                <p className="text-[14px] font-[500] text-foreground">{diamondStorePrice}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {diamondStorePrice}
+                </p>
               </div>
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Selling Price
-                <p className="text-[14px] font-[500] text-foreground">{diamondSellingPrice}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {diamondSellingPrice}
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 pt-4">
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Metal Store Price
-                <p className="text-[14px] font-[500] text-foreground">{metalStorePrice}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {metalStorePrice}
+                </p>
               </div>
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Selling Price
-                <p className="text-[14px] font-[500] text-foreground">{metalSellingPrice}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {metalSellingPrice}
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 pt-4">
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Labour Store Price
-                <p className="text-[14px] font-[500] text-foreground">{labourStorePrice}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {labourStorePrice}
+                </p>
               </div>
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Selling Price
-                <p className="text-[14px] font-[500] text-foreground">{labourSellingPrice}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {labourSellingPrice}
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 pt-4">
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Total Store Price
-                <p className="text-[14px] font-[500] text-[#F15A29]">{totalStorePrice}</p>
+                <p className="text-[14px] font-[500] text-[#F15A29]">
+                  {totalStorePrice}
+                </p>
               </div>
               <div className="text-[12px] text-secondary-foreground font-[400]">
                 Total Selling Price
-                <p className="text-[14px] font-[500] text-foreground">{totalSellingPrice}</p>
+                <p className="text-[14px] font-[500] text-foreground">
+                  {totalSellingPrice}
+                </p>
               </div>
             </div>
           </div>
@@ -298,7 +318,5 @@ const MarginCard = ({
     </>
   );
 };
-
-
 
 export default MarginSetup;
