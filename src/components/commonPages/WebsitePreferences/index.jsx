@@ -1,19 +1,26 @@
 "use client";
 
 import { AvatarSingle } from "@/components/common/ui/avatar-single";
-import { Card, CardContent, CardFooter } from "@/components/common/ui/cards/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+} from "@/components/common/ui/cards/card";
 import Link from "next/link";
 import React from "react";
 import Content from "./content";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/common/ui/button";
+import { useWizardPaths } from "@/hooks/useWizardPaths";
+import { useRouter } from "next/navigation";
 
 const item = {
   bgImage: "/images/website-banner.jpg",
   name: "Velin",
   location: "Minimal and modern layout ideal for contemporary jewelry",
   avatar: {
-    className: "w-[50px] h-28 md:w-32 md:h-28 -mt-12 md:-mt-20 shrink-0 relative top-[2px]",
+    className:
+      "w-[50px] h-28 md:w-32 md:h-28 -mt-12 md:-mt-20 shrink-0 relative top-[2px]",
     image: "/images/brand-logo.png",
     imageClass: "rounded-[20px]",
     badgeClass: "",
@@ -21,6 +28,8 @@ const item = {
 };
 
 const WebsitePreferences = ({ avatar, name, location, bgImage }) => {
+  const router = useRouter();
+  const { next, previous } = useWizardPaths();
   return (
     <>
       <Content />
@@ -52,7 +61,11 @@ const WebsitePreferences = ({ avatar, name, location, bgImage }) => {
                     {name}
                   </Link>
                   <span className="inline-flex items-center justify-center rounded-full bg-red-50 p-1">
-                    <img src="/images/verify.svg" alt="Verified Badge" className="w-5 h-5" />
+                    <img
+                      src="/images/verify.svg"
+                      alt="Verified Badge"
+                      className="w-5 h-5"
+                    />
                   </span>
                 </div>
                 {location && (
@@ -64,21 +77,23 @@ const WebsitePreferences = ({ avatar, name, location, bgImage }) => {
             </div>
           </div>
         </CardContent>
-    
       </Card>
 
       <div className="flex flex-col md:flex-row justify-center items-center gap-3 mt-8 px-4">
         <Link href="#" className="w-full md:w-auto">
-          <Button variant="outline" className="w-full">Save Draft</Button>
+          <Button variant="outline" className="w-full">
+            Save Draft
+          </Button>
         </Link>
 
-        <Link href="#" className="w-full md:w-auto">
-          <Button variant="outline" className="w-full bg-[#F1F1F2]">Previous</Button>
-        </Link>
-
-        <Link href="#" className="w-full md:w-auto">
-          <Button className="w-full">Next</Button>
-        </Link>
+        <Button
+          variant="outline"
+          className="bg-[#F1F1F2]"
+          onClick={() => router.push(previous.path)}
+        >
+          Previous
+        </Button>
+        <Button onClick={() => router.push(next.path)}>Next</Button>
       </div>
     </>
   );

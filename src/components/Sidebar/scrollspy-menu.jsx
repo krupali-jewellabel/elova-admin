@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 const ScrollspyMenu = ({ items, onClick, activeItem }) => {
   const buildAnchor = (item, index, indent = false) => {
     const isActive = item.target === activeItem;
-    console.log("isActive", isActive);
     return (
       <div
         key={index}

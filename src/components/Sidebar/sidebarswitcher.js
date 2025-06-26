@@ -49,14 +49,18 @@
 //   );
 // }
 
-
 "use client";
 
 import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
-import { MENU_ITEMS, MENU_ITEMS_2, DASHBOARD } from "@/services/constant";
+import {
+  MENU_ITEMS,
+  THEME_CUSTOMIZATION_MENU,
+  DASHBOARD,
+  FORM_WIZARD_MENU,
+  DASHBOARD_MENU,
+} from "@/services/constant";
 // import { MENU_SIDEBAR } from "@/config/menu.config";
-
 
 // Recursively extract all paths from DASHBOARD
 function extractPaths(menu) {
@@ -69,8 +73,8 @@ function extractPaths(menu) {
 export default function SidebarSwitcher() {
   const pathname = usePathname();
 
-  const dashboardPaths = extractPaths(DASHBOARD);
-  const customSidebarPaths = MENU_ITEMS_2.map((item) => item.path);
+  const dashboardPaths = extractPaths(DASHBOARD_MENU);
+  const customSidebarPaths = THEME_CUSTOMIZATION_MENU.map((item) => item.path);
 
   const isDashboardRoute = dashboardPaths.some((path) =>
     pathname.startsWith(path)
@@ -83,11 +87,11 @@ export default function SidebarSwitcher() {
   let sideBarMenus;
 
   if (isDashboardRoute) {
-    sideBarMenus = DASHBOARD;
+    sideBarMenus = DASHBOARD_MENU;
   } else if (isCustomizationRoute) {
-    sideBarMenus = MENU_ITEMS_2;
+    sideBarMenus = THEME_CUSTOMIZATION_MENU;
   } else {
-    sideBarMenus = MENU_ITEMS;
+    sideBarMenus = FORM_WIZARD_MENU;
   }
 
   return (
@@ -96,4 +100,3 @@ export default function SidebarSwitcher() {
     </div>
   );
 }
-

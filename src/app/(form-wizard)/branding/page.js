@@ -1,4 +1,4 @@
-import Branding from "@/components/commonPages/Branding";
+import Branding from "@/components/commonPages/FormWizard/Branding";
 import React from "react";
 
 const page = () => {

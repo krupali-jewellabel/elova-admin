@@ -52,7 +52,6 @@ export const createCrudClient = (baseUrl) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_active }),
       });
-      console.log("res", res);
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));
         throw new Error(error.message || "Failed to toggle status");

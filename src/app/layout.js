@@ -53,7 +53,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <LayoutWrapper>{children}</LayoutWrapper>
+        {/* <LayoutWrapper> */}
+          {children}
+          {/* </LayoutWrapper> */}
       </body>
     </html>
   );
