@@ -23,11 +23,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/common/ui/table";
-import ReactApexChart from "react-apexcharts";
+// import ReactApexChart from "react-apexcharts";
 import MetricBreakdownCard from "@/components/common/ui/cards/MetricBreakdownCard";
 import { Button } from "@/components/common/ui/button";
 import { CalendarRangeIcon } from "lucide-react";
 import { PRODUCTS_IMAGES } from "../constant";
+import dynamic from "next/dynamic";
+const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const TOP_PERFORMING_STORE = [
   {
@@ -163,7 +165,6 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
       amount: "13914.87",
     },
   ];
-
 
   const renderItem = (table, index) => (
     <TableRow key={index}>
@@ -391,7 +392,7 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
                           <CalendarRangeIcon />
                         </Button>
                       </div>
-                      <ReactApexChart
+                      <ApexChart
                         options={options}
                         series={series}
                         type="area"

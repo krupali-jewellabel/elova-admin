@@ -116,8 +116,11 @@ import { useRouter, usePathname } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollspyMenu } from "./scrollspy-menu";
 import { cn } from "@/lib/utils";
+import SidebarMenu from "./SidebarMenu";
+import SidebarHeader from "./SidebarHeader";
+import { SettingsProvider } from "@/provider/settings-provider";
 
-export function Sidebar({ sideBarMenus }) {
+export function Sidebar({ sideBarMenus, dashboardSidebar }) {
   const router = useRouter();
   const pathname = usePathname();
   const isMobile = useIsMobile();
@@ -149,15 +152,27 @@ export function Sidebar({ sideBarMenus }) {
         "bg-background lg:border-e lg:border-border lg:fixed lg:top-0 lg:bottom-0 lg:z-20 lg:flex flex-col w-[280px]"
       )}
     >
-      <div className="p-5 border-b border-muted-foreground">
-        <Link href="/">
-          <img src="/app/logo.png" alt="Logo" className="w-[178px]" />
-        </Link>
-      </div>
-      <div className="p-6 overflow-hidden">
-        <ScrollspyMenu items={items} onClick={handleClick} />
-      </div>
+      {dashboardSidebar ? (
+        <SettingsProvider>
+          <SidebarHeader />
+          <div className="overflow-hidden">
+            <div className="w-(--sidebar-default-width)">
+              <SidebarMenu />
+            </div>
+          </div>
+        </SettingsProvider>
+      ) : (
+        <>
+          <div className="p-5 border-b border-muted-foreground">
+            <Link href="/">
+              <img src="/app/logo.png" alt="Logo" className="w-[178px]" />
+            </Link>
+          </div>
+          <div className="p-6 overflow-hidden">
+            {<ScrollspyMenu items={items} onClick={handleClick} />}
+          </div>
+        </>
+      )}
     </aside>
   );
 }
-

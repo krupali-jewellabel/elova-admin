@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/common/ui/button";
 import { Card, CardContent } from "@/components/common/ui/cards/card";
 import { Input, InputWrapper } from "@/components/common/ui/input";
-import { Label } from "@/components/common/ui/label";
 import {
   Select,
   SelectContent,
@@ -69,8 +68,6 @@ const Branding = () => {
     }
   };
 
-  console.log(stepData, "stepData");
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -79,6 +76,21 @@ const Branding = () => {
     resolver: zodResolver(PackageSchema),
     defaultValues: { name: "" },
   });
+
+  const onSubmit = async (formValues) => {
+    debugger;
+    try {
+      setLoading(true);
+      // Submit to API
+      await create(formValues); // Assuming you extend useCrudApi to have `create`
+
+      // Go to next step
+    } catch (err) {
+      console.error("Submit error:", err.message || err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   {
     loading && <p>Loading...</p>;
@@ -90,7 +102,7 @@ const Branding = () => {
           {stepData?.name}
         </div>
         <div className="grid gap-5 lg:gap-7.5 xl:w-[38.75rem] w-full mx-auto">
-          <form>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardContent className="grid gap-5">
               {stepData?.questions?.map((q) => (
                 <div
@@ -196,7 +208,6 @@ const Branding = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            console.log("Button clicked");
                             const colorInput = document.getElementById(
                               `color-input-${q.id || 1}`
                             );
@@ -280,13 +291,7 @@ const Branding = () => {
               <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
                 <Button variant="ghost">Save Draft</Button>
                 <Button variant="outline">Previous</Button>
-                <Button
-                  onClick={() => {
-                    console.log("Form Submitted", formValues);
-                  }}
-                >
-                  Next
-                </Button>
+                <Button type="submit">Next</Button>
               </div>
             </CardContent>
           </form>

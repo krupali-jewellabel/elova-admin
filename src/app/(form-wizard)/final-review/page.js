@@ -1,5 +1,5 @@
 import React from "react";
-import FinalReview from "@/components/commonPages/FinalReview/final-review";
+import FinalReview from "@/components/commonPages/FormWizard/FinalReview/final-review";
 export const page = () => {
   return <FinalReview />;
 };

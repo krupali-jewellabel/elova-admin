@@ -2,7 +2,7 @@
 
 import React, { Fragment } from "react";
 import PieChartCard from "@/components/common/ui/cards/PieChartCard";
-import ReactApexChart from "react-apexcharts";
+// import ReactApexChart from "react-apexcharts";
 import MetricBreakdownCard from "@/components/common/ui/cards/MetricBreakdownCard";
 import SalesOverview from "./salesoverview";
 import TopPerformingProducts from "./top-performing-products";
@@ -15,6 +15,8 @@ import {
 import GenericListCard from "@/components/common/ui/cards/GenericListCard";
 import ActivityCard from "./ActivityCard";
 import { DropdownMenu } from "@/components/common/ui/dropdown-menu";
+import dynamic from "next/dynamic";
+const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const series = [22, 50, 15];
 const labels = ["Pending", "Shipped", "Delivers"];
@@ -47,7 +49,7 @@ const options = {
 
 const ACTIVE_STORE_DATA = {
   chart: {
-    Component: ReactApexChart,
+    Component: ApexChart,
     props: {
       options,
       series,
@@ -82,7 +84,7 @@ const renderRow = (row, index) => {
   );
 };
 
-export const Overview = () => {
+const Overview = () => {
   return (
     <>
       <div className="grid grid-cols-4 gap-2 p-5">

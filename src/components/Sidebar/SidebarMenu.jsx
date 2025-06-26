@@ -1,0 +1,106 @@
+"use client";
+import React, { useCallback } from "react";
+
+import { MENU_SIDEBAR } from "@/config/menu.config";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import {
+  AccordionMenu,
+  AccordionMenuGroup,
+  AccordionMenuItem,
+  AccordionMenuLabel,
+  AccordionMenuSub,
+  AccordionMenuSubContent,
+  AccordionMenuSubTrigger,
+} from "../common/ui/accordion-menu";
+
+const SidebarMenu = () => {
+  const pathname = usePathname();
+
+  const matchPath = useCallback(
+    (path) => {
+      pathname === path || pathname.startsWith(`${path}/`);
+    },
+    [pathname]
+  );
+
+  const classNames = {
+    root: "lg:ps-1 space-y-3",
+    group: "gap-px",
+    label: "uppercase text-xs font-medium text-muted-foreground/70 pt-2.5 pb-1",
+    item: "h-8 hover:bg-transparent text-accent-foreground hover:text-primary data-[selected=true]:text-primary data-[selected=true]:bg-muted data-[selected=true]:font-medium",
+    subTrigger:
+      "h-8 hover:bg-transparent text-accent-foreground hover:text-primary data-[selected=true]:text-primary data-[selected=true]:bg-muted data-[selected=true]:font-medium",
+    subContent: "py-0 transition-all duration-300 ease-in-out overflow-hidden",
+  };
+
+  const renderMenu = (items, level = 0) =>
+    items.map((item) => {
+      const key = item.path || `${item.title}-${level}`;
+
+      if (item.heading) {
+        return (
+          <AccordionMenuLabel key={`heading-${key}`}>
+            {item.heading}
+          </AccordionMenuLabel>
+        );
+      }
+
+      if (item.children) {
+        return (
+          <AccordionMenuSub key={key} value={item.path || key}>
+            <AccordionMenuSubTrigger
+              className={
+                level === 0
+                  ? "text-[15px] text-gray-500 font-semibold"
+                  : "text-sm"
+              }
+            >
+              {item.icon && <item.icon data-slot="accordion-menu-icon" />}
+              <span data-slot="accordion-menu-title">{item.title}</span>
+            </AccordionMenuSubTrigger>
+            <AccordionMenuSubContent
+              type="single"
+              collapsible
+              parentValue={item.path || key}
+              className={cn(level === 0 ? "ps-6" : "ps-4")}
+            >
+              <AccordionMenuGroup>
+                {renderMenu(item.children, level + 1)}
+              </AccordionMenuGroup>
+            </AccordionMenuSubContent>
+          </AccordionMenuSub>
+        );
+      }
+
+      return (
+        <AccordionMenuItem
+          key={key}
+          value={item.path || ""}
+          className={level === 0 ? "text-sm font-medium" : "text-sm"}
+        >
+          <Link href={item.path || "#"} className="flex items-center gap-2">
+            {item.icon && <item.icon data-slot="accordion-menu-icon" />}
+            <span data-slot="accordion-menu-title">{item.title}</span>
+          </Link>
+        </AccordionMenuItem>
+      );
+    });
+
+  return (
+    <div className="overflow-y-auto py-5 px-5 max-h-[calc(100vh-5.5rem)] custom-scrollbar">
+      <AccordionMenu
+        selectedValue={pathname}
+        matchPath={matchPath}
+        type="single"
+        collapsible
+        classNames={classNames}
+      >
+        {renderMenu(MENU_SIDEBAR)}
+      </AccordionMenu>
+    </div>
+  );
+};
+
+export default SidebarMenu;

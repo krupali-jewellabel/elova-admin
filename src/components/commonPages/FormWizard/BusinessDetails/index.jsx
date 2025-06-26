@@ -23,13 +23,16 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { usePathname, useRouter } from "next/navigation";
+import { useWizardPaths } from "@/hooks/useWizardPaths";
 
 const BusinessDetails = () => {
   const [stepData, setStepData] = useState(null);
   const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const router = useRouter();
+  const { next, previous } = useWizardPaths();
   const { fetchAll } = useCrudApi("/api/onboarding/business-details");
   const PackageSchema = z.object({
     name: z
@@ -50,8 +53,6 @@ const BusinessDetails = () => {
       setLoading(false);
     }
   };
-
-  console.log(stepData, "stepData");
 
   useEffect(() => {
     fetchData();
@@ -145,11 +146,7 @@ const BusinessDetails = () => {
                 <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
                   <Button variant="ghost">Save Draft</Button>
                   <Button variant="outline">Previous</Button>
-                  <Button
-                    onClick={() => {
-                      console.log("Form Submitted", formValues);
-                    }}
-                  >
+                  <Button type="button" onClick={() => router.push(next.path)}>
                     Next
                   </Button>
                 </div>

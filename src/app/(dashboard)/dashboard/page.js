@@ -1,6 +1,7 @@
-import React from "react";
 import Overview from "@/components/commonPages/Dashboard/Overview";
-export const page = () => {
+import React from "react";
+
+const page = () => {
   return <Overview />;
 };
 

@@ -1,13 +1,4 @@
-import {
-  Gem,
-  Heading,
-  LayoutDashboard,
-  ListChecks,
-  PieChart,
-} from "lucide-react";
-
-export const MENU_ITEMS = [
-  { title: "Welcome", path: "/welcome" },
+export const FORM_WIZARD_MENU = [
   { title: "Business Details", path: "/business-details" },
   { title: "Branding", path: "/branding" },
   { title: "Website Preferences", path: "/website-preferences" },
@@ -39,17 +30,17 @@ export const DASHBOARD = [
   {
     title: "Dashboard",
     path: "/overview",
-    Children: [
-      { title: "OverView", path: "/overview" },
-      { title: "Sales Trends & Graphs", path: "/sales-trends-graphs" },
-      {
-        title: "Store Setup Progress Tracker",
-        path: "/store-setup-progress-tracker",
-      },
-      { title: "Recent Orders Summary", path: "/recent-orders-summary" },
-    ],
+    // Children: [
+    //   { title: "OverView", path: "/overview" },
+    //   { title: "Sales Trends & Graphs", path: "/sales-trends-graphs" },
+    //   {
+    //     title: "Store Setup Progress Tracker",
+    //     path: "/store-setup-progress-tracker",
+    //   },
+    //   { title: "Recent Orders Summary", path: "/recent-orders-summary" },
+    // ],
   },
-  { Heading, path: "/overview" },
+  // { Heading: "overview", path: "/overview" },
   // {
   //   title: "Product Management",
   //   children: [
@@ -72,99 +63,99 @@ export const DASHBOARD = [
   //     },
   //   ],
   // },
-  {
-    title: "Pricing & Margins",
-    icon: LayoutDashboard,
-    children: [
-      {
-        title: "Apply Margin",
-        path: "/apply-margin",
-        children: [
-          { title: "By Category", path: "/by-category" },
-          { title: "By Individual Product", path: "/by-individual-product" },
-        ],
-      },
-      { title: "Real-Time Price Preview", path: "/real-time-price-preview" },
-      { title: "Margin Rules & Limits", path: "/margin-rules-limits" },
-    ],
-  },
-  {
-    title: "Order Management",
-    icon: ListChecks,
-    children: [
-      { title: "All Orders", path: "/orders/all" },
-      { title: "Fulfilled Orders", path: "/orders/fulfilled" },
-      { title: "In Transit Orders", path: "/orders/in-transit" },
-      { title: "All Orders", path: "/orders/all" },
-      { title: "Return/ Repair Orders", path: "/orders/return-repair" },
-      { title: "Manual Order Entry", path: "/orders/manual=order-entry" },
-      { title: "Invoices & Receipts", path: "/orders/invoices-receipts" },
-    ],
-  },
-  {
-    title: "Custom Jewelry",
-    icon: Gem,
-    children: [
-      { title: "All Custom Requests", path: "/custom-request" },
-      { title: "Request Details View", path: "/request-details" },
-      { title: "Quotation and CAD File", path: "/quotation-cad" },
-      { title: "Communication", path: "/communication" },
-    ],
-  },
-  {
-    title: "Content & Branding",
-    icon: PieChart,
-    children: [
-      { title: "Store Branding", path: "/store-branding" },
-      { title: "Request Website Content", path: "/request-website-content" },
-    ],
-  },
-  {
-    title: "Customers & Com",
-    icon: PieChart,
-    children: [
-      { title: "Customer Inbox", path: "/customer-inbox" },
-      { title: "Notifications", path: "/notifications" },
-      {
-        title: "Jewel Label Announcements",
-        path: "/jewel-label-announcements",
-      },
-    ],
-  },
-  {
-    title: "Reports & Analytics",
-    icon: PieChart,
-    children: [
-      { title: "Sales Reports", path: "/sales-reports" },
-      {
-        title: "Product Performance Metrics",
-        path: "/product-performance-metrics",
-      },
-      { title: "Revenue Breakdown", path: "/revenue-breakdown" },
-      { title: "Low Performing Products", path: "/low-performing-products" },
-    ],
-  },
-  {
-    title: "Settings & Permissions",
-    icon: PieChart,
-    children: [
-      { title: "Store Profile", path: "/store-profile" },
-      { title: "Team Member Management", path: "/team-member-management" },
-      { title: "Custom Domain Settings", path: "/custom-domain-settings" },
-      { title: "Store Preferences", path: "/store-preferences" },
-    ],
-  },
-  {
-    title: "Support & Help",
-    icon: PieChart,
-    children: [
-      { title: "Support Ticket", path: "/support-ticket" },
-      { title: "Live Chat Support", path: "/live-chat-support" },
-      {
-        title: "Help Center / Documentation",
-        path: "/help-center-documentation",
-      },
-      { title: "Tutorial Videos", path: "/tutorial-videos" },
-    ],
-  },
+  // {
+  //   title: "Pricing & Margins",
+  //   icon: LayoutDashboard,
+  //   children: [
+  //     {
+  //       title: "Apply Margin",
+  //       path: "/apply-margin",
+  //       children: [
+  //         { title: "By Category", path: "/by-category" },
+  //         { title: "By Individual Product", path: "/by-individual-product" },
+  //       ],
+  //     },
+  //     { title: "Real-Time Price Preview", path: "/real-time-price-preview" },
+  //     { title: "Margin Rules & Limits", path: "/margin-rules-limits" },
+  //   ],
+  // },
+  // {
+  //   title: "Order Management",
+  //   icon: ListChecks,
+  //   children: [
+  //     { title: "All Orders", path: "/orders/all" },
+  //     { title: "Fulfilled Orders", path: "/orders/fulfilled" },
+  //     { title: "In Transit Orders", path: "/orders/in-transit" },
+  //     { title: "All Orders", path: "/orders/all" },
+  //     { title: "Return/ Repair Orders", path: "/orders/return-repair" },
+  //     { title: "Manual Order Entry", path: "/orders/manual=order-entry" },
+  //     { title: "Invoices & Receipts", path: "/orders/invoices-receipts" },
+  //   ],
+  // },
+  // {
+  //   title: "Custom Jewelry",
+  //   icon: Gem,
+  //   children: [
+  //     { title: "All Custom Requests", path: "/custom-request" },
+  //     { title: "Request Details View", path: "/request-details" },
+  //     { title: "Quotation and CAD File", path: "/quotation-cad" },
+  //     { title: "Communication", path: "/communication" },
+  //   ],
+  // },
+  // {
+  //   title: "Content & Branding",
+  //   icon: PieChart,
+  //   children: [
+  //     { title: "Store Branding", path: "/store-branding" },
+  //     { title: "Request Website Content", path: "/request-website-content" },
+  //   ],
+  // },
+  // {
+  //   title: "Customers & Com",
+  //   icon: PieChart,
+  //   children: [
+  //     { title: "Customer Inbox", path: "/customer-inbox" },
+  //     { title: "Notifications", path: "/notifications" },
+  //     {
+  //       title: "Jewel Label Announcements",
+  //       path: "/jewel-label-announcements",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Reports & Analytics",
+  //   icon: PieChart,
+  //   children: [
+  //     { title: "Sales Reports", path: "/sales-reports" },
+  //     {
+  //       title: "Product Performance Metrics",
+  //       path: "/product-performance-metrics",
+  //     },
+  //     { title: "Revenue Breakdown", path: "/revenue-breakdown" },
+  //     { title: "Low Performing Products", path: "/low-performing-products" },
+  //   ],
+  // },
+  // {
+  //   title: "Settings & Permissions",
+  //   icon: PieChart,
+  //   children: [
+  //     { title: "Store Profile", path: "/store-profile" },
+  //     { title: "Team Member Management", path: "/team-member-management" },
+  //     { title: "Custom Domain Settings", path: "/custom-domain-settings" },
+  //     { title: "Store Preferences", path: "/store-preferences" },
+  //   ],
+  // },
+  // {
+  //   title: "Support & Help",
+  //   icon: PieChart,
+  //   children: [
+  //     { title: "Support Ticket", path: "/support-ticket" },
+  //     { title: "Live Chat Support", path: "/live-chat-support" },
+  //     {
+  //       title: "Help Center / Documentation",
+  //       path: "/help-center-documentation",
+  //     },
+  //     { title: "Tutorial Videos", path: "/tutorial-videos" },
+  //   ],
+  // },
 ];

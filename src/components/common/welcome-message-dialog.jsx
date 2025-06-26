@@ -10,11 +10,14 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
-export function WelcomeMessageDialog({ open, onOpenChange }) {
+export function WelcomeMessageDialog({ open }) {
+  const router = useRouter();
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[500px]">
+    <Dialog open={open}>
+      <DialogContent className="max-w-[500px]" close={false}>
         <DialogHeader className="border-0">
           <DialogTitle></DialogTitle>
           <DialogDescription></DialogDescription>
@@ -39,7 +42,9 @@ export function WelcomeMessageDialog({ open, onOpenChange }) {
             more.
           </div>
 
-          <Button onClick={onOpenChange}>Let’s Get Started</Button>
+          <Button onClick={() => router.push("/business-details")}>
+            Let’s Get Started
+          </Button>
         </DialogBody>
       </DialogContent>
     </Dialog>
