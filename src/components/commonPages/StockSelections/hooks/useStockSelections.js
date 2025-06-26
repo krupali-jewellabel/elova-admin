@@ -6,9 +6,9 @@ import {
 } from "@/components/common/ui/data-grid-table";
 import { Skeleton } from "@/components/common/ui/skeleton";
 import { Button } from "@/components/common/ui/button";
-import { Edit2Icon, EyeIcon, ShoppingCart } from "lucide-react";
+import { EyeIcon, ShoppingCart } from "lucide-react";
 
-export const useStockSelections = ({ onClick }) => {
+export const useStockSelections = ({ onClick = () => {}, onView = () => {}}) => {
   return useMemo(
     () => [
       {
@@ -84,12 +84,10 @@ export const useStockSelections = ({ onClick }) => {
         cell: ({ row }) => {
           let metals = row.original.metal;
 
-          // Convert comma-separated string to array
           if (typeof metals === "string") {
             metals = metals.split(",").map((c) => c.trim());
           }
 
-          // Fallback to empty array if it's not valid
           if (!Array.isArray(metals)) {
             metals = [];
           }
@@ -102,7 +100,7 @@ export const useStockSelections = ({ onClick }) => {
                   className="w-4 h-4 rounded-sm"
                   style={{ backgroundColor: color }}
                 />
-              ))}
+              ))}                 
             </div>
           );
         },
@@ -119,20 +117,18 @@ export const useStockSelections = ({ onClick }) => {
             <Button
               mode="icon"
               variant="outline"
-              onClick={() => onClick(row.original)}
+              onClick={() => onView(row.original)}
             >
               <EyeIcon />
             </Button>
-            <Button
-              variant="outline"
-              className="ms-2 shrink-0"
-            >
+
+            <Button variant="outline" className="ms-2 shrink-0">
               <ShoppingCart /> Add
             </Button>
           </div>
         ),
       },
     ],
-    []
+    [onClick, onView]
   );
 };

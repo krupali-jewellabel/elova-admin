@@ -62,19 +62,17 @@ const StockSelectionCard = ({ product, onView }) => {
   );
 };
 
-// Main StockSelections component
 const StockSelections = ({ product }) => {
-  const [orderListView, onCloseSheet] = useState(false);
+  const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
   const handleView = (product) => {
     setSelectedProduct(product);
-    onCloseSheet(true);
+    setIsOrderSheetOpen(true);
   };
 
-  const columns = useStockSelections({ onClick: handleView });
+  const columns = useStockSelections({ onClick: () => {}, onView: handleView });
 
-  const renderStoreCardsView = (item, index) => (
+  const renderStoreCardsView = (item) => (
     <ProductCard
       key={item.id}
       variantsimg={item.variantsimg}
@@ -90,72 +88,114 @@ const StockSelections = ({ product }) => {
 
   return (
     <>
-      <Card className="w-full">
-        <div className="flex flex-wrap gap-6">
-          {STOCK_PRODUCT_DETAIL.map((product, index) => (
-            <Card key={index} className="w-full lg:w-[calc(50%-12px)] p-4">
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center text-center">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="rounded-lg h-[200px] object-contain border border-muted/30 mb-4"
-                  />
-                  <div className="flex flex-col gap-2">
-                    <h3 className="text-base font-medium">{product.id}</h3>
-                    <h2 className="text-lg font-semibold">{product.title}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      Style: {product.style}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Collection: {product.collection}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Category: {product.category}
-                    </p>
-                  </div>
-                </div>
-                <ListWithCardToggle
-                  title="Select Variants"
-                  data={STOCK_DETAIL}
-                  columns={useStockSelections({ onClick: () => {} })}
-                  useFilteredData={useFilteredStoreData}
-                  ToolbarComponent={DataGridToolbar}
-                  renderCardView={(item) => (
-                    <ProductCard
-                      key={item.id}
-                      {...item}
-                      onClick={() => handleView(item)}
-                    />
-                  )}
+      <div className="grid grid-cols-2 gap-4 w-full">
+        {STOCK_PRODUCT_DETAIL.map((product, index) => (
+          <Card key={index} className="p-4">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center text-center">
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="rounded-lg h-[200px] object-contain border border-muted/30 mb-4"
                 />
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-base font-medium">{product.id}</h3>
+                  <h2 className="text-lg font-semibold">{product.title}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Style: {product.style}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Collection: {product.collection}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Category: {product.category}
+                  </p>
+                </div>
               </div>
-            </Card>
-          ))}
-        </div>
-
-        <Card className="m-4">
-          <CardHeader>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
-              <span className="flex items-center gap-x-2 text-sm font-normal text-secondary-foreground">
-                Variants Selected: 3/5
-              </span>
-
-              <span className="text-sm font-normal text-secondary-foreground text-center">
-                Estimated Price: $2400.43
-              </span>
-
-              <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-3">
-                <Link href="#" className="w-full sm:w-auto">
-                  <Button variant="outline" className="shrink-0">
-                    <ShoppingCart className="mr-1 h-4 w-4" />
-                    Add all to Cart
-                  </Button>
-                </Link>
-              </div>
+              <ListWithCardToggle
+                title="Select Variants"
+                data={STOCK_DETAIL}
+                columns={columns}
+                useFilteredData={useFilteredStoreData}
+                ToolbarComponent={DataGridToolbar}
+                renderCardView={(item) => (
+                  <ProductCard
+                    key={item.id}
+                    {...item}
+                    onClick={() => handleView(item)}
+                  />
+                )}
+              />
             </div>
-          </CardHeader>
+          </Card>
+        ))}
+        <Card className="">
+          <div className="">
+            {STOCK_PRODUCT_DETAIL.map((product, index) => (
+              <Card key={index} className="p-4">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center text-center">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="rounded-lg h-[200px] object-contain border border-muted/30 mb-4"
+                    />
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-base font-medium">{product.id}</h3>
+                      <h2 className="text-lg font-semibold">{product.title}</h2>
+                      <p className="text-sm text-muted-foreground">
+                        Style: {product.style}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Collection: {product.collection}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Category: {product.category}
+                      </p>
+                    </div>
+                  </div>
+                  <ListWithCardToggle
+                    title="Select Variants"
+                    data={STOCK_DETAIL}
+                    columns={columns}
+                    useFilteredData={useFilteredStoreData}
+                    ToolbarComponent={DataGridToolbar}
+                    renderCardView={(item) => (
+                      <ProductCard
+                        key={item.id}
+                        {...item}
+                        onClick={() => handleView(item)}
+                      />
+                    )}
+                  />
+                </div>
+              </Card>
+            ))}
+          </div>
         </Card>
+      </div>
+
+      <Card className="w-full mt-4">
+        <CardHeader className="sticky top-0 z-10 bg-white py-5 px-6 shadow-sm border rounded-md">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+            <span className="flex items-center gap-x-2 text-sm font-normal text-secondary-foreground">
+              Variants Selected: 3/5
+            </span>
+
+            <span className="text-sm font-normal text-secondary-foreground text-center">
+              Estimated Price: $2400.43
+            </span>
+
+            <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-3">
+              <Link href="#" className="w-full sm:w-auto">
+                <Button variant="outline" className="shrink-0">
+                  <ShoppingCart className="mr-1 h-4 w-4" />
+                  Add all to Cart
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </CardHeader>
       </Card>
 
       <Card className="w-full mt-4">
@@ -199,7 +239,7 @@ const StockSelections = ({ product }) => {
         </CardHeader>
       </Card>
 
-      <Sheet open={orderListView} onOpenChange={onCloseSheet}>
+      <Sheet open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen}>
         <SheetContent className="sm:w-[720px] inset-5 start-auto h-auto rounded-lg p-0 sm:max-w-none [&_[data-slot=sheet-close]]:top-4.5 [&_[data-slot=sheet-close]]:end-5">
           <SheetHeader className="border-b py-3.5 px-5 border-border">
             <SheetTitle>Order Info</SheetTitle>

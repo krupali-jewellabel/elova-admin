@@ -6,7 +6,7 @@ import {
   PieChart,
 } from "lucide-react";
 
-export const FORM_WIZARD_MENU = [
+export const MENU_ITEMS = [
   { title: "Welcome", path: "/welcome" },
   { title: "Business Details", path: "/business-details" },
   { title: "Branding", path: "/branding" },
@@ -21,7 +21,7 @@ export const FORM_WIZARD_MENU = [
   { title: "Final Review", path: "/final-review" },
 ];
 
-export const THEME_CUSTOMIZATION_MENU = [
+export const MENU_ITEMS_2 = [
   {
     title: "Website Theme & Layout Customization",
     path: "/theme-customization",
@@ -35,7 +35,7 @@ export const THEME_CUSTOMIZATION_MENU = [
   { title: "Customer Engagement", path: "/customer-engagement" },
 ];
 
-export const DASHBOARD_MENU = [
+export const DASHBOARD = [
   {
     title: "Dashboard",
     path: "/overview",
