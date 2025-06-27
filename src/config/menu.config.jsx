@@ -1,7 +1,13 @@
 // import { RiCurrencyFill, RiStore2Line } from "@remixicon/react";
-import { RiStore2Line, RiCurrencyFill } from "@remixicon/react";
+import {
+  RiStore2Line,
+  RiCurrencyFill,
+  RiPriceTag2Fill,
+  RiPriceTag2Line,
+} from "@remixicon/react";
 import {
   AlertCircle,
+  ArrowUpNarrowWideIcon,
   Award,
   Badge,
   Bell,
@@ -72,151 +78,134 @@ export const MENU_SIDEBAR = [
     icon: LayoutGrid,
     children: [
       { title: "Overview", path: "/" },
-      { title: "Activity Feed", path: "/dark-sidebar" },
-      { title: "Alerts & Announcements", path: "/alert" },
+      { title: "Sales Trends & Graphs", path: "/dark-sidebar" },
+      { title: "Store Setup Progress Tracker", path: "/alert" },
+      { title: "Recent Orders Summary", path: "/alert" },
     ],
   },
-  { heading: "User" },
+  // { heading: "User" },
   {
-    title: "Store Management",
+    title: "Product Management",
     icon: RiStore2Line,
     children: [
-      { title: "All Stores List", path: "/store-management" },
       {
-        title: "Store Detail View",
+        title: "My Products",
         children: [
-          { title: "Overview", path: "/store-detail-view" },
+          { title: "Product List", path: "/product-management/my-products" },
           {
-            title: "Assigned Products",
+            title: "Edit Product Info",
             path: "/store-detail-view/assign-products",
           },
-          { title: "Permissions", path: "/store-detail-view/permission-check" },
-          { title: "Custom Domain", path: "/store-detail-view/custom-domin" },
-          { title: "Branding", path: "/store-detail-view/branding" },
           {
-            title: "Tasks & Setup Progress",
-            path: "/store-detail-view/task-setupprogress",
+            title: "Product Detail View",
+            path: "/store-detail-view/permission-check",
           },
         ],
       },
-      { title: "Store Onboarding Requests", path: "/public-profile/works" },
+      {
+        title: "Browse Other Products",
+        path: "/account/notifications",
+      },
+      { title: "Product History & Logs", path: "/public-profile/works" },
     ],
   },
   {
-    title: "Product Management",
-    icon: LayoutDashboard,
+    title: "Pricing & Margins",
+    icon: RiPriceTag2Line,
     children: [
-      { title: "Product Master List", path: "/product-management" },
-      { title: "Product Detail View", path: "/account/notifications" },
-      { title: "Product Categories", path: "/account/api-keys" },
+      {
+        title: "Apply Margin",
+        children: [
+          { title: "By Category", path: "/public-profile/works" },
+          { title: "By Individual Products", path: "/public-profile/works" },
+        ],
+      },
+      { title: "Real-Time Price Preview", path: "/account/notifications" },
+      { title: "Margin Rules & Limits", path: "/account/api-keys" },
     ],
   },
   {
     title: "Order Management",
     icon: ListChecks,
     children: [
-      { title: "All Orders", path: "/orders/all" },
-      { title: "Return/ Repair Management", path: "/orders/return-repair" },
-    ],
-  },
-  {
-    title: "Pricing & Margins",
-    icon: RiCurrencyFill,
-    children: [
-      { title: "Store Lists", path: "/pricing-margin/store-lists" },
+      { title: "All Orders", path: "/order-management/all" },
+      { title: "Fulfilled Orders", path: "/order-management/fulfilled" },
+      { title: "In Transit Orders", path: "/order-management/in-transit" },
       {
-        title: "Store-specific Pricing Config",
-        path: "/pricing-margin/pricing-config",
+        title: "Return/ Repair Orders",
+        path: "/order-management/return-repair",
       },
-      {
-        title: "Pricing Tier Rules (P1, P2, P3)",
-        path: "/pricing-margin/pricing-tier-rule",
-      },
+      { title: "Manual Order Entry", path: "/order-management/manual" },
+      { title: "Invoices & Receipts", path: "/order-management/invoices" },
     ],
   },
   {
     title: "Custom Jewelry",
-    icon: Gem,
+    icon: ArrowUpNarrowWideIcon,
     children: [
-      { title: "All Custom Requests", path: "/custom-request" },
-      { title: "Custom Requests Details", path: "/custom-requests-details" },
+      { title: "All Custom Requests", path: "/pricing-margin/store-lists" },
+      {
+        title: "Request Details View",
+        path: "/pricing-margin/pricing-config",
+      },
+      {
+        title: "Quotation and CAD File",
+        path: "/pricing-margin/pricing-tier-rule",
+      },
+      { title: "Communication", path: "/pricing-margin/store-lists" },
     ],
   },
   {
-    title: "Store Content & Branding",
+    title: "Content & Branding",
+    icon: ArrowUpNarrowWideIcon,
+    children: [
+      { title: "Store Branding", path: "/custom-request" },
+      { title: "Request Website Content", path: "/custom-requests-details" },
+    ],
+  },
+  {
+    title: "Customers & Com",
     icon: PieChart,
     children: [
-      { title: "All Stores", path: "/social/scheduled-posts" },
-      { title: "Store CMS", path: "/social/accounts" },
-      { title: "Media Library", path: "/social/performance" },
+      { title: "Customer Inbox", path: "/social/scheduled-posts" },
+      { title: "Notifications", path: "/social/accounts" },
+      { title: "Jewel Label Announcements", path: "/social/performance" },
     ],
   },
   {
-    title: "Analytics & Reports",
+    title: "Reports & Analytics",
     icon: ChartNoAxesCombined,
     children: [
-      { title: "Sales Overview", path: "/users/super-admins" },
-      { title: "Store Performance", path: "/users/roles-permissions" },
-      { title: "Product Insights", path: "/users/activity-logs" },
-      { title: "Inventory Insights", path: "/users/access-audit" },
-      { title: "Traffic & Conversion", path: "/users/access-audit" },
-    ],
-  },
-  {
-    title: "Social Media Management",
-    icon: BookCopy,
-    children: [
-      { title: "All Store List", path: "/support/tickets" },
-      { title: "Post Scheduler", path: "/support/communication-log" },
-      { title: "Promotions & Campaigns", path: "/support/notifications" },
-      { title: "Engagement Reports", path: "/support/announcements" },
-    ],
-  },
-  {
-    title: "User & Role Management",
-    icon: Users,
-    children: [
-      { title: "All Users List", path: "/support/tickets" },
-      { title: "Roles & Access", path: "/support/communication-log" },
-    ],
-  },
-  {
-    title: "Billing & Finance",
-    icon: FileText,
-    children: [
+      { title: "Sales Reports", path: "/users/super-admins" },
       {
-        title: "Store Subscription Plans",
-        path: "/billing/subscription-plans",
+        title: "Product Performance Metrics",
+        path: "/users/roles-permissions",
       },
-      { title: "Store Invoices", path: "/billing/invoices-payouts" },
-      { title: "Payouts & Commissions", path: "/billing/transaction-history" },
-      { title: "Subscription & Plans", path: "/billing/tax-compliance" },
+      { title: "Revenue Breakdown", path: "/users/activity-logs" },
+      { title: "Low Performing Products", path: "/users/access-audit" },
     ],
   },
   {
-    title: "Communication & Support",
-    icon: MessagesSquare,
-    children: [
-      { title: "Internal Support Tickets", path: "/support/tickets" },
-      { title: "Store-to-Admin Chat", path: "/support/communication-log" },
-      { title: "Customer Escalations", path: "/support/notifications" },
-      { title: "Notifications Center", path: "/support/announcements" },
-    ],
-  },
-  {
-    title: "Settings",
+    title: "Settings & Permissions",
     icon: Settings,
     children: [
-      { title: "Platform Configurations", path: "/settings/platform" },
-      { title: "Notification Preferences", path: "/settings/appearance-theme" },
+      { title: "Store Profile", path: "/support/tickets" },
+      { title: "Team Member Management", path: "/support/communication-log" },
+      { title: "Custom Domain Settings", path: "/support/notifications" },
+      { title: "Store Preferences", path: "/support/announcements" },
     ],
   },
   {
-    title: "Tools & Help",
-    icon: Wrench,
+    title: "Support & Help",
+    icon: Users,
     children: [
-      { title: "Knowledge Base", path: "/tools/sandbox" },
-      { title: "Video & Walkthrough Manager", path: "/tools/tasks" },
+      { title: "Support Ticket", path: "/support/tickets" },
+      { title: "Live Chat Support", path: "/support/communication-log" },
+      {
+        title: "Help Center / Documentation",
+        path: "/support/communication-log",
+      },
+      { title: "Tutorial Videos", path: "/support/communication-log" },
     ],
   },
 ];

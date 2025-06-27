@@ -10,6 +10,7 @@ import ProductCard from "./ProductCard";
 import { ProductCardView } from "./ProductCardView";
 
 export const ProductMasterList = () => {
+  const [row, setRow] = useState([PRODUCT_MASTER_DATA]);
   const [editingCell, setEditingCell] = useState(null);
   const [editedValue, setEditedValue] = useState("");
   const [openProductDetailSheet, setOpenProductDetailSheet] = useState(false);
@@ -29,8 +30,17 @@ export const ProductMasterList = () => {
     console.log("Column clicked:", columnId);
   };
 
+  // const handleSaveEdit = (id, field, value) => {
+  //   console.log("Saving inline edit:", { id, field, value });
+  //   setEditingCell(null);
+  // };
+
   const handleSaveEdit = (id, field, value) => {
+    setRow((prevRows) =>
+      prevRows.map((row) => (row.id === id ? { ...row, [field]: value } : row))
+    );
     setEditingCell(null);
+    console.log("Saving inline edit:", { id, field, value });
   };
 
   const columns = useProductListColumns({
