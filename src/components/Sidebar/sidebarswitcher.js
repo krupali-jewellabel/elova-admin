@@ -54,9 +54,7 @@
 import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import {
-  MENU_ITEMS,
   THEME_CUSTOMIZATION_MENU,
-  DASHBOARD,
   FORM_WIZARD_MENU,
   DASHBOARD_MENU,
 } from "@/services/constant";

@@ -91,7 +91,7 @@ const StockSelections = ({ product }) => {
       <div className="grid grid-cols-2 gap-4 w-full">
         {STOCK_PRODUCT_DETAIL.map((product, index) => (
           <Card key={index} className="p-4">
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col">
               <div className="flex items-center text-center">
                 <img
                   src={product.image}
@@ -133,7 +133,7 @@ const StockSelections = ({ product }) => {
           <div className="">
             {STOCK_PRODUCT_DETAIL.map((product, index) => (
               <Card key={index} className="p-4">
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col">
                   <div className="flex items-center text-center">
                     <img
                       src={product.image}

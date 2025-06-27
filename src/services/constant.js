@@ -12,7 +12,7 @@ export const FORM_WIZARD_MENU = [
   { title: "Final Review", path: "/final-review" },
 ];
 
-export const MENU_ITEMS_2 = [
+export const THEME_CUSTOMIZATION_MENU = [
   {
     title: "Website Theme & Layout Customization",
     path: "/theme-customization",
@@ -26,7 +26,7 @@ export const MENU_ITEMS_2 = [
   { title: "Customer Engagement", path: "/customer-engagement" },
 ];
 
-export const DASHBOARD = [
+export const DASHBOARD_MENU = [
   {
     title: "Dashboard",
     path: "/overview",

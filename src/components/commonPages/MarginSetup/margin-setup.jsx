@@ -184,7 +184,6 @@ const MarginSetup = () => {
           </div>
         </div>
       </div>
-
       <div className="flex flex-col md:flex-row justify-end items-end gap-3 mt-8 px-4">
         <Link href="#" className="w-full md:w-auto">
           <Button variant="outline" className="w-full">
@@ -203,6 +202,7 @@ const MarginSetup = () => {
         </Link>
       </div>
 
+      {/* Custom Margin Products */}
       <CustomMarginProducts />
     </>
   );

@@ -13,7 +13,7 @@ export const FinalReview = () => {
   return (
     <>
       <div>
-        <CardHeader className={"text-lg justify-center"}>Review</CardHeader>
+        <h2 className="text-center text-xl font-semibold mb-8">Review</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {CARD_DATA.map((card, index) => (
             <Card key={index}>
