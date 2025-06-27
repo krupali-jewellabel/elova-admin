@@ -1,4 +1,4 @@
-export const createCrudClient = (baseUrl) => {
+export const storeAdminCrud = (baseUrl) => {
   return {
     fetchAll: async (search = "") => {
       const params = new URLSearchParams();
@@ -7,6 +7,12 @@ export const createCrudClient = (baseUrl) => {
       const res = await fetch(`${baseUrl}?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to fetch data");
       return res.json();
+    },
+
+    fetchById: async (id) => {
+      const res = await fetch(`${baseUrl}/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch data by ID");
+      return await res.json();
     },
 
     create: async (payload) => {

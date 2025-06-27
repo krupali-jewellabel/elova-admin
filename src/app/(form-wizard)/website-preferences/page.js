@@ -1,15 +1,12 @@
-import React from 'react'
-import WebsitePreferences from '@/components/commonPages/WebsitePreferences'
+import WebsitePreferences from "@/components/commonPages/FormWizard/WebsitePreferences";
+import React from "react";
 
 export const page = () => {
   return (
     <>
-
-    <WebsitePreferences/>
+      <WebsitePreferences />
     </>
-  )
-}
+  );
+};
 
-export default page
-
-
+export default page;

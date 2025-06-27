@@ -1,4 +1,4 @@
-import ProductCategories from "@/components/commonPages/ProductCategories";
+import ProductCategories from "@/components/commonPages/FormWizard/ProductCategories";
 import React from "react";
 
 const page = () => {

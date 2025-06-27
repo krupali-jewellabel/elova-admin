@@ -2,7 +2,6 @@
 
 import React, { Fragment } from "react";
 import PieChartCard from "@/components/common/ui/cards/PieChartCard";
-// import ReactApexChart from "react-apexcharts";
 import MetricBreakdownCard from "@/components/common/ui/cards/MetricBreakdownCard";
 import SalesOverview from "./salesoverview";
 import TopPerformingProducts from "./top-performing-products";

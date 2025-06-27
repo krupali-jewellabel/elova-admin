@@ -23,17 +23,18 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useWizardPaths } from "@/hooks/useWizardPaths";
+import { ContentLoader } from "@/components/common/ui/Loader/content-loader";
 
 const BusinessDetails = () => {
   const [stepData, setStepData] = useState(null);
-  const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
   const { next, previous } = useWizardPaths();
   const { fetchAll } = useCrudApi("/api/onboarding/business-details");
+
   const PackageSchema = z.object({
     name: z
       .string()
@@ -62,6 +63,9 @@ const BusinessDetails = () => {
     resolver: zodResolver(PackageSchema),
     defaultValues: { name: "" },
   });
+
+  if (loading) return <ContentLoader />;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <Card className="pb-2.5 w-full h-full justify-center">
@@ -145,7 +149,6 @@ const BusinessDetails = () => {
 
                 <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
                   <Button variant="ghost">Save Draft</Button>
-                  <Button variant="outline">Previous</Button>
                   <Button type="button" onClick={() => router.push(next.path)}>
                     Next
                   </Button>

@@ -18,7 +18,8 @@ const ScrollspyMenu = ({ items, onClick, activeItem }) => {
       >
         <span
           className={cn(
-            "flex w-1.5 relative before:absolute start-px rtl:-start-[5px] before:top-0 before:size-1.5 before:rounded-full before:-translate-x-2/4 before:-translate-y-2/4 before:bg-muted data-[active=true]:before:bg-primary"
+            "flex w-1.5 relative before:absolute start-px rtl:-start-[5px] before:top-0 before:size-1.5 before:rounded-full before:-translate-x-2/4 before:-translate-y-2/4 before:bg-muted data-[active=true]:before:bg-primary",
+            isActive && "text-primary"
           )}
         ></span>
         {item.title}

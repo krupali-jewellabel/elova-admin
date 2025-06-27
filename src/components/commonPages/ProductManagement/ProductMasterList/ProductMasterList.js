@@ -30,7 +30,6 @@ export const ProductMasterList = () => {
   };
 
   const handleSaveEdit = (id, field, value) => {
-    console.log("Saving inline edit:", { id, field, value });
     setEditingCell(null);
   };
 

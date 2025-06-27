@@ -75,7 +75,7 @@ body {
   --text-2xs--line-height: calc(0.825 / 0.6875);
 }
 
-/* @layer components {
+@layer components {
   .demo1 {
     --sidebar-transition-duration: 0.3s;
     --sidebar-transition-timing: ease;
@@ -92,7 +92,6 @@ body {
     }
   }
 
-
   .demo1 .header {
     height: var(--header-height);
   }
@@ -104,7 +103,6 @@ body {
   .demo1.header-fixed .wrapper {
     padding-top: var(--header-height);
   }
-
 
   @media (min-width: 1024px) {
     .demo1 .sidebar {
@@ -213,4 +211,4 @@ body {
     transition: inset-inline-start var(--sidebar-transition-duration)
       var(--sidebar-transition-timing);
   }
-} */
+}

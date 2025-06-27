@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 
-export async function GET(req, { params }) {
-  const { slug } = await params;
+export async function GET(req) {
   const api = "https://api.jewellabel.in";
   const baseUrl = api || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/store-admin/onboarding/step/${slug}`);
+  const res = await fetch(`${baseUrl}/api/store-admin/get-templates`);
 
   if (!res.ok) {
     return NextResponse.json(
@@ -13,6 +12,6 @@ export async function GET(req, { params }) {
     );
   }
 
-  const data = await res.json();
-  return NextResponse.json(data);
+  const users = await res.json();
+  return NextResponse.json(users);
 }

@@ -16,8 +16,9 @@ import {
   SelectValue,
 } from "@/components/common/ui/select";
 import { Switch } from "@/components/common/ui/switch";
-import ReactApexChart from "react-apexcharts";
 import TodoCard from "./TodoCard";
+import dynamic from "next/dynamic";
+const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const dummyChartData = [58, 64, 52, 45, 42, 38, 45, 53, 56, 65, 75, 85];
 
@@ -152,12 +153,7 @@ export const SalesOverview = () => {
         {title}
       </h2>
       <h3 className="text-md text-gray-400 mb-2 ml-5 mt-2">{subtitle}</h3>
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="bar"
-        height={height}
-      />
+      <ApexChart options={options} series={series} type="bar" height={height} />
     </Card>
   );
   const [series1, setSeries1] = useState([{ data: [50, 40, 20, 10] }]);
@@ -233,7 +229,7 @@ export const SalesOverview = () => {
           </div>
         </CardHeader>
         <CardContent className="flex flex-col justify-end items-stretch grow px-3 py-1">
-          <ReactApexChart
+          <ApexChart
             id="earnings_chart"
             options={options}
             series={options.series}
