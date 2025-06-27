@@ -35,6 +35,7 @@ const Branding = () => {
   const [loading, setLoading] = useState(false);
   const [selectedColor, setSelectedColor] = useState("");
   const { fetchAll } = useCrudApi("/api/onboarding/branding");
+  const { create } = useCrudApi("/api/store-profile");
 
   const router = useRouter();
   const { next, previous } = useWizardPaths();
@@ -317,7 +318,7 @@ const Branding = () => {
                   Previous
                 </Button>
                 {/* <Button type="submit">Next</Button> */}
-                <Button type="button" onClick={() => router.push(next.path)}>
+                <Button type="submit" onClick={() => router.push(next.path)}>
                   Next
                 </Button>
               </div>

@@ -1,18 +1,6 @@
-import { NextResponse } from "next/server";
+import { handleGET } from "@/lib/apiHandler";
 
 export async function GET(req, { params }) {
   const { slug } = await params;
-  const api = "https://api.jewellabel.in";
-  const baseUrl = api || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/store-admin/onboarding/step/${slug}`);
-
-  if (!res.ok) {
-    return NextResponse.json(
-      { error: "Failed to fetch packages" },
-      { status: res.status }
-    );
-  }
-
-  const data = await res.json();
-  return NextResponse.json(data);
+  return handleGET(`/api/store-admin/onboarding/step/${slug}`);
 }
