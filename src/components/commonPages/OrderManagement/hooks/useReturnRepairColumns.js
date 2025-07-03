@@ -55,15 +55,15 @@ export const useReturnRepairColumns = () => {
         enableSorting: true,
         size: 135,
       },
-      {
-        id: "storeName",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Store Name" column={column} />
-        ),
-        accessorFn: (row) => row.storeName,
-        cell: ({ row }) => <span>{row.original.storeName}</span>,
-        size: 135,
-      },
+      // {
+      //   id: "storeName",
+      //   header: ({ column }) => (
+      //     <DataGridColumnHeader title="Store Name" column={column} />
+      //   ),
+      //   accessorFn: (row) => row.storeName,
+      //   cell: ({ row }) => <span>{row.original.storeName}</span>,
+      //   size: 135,
+      // },
       {
         id: "reason",
         header: ({ column }) => (

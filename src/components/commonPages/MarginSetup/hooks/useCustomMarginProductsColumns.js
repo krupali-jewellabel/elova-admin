@@ -8,7 +8,10 @@ import { Skeleton } from "@/components/common/ui/skeleton";
 import { Edit2Icon, EyeIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/common/ui/button";
 
-export const useCustomMarginProductsColumns = (onClick) => {
+export const useCustomMarginProductsColumns = ({
+  onClick = () => {},
+  onView = () => {},
+}) => {
   return useMemo(
     () => [
       {
@@ -100,19 +103,27 @@ export const useCustomMarginProductsColumns = (onClick) => {
         ),
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
-            <Button mode="icon" variant="outline">
+            <Button
+              mode="icon"
+              variant="outline"
+              onClick={() => onView(row.original)}
+            >
               <EyeIcon />
             </Button>
-            <Button mode="icon" variant="outline">
+            <Button mode="icon" 
+            variant="outline"
+            onClick={() => onView(row.original)}
+            >
               <Edit2Icon />
             </Button>
-           <Button mode="icon" variant="outline">
+            <Button mode="icon" variant="outline">
               <Trash2Icon />
             </Button>
           </div>
         ),
-        size: 100,
+        size: 125,
       },
     ],
+    [onClick, onView]
   );
 };

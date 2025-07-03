@@ -98,7 +98,7 @@ export const MENU_SIDEBAR = [
           },
           {
             title: "Product Detail View",
-            path: "/store-detail-view/permission-check",
+            path: "/product-management/category",
           },
         ],
       },
@@ -116,8 +116,8 @@ export const MENU_SIDEBAR = [
       {
         title: "Apply Margin",
         children: [
-          { title: "By Category", path: "/public-profile/works" },
-          { title: "By Individual Products", path: "/public-profile/works" },
+          { title: "By Category", path: "/pricing-margin/by-category" },
+          { title: "By Individual Products", path: "/pricing-margin/by-individual" },
         ],
       },
       { title: "Real-Time Price Preview", path: "/account/notifications" },
@@ -143,10 +143,10 @@ export const MENU_SIDEBAR = [
     title: "Custom Jewelry",
     icon: ArrowUpNarrowWideIcon,
     children: [
-      { title: "All Custom Requests", path: "/pricing-margin/store-lists" },
+      { title: "All Custom Requests", path: "/custom-jewelary/all-custom-request" },
       {
         title: "Request Details View",
-        path: "/pricing-margin/pricing-config",
+        path: "/custom-jewelary",
       },
       {
         title: "Quotation and CAD File",
@@ -167,7 +167,7 @@ export const MENU_SIDEBAR = [
     title: "Customers & Com",
     icon: PieChart,
     children: [
-      { title: "Customer Inbox", path: "/social/scheduled-posts" },
+      { title: "Internal Support Tickets", path: "/support" },
       { title: "Notifications", path: "/social/accounts" },
       { title: "Jewel Label Announcements", path: "/social/performance" },
     ],

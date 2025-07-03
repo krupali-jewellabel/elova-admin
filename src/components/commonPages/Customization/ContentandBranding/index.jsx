@@ -168,7 +168,7 @@ export const ContentandBranding = () => {
                 Save Draft
               </Button>
             </Link>
-            <Link href="#" className="w-full sm:w-auto">
+            <Link href="/theme-customization" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 className="w-full sm:w-auto bg-[#F1F1F2]"
@@ -176,7 +176,7 @@ export const ContentandBranding = () => {
                 Previous
               </Button>
             </Link>
-            <Link href="#" className="w-full sm:w-auto">
+            <Link href="/policies" className="w-full sm:w-auto">
               <Button type="submit">Next</Button>
             </Link>
           </div>

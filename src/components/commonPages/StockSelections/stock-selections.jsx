@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -15,16 +15,8 @@ import { useFilteredStoreData } from "@/components/commonPages/StockSelections/h
 import { Button } from "@/components/common/ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import {
-  Sheet,
-  SheetBody,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/common/ui/sheet";
-import { ScrollArea } from "@/components/common/ui/scroll-area";
-import { TwoColCard } from "@/components/common/ui/cards/TwoColCard";
 import { STOCK_PRODUCT_DETAIL } from "@/components/commonPages/StockSelections/constant";
+import { ProductCardView } from "./ProductCardView";
 
 // Single product card
 const StockSelectionCard = ({ product, onView }) => {
@@ -63,24 +55,42 @@ const StockSelectionCard = ({ product, onView }) => {
 };
 
 const StockSelections = ({ product }) => {
-  const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false);
+  const [openProductDetailSheet, setOpenProductDetailSheet] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const handleView = (product) => {
+
+  const handleView = useCallback((product) => {
     setSelectedProduct(product);
-    setIsOrderSheetOpen(true);
+    setOpenProductDetailSheet(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpenProductDetailSheet(false);
+    setSelectedProduct(null);
+  }, []);
+
+  const handleColumnClick = (columnId) => {
+    console.log("Column clicked:", columnId);
   };
 
-  const columns = useStockSelections({ onClick: () => {}, onView: handleView });
+  const columns = useStockSelections({
+    onClick: handleColumnClick,
+    onView: handleView,
+  });
 
   const renderStoreCardsView = (item) => (
     <ProductCard
       key={item.id}
-      variantsimg={item.variantsimg}
-      name={item.name}
-      baseprice={item.baseprice}
-      defaultmargin={item.defaultmargin}
-      sellingprice={item.sellingprice}
-      metal={item.metal}
+      productImg={item.productImg}
+      designNo={item.designNo}
+      category={item.category}
+      style={item.style}
+      shape={item.shape}
+      basePrice={item.basePrice}
+      plan={item.plan}
+      collection={item.collection}
+      createdAt={item.createdAt}
+      lastUpdatedDate={item.lastUpdatedDate}
+      gender={item.gender}
       active={item.active}
       onClick={() => handleView(item)}
     />
@@ -122,7 +132,7 @@ const StockSelections = ({ product }) => {
                   <ProductCard
                     key={item.id}
                     {...item}
-                    onClick={() => handleView(item)}
+                    onClick={() => handleView({ ...product, ...item })}
                   />
                 )}
               />
@@ -239,42 +249,13 @@ const StockSelections = ({ product }) => {
         </CardHeader>
       </Card>
 
-      <Sheet open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen}>
-        <SheetContent className="sm:w-[720px] inset-5 start-auto h-auto rounded-lg p-0 sm:max-w-none [&_[data-slot=sheet-close]]:top-4.5 [&_[data-slot=sheet-close]]:end-5">
-          <SheetHeader className="border-b py-3.5 px-5 border-border">
-            <SheetTitle>Order Info</SheetTitle>
-          </SheetHeader>
-          <SheetBody className="px-5 py-0">
-            <ScrollArea className="h-[calc(100dvh-11.5rem)] pe-3 -me-3">
-              <div className="grid xl:grid-cols-1 gap-5 lg:gap-9">
-                <div className="lg:col-span-1">
-                  <Card>
-                    <CardHeader className="justify-start bg-muted/70 gap-9 h-auto py-5">
-                      {[
-                        ["Order ID", "X319330-S24"],
-                        ["Order placed", "26 June, 2025"],
-                        ["Total", "$512.60"],
-                        ["Ship to", "Jeroen van Dijk"],
-                        ["Estimated Delivery", "07 July, 2025"],
-                      ].map(([label, value], i) => (
-                        <div key={i}>
-                          <span className="text-xs text-secondary-foreground">
-                            {label}
-                          </span>
-                          <div className="text-sm font-medium">{value}</div>
-                        </div>
-                      ))}
-                    </CardHeader>
-                    <CardContent className="p-5 lg:p-7.5 space-y-5">
-                      <TwoColCard items={STOCK_PRODUCT_DETAIL} />
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </ScrollArea>
-          </SheetBody>
-        </SheetContent>
-      </Sheet>
+      {selectedProduct && (
+        <ProductCardView
+          open={openProductDetailSheet}
+          closeProductDetailSheet={handleClose}
+          product={selectedProduct}
+        />
+      )}
     </>
   );
 };

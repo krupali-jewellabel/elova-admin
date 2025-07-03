@@ -138,7 +138,7 @@ export const PoliciesandCustomerAssurance = () => {
                   Save Draft
                 </Button>
               </Link>
-              <Link href="#" className="w-full sm:w-auto">
+              <Link href="/content-branding" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
                   className="w-full sm:w-auto bg-[#F1F1F2]"
@@ -146,7 +146,7 @@ export const PoliciesandCustomerAssurance = () => {
                   Previous
                 </Button>
               </Link>
-              <Link href="#" className="w-full sm:w-auto">
+              <Link href="/product-shopping-experience" className="w-full sm:w-auto">
                 <Button>Next</Button>
               </Link>
             </div>

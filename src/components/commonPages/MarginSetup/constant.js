@@ -139,4 +139,18 @@ export const CUSTOM_MARGIN_PRODUCTS = [
         margin: "10",
         active: <Switch size="sm" />,
     },
-]
+];
+
+export const PRODUCTS_IMAGES = [
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png",
+  "/images/products/1.png"
+];

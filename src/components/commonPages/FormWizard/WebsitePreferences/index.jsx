@@ -35,7 +35,7 @@ const WebsitePreferences = () => {
         Website Design Preferences
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:gap-7.5">
+      <div className="grid grid-cols-1 gap-5 lg:gap-7.5 max-w-[75%] mx-auto">
         {templateData.data?.length > 0 ? (
           templateData.data?.map((item, idx) => {
             return <PreferencesCard key={item.id} data={item} />;
@@ -47,21 +47,29 @@ const WebsitePreferences = () => {
         )}
       </div>
 
-      <div className="flex flex-col md:flex-row justify-center items-center gap-3 mt-8 px-4 fixed bottom-0">
-        <Link href="#" className="w-full md:w-auto">
-          <Button variant="outline" className="w-full">
-            Save Draft
-          </Button>
-        </Link>
+      <div className="w-full fixed bottom-0 px-4 mt-8 max-w-[75%] mx-auto">
+        <div className="flex flex-col md:flex-row gap-3 justify-center">
+          <Link href="#" className="w-full md:w-auto">
+            <Button variant="outline" className="w-full md:w-auto">
+              Save Draft
+            </Button>
+          </Link>
 
-        <Button
-          variant="outline"
-          className="bg-[#F1F1F2]"
-          onClick={() => router.push(previous.path)}
-        >
-          Previous
-        </Button>
-        <Button onClick={() => router.push(next.path)}>Next</Button>
+          <Button
+            variant="outline"
+            className="bg-[#F1F1F2] w-full md:w-auto"
+            onClick={() => router.push(previous.path)}
+          >
+            Previous
+          </Button>
+
+          <Button
+            className="w-full md:w-auto"
+            onClick={() => router.push(next.path)}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </>
   );

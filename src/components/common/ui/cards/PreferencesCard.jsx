@@ -7,7 +7,7 @@ import { Button } from "../button";
 
 export const PreferencesCard = ({ data }) => {
   return (
-    <Card className="max-w-full mx-auto overflow-hidden">
+    <Card className="max-w-full overflow-hidden">
       <div
         className="relative h-[230px] w-full bg-cover bg-top"
         style={{ backgroundImage: `url(${data?.cover_image})` }}
@@ -46,12 +46,12 @@ export const PreferencesCard = ({ data }) => {
           {/* Pages thumbnails Grid */}
           {data.thumbnail?.length > 0 && (
             <>
-              <div className="grid grid-cols-4 gap-5 w-full pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full pt-2">
                 {data.thumbnail.map((work) => (
                   <Card key={work.id}>
                     <CardContent
                       className={
-                        " aspect-[1/0.75] bg-muted/5 cursor-pointer p-0"
+                        "bg-muted/5 cursor-pointer p-0"
                       }
                     >
                       <img
@@ -101,7 +101,7 @@ export const PreferencesCard = ({ data }) => {
 
 // Extracted reusable component for theme info cards
 const ThemeCard = ({ title, content }) => (
-  <Card className="bg-white border-2 border-dashed border-gray-300">
+  <Card className="bg-white border-2 border-dashed border-gray-300 ">
     <CardContent className="">
       <h3 className="font-semibold text-base mb-2">{title}</h3>
       <p className="text-sm text-muted-foreground">{content}</p>
