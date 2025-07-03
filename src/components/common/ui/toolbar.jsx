@@ -1,6 +1,6 @@
 'use client'
-// import { MENU_SIDEBAR } from '@/config/menu.config';
-// import { useMenu } from '@/hooks/use-menu';
+import { MENU_SIDEBAR } from '@/config/menu.config';
+import { useMenu } from '@/hooks/use-menu';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 

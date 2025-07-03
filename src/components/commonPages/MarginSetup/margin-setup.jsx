@@ -64,7 +64,6 @@ const SliderField = ({ label, value, onChange, disabled }) => (
   </div>
 );
 
-// Price Configuration
 const MarginSetup = () => {
   const [selectedStore, setSelectedStore] = useState("1");
   const [diamondPercentage, setDiamondPercentage] = useState(5);
@@ -74,12 +73,12 @@ const MarginSetup = () => {
   const [diamondTier, setDiamondTier] = useState("intermediate");
 
   const RadioGroupField = ({ label, value, onChange, options }) => (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-6 mb-6">
       <Label className="text-sm font-medium whitespace-nowrap">{label}</Label>
       <RadioGroup
         value={value}
         onValueChange={onChange}
-        className="flex items-center gap-6 mb-5"
+        className="flex items-center gap-6"
       >
         {options.map((opt) => (
           <div key={opt.id} className="flex items-center space-x-2">
@@ -95,95 +94,102 @@ const MarginSetup = () => {
 
   return (
     <>
-      <CardTitle className="text-xl text-center text-[#1D2B4F]">
+      <CardTitle className="text-xl text-center text-[#1D2B4F] mb-4">
         Pricing and Margin
       </CardTitle>
-      <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
-        <div>
-          <RadioGroupField
-            value={diamondTier}
-            onChange={setDiamondTier}
-            options={[
-              { label: "Use Category Margin", value: "intermediate", id: "d1" },
-              { label: "Custom Margin Per Product", value: "d2", id: "d2" },
-            ]}
-          />
-          {/* LEFT: Configuration Panel */}
-          <Card>
-            <CardHeader>Pricing Margin Configuration</CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <SelectField
-                  label="Categories"
-                  value={selectedStore}
-                  onChange={setSelectedStore}
-                  options={[
-                    { label: "Ring", value: "1" },
-                    { label: "Necklace", value: "2" },
-                  ]}
-                />
+      <RadioGroupField
+        value={diamondTier}
+        onChange={setDiamondTier}
+        options={[
+          { label: "Use Category Margin", value: "intermediate", id: "d1" },
+          { label: "Custom Margin Per Product", value: "d2", id: "d2" },
+        ]}
+      />
 
-                <SliderField
-                  label="Ring Margin (%)"
-                  value={diamondPercentage}
-                  onChange={setDiamondPercentage}
-                  disabled={!isDiamondCustom}
-                />
+      {diamondTier === "intermediate" ? (
+        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
+          {/* LEFT PANEL */}
+          <div>
+            <Card>
+              <CardHeader>Pricing Margin Configuration</CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <SelectField
+                    label="Categories"
+                    value={selectedStore}
+                    onChange={setSelectedStore}
+                    options={[
+                      { label: "Ring", value: "1" },
+                      { label: "Necklace", value: "2" },
+                    ]}
+                  />
 
-                <SliderField
-                  label="Necklace Margin (%)"
-                  value={diamondPercentage}
-                  onChange={setLabourPercentage}
-                  disabled={!isLabourCustom}
-                />
+                  <SliderField
+                    label="Ring Margin (%)"
+                    value={diamondPercentage}
+                    onChange={setDiamondPercentage}
+                    disabled={!isDiamondCustom}
+                  />
 
-                <SliderField
-                  label="Wedding Band Margin (%)"
-                  value={labourPercentage}
-                  onChange={setLabourPercentage}
-                  disabled={!isLabourCustom}
-                />
+                  <SliderField
+                    label="Necklace Margin (%)"
+                    value={labourPercentage}
+                    onChange={setLabourPercentage}
+                    disabled={!isLabourCustom}
+                  />
 
-                <SliderField
-                  label="Earrings Margin (%)"
-                  value={labourPercentage}
-                  onChange={setLabourPercentage}
-                  disabled={!isLabourCustom}
-                />
+                  <SliderField
+                    label="Wedding Band Margin (%)"
+                    value={labourPercentage}
+                    onChange={setLabourPercentage}
+                    disabled={!isLabourCustom}
+                  />
 
-                <SliderField
-                  label="Bracelet Margin (%)"
-                  value={labourPercentage}
-                  onChange={setLabourPercentage}
-                  disabled={!isLabourCustom}
-                />
+                  <SliderField
+                    label="Earrings Margin (%)"
+                    value={labourPercentage}
+                    onChange={setLabourPercentage}
+                    disabled={!isLabourCustom}
+                  />
 
-                <SliderField
-                  label="Mangalsutra Margin (%)"
-                  value={labourPercentage}
-                  onChange={setLabourPercentage}
-                  disabled={!isLabourCustom}
-                />
+                  <SliderField
+                    label="Bracelet Margin (%)"
+                    value={labourPercentage}
+                    onChange={setLabourPercentage}
+                    disabled={!isLabourCustom}
+                  />
 
-                <div className="flex justify-end">
-                  <Button asChild>
-                    <Link href="#">Save Changes</Link>
-                  </Button>
+                  <SliderField
+                    label="Mangalsutra Margin (%)"
+                    value={labourPercentage}
+                    onChange={setLabourPercentage}
+                    disabled={!isLabourCustom}
+                  />
+
+                  <div className="flex justify-end">
+                    <Button asChild>
+                      <Link href="#">Save Changes</Link>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* RIGHT: Product Cards */}
-        <div>
+          {/* RIGHT PANEL */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             {PRICE_LIST.map((item) => (
               <MarginCard key={item.id} {...item} />
             ))}
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="w-full h-full min-h-[75vh] rounded-xl p-4">
+          <CustomMarginProducts />
+        </div>
+      )}
+
+      {/* Footer Buttons */}
       <div className="flex flex-col md:flex-row justify-end items-end gap-3 mt-8 px-4">
         <Link href="#" className="w-full md:w-auto">
           <Button variant="outline" className="w-full">
@@ -201,13 +207,11 @@ const MarginSetup = () => {
           <Button className="w-full">Next</Button>
         </Link>
       </div>
-
-      {/* Custom Margin Products */}
-      <CustomMarginProducts />
     </>
   );
 };
 
+// MarginCard stays the same
 const MarginCard = ({
   id,
   productImg,
@@ -223,99 +227,97 @@ const MarginCard = ({
   totalSellingPrice,
 }) => {
   return (
-    <>
-      <div className="mt-13">
-        <Card className="shadow-none">
-          <div className="rounded-t-xl relative p-[17px] w-auto h-[196px] bg-[#FCFCFC]">
-            <div className="absolute left-[17px]">
-              <Checkbox />
+    <div className="mt-13">
+      <Card className="shadow-none">
+        <div className="rounded-t-xl relative p-[17px] w-auto h-[196px] bg-[#FCFCFC]">
+          <div className="absolute left-[17px]">
+            <Checkbox />
+          </div>
+          <img
+            src={productImg}
+            alt="Product"
+            className="h-[163px] w-[163px] mx-auto object-cover"
+          />
+        </div>
+
+        <div className="card-border card-rounded-b px-3.5 pt-5 pb-3.5">
+          <div className="grid grid-cols-2 gap-4 pb-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Design Number
+              <p className="text-[14px] font-[500] text-foreground">
+                {designNo}
+              </p>
             </div>
-            <img
-              src={productImg}
-              alt="Product"
-              className="h-[163px] w-[163px] mx-auto object-cover"
-            />
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Category
+              <p className="text-[14px] font-[500] text-foreground">
+                {category}
+              </p>
+            </div>
           </div>
 
-          <div className="card-border card-rounded-b px-3.5 pt-5 pb-3.5">
-            <div className="grid grid-cols-2 gap-4 pb-4">
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Design Number
-                <p className="text-[14px] font-[500] text-foreground">
-                  {designNo}
-                </p>
-              </div>
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Category
-                <p className="text-[14px] font-[500] text-foreground">
-                  {category}
-                </p>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Diamond Store Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {diamondStorePrice}
+              </p>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Diamond Store Price
-                <p className="text-[14px] font-[500] text-foreground">
-                  {diamondStorePrice}
-                </p>
-              </div>
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Selling Price
-                <p className="text-[14px] font-[500] text-foreground">
-                  {diamondSellingPrice}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Metal Store Price
-                <p className="text-[14px] font-[500] text-foreground">
-                  {metalStorePrice}
-                </p>
-              </div>
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Selling Price
-                <p className="text-[14px] font-[500] text-foreground">
-                  {metalSellingPrice}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Labour Store Price
-                <p className="text-[14px] font-[500] text-foreground">
-                  {labourStorePrice}
-                </p>
-              </div>
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Selling Price
-                <p className="text-[14px] font-[500] text-foreground">
-                  {labourSellingPrice}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Total Store Price
-                <p className="text-[14px] font-[500] text-[#F15A29]">
-                  {totalStorePrice}
-                </p>
-              </div>
-              <div className="text-[12px] text-secondary-foreground font-[400]">
-                Total Selling Price
-                <p className="text-[14px] font-[500] text-foreground">
-                  {totalSellingPrice}
-                </p>
-              </div>
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Selling Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {diamondSellingPrice}
+              </p>
             </div>
           </div>
-        </Card>
-      </div>
-    </>
+
+          <div className="grid grid-cols-2 gap-4 pt-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Metal Store Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {metalStorePrice}
+              </p>
+            </div>
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Selling Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {metalSellingPrice}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Labour Store Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {labourStorePrice}
+              </p>
+            </div>
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Selling Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {labourSellingPrice}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Total Store Price
+              <p className="text-[14px] font-[500] text-primary">
+                {totalStorePrice}
+              </p>
+            </div>
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Total Selling Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {totalSellingPrice}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
   );
 };
 

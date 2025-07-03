@@ -258,7 +258,7 @@ export const ThemeCustomization = () => {
             Previous
           </Button>
         </Link>
-        <Link href="#" className="w-full sm:w-auto">
+        <Link href="/content-branding" className="w-full sm:w-auto">
           <Button>Next</Button>
         </Link>
       </div>

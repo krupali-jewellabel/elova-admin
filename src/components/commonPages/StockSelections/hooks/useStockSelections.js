@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/common/ui/skeleton";
 import { Button } from "@/components/common/ui/button";
 import { EyeIcon, ShoppingCart } from "lucide-react";
 
-export const useStockSelections = ({ onClick = () => {}, onView = () => {}}) => {
+export const useStockSelections = ({ onClick, onView }) => {
   return useMemo(
     () => [
       {
@@ -129,6 +129,6 @@ export const useStockSelections = ({ onClick = () => {}, onView = () => {}}) => 
         ),
       },
     ],
-    [onClick, onView]
+    [onView]
   );
 };

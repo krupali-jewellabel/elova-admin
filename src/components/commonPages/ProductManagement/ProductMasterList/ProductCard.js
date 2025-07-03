@@ -7,6 +7,7 @@ import { RiDeleteBinFill } from "@remixicon/react";
 const ProductCard = ({
   id,
   productImg,
+  title,
   designNo,
   category,
   style,
@@ -36,6 +37,14 @@ const ProductCard = ({
         />
       </div>
       <div className="card-border card-rounded-b px-3.5 pt-5 pb-3.5 ">
+        {title && (
+          <div className="text-[12px] text-secondary-foreground font-[400] pb-4">
+            Title
+            <p className="text-[14px] font-[500] text-foreground">
+              {title}
+            </p>
+          </div>
+        )}
         <div className="text-[12px] text-secondary-foreground font-[400] pb-4">
           Design No
           <p className="text-[14px] font-[500] text-foreground"> {designNo}</p>
