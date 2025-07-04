@@ -41,8 +41,12 @@ export async function handlePOST(req, apiPath, customHeaders = {}) {
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: "Failed to post data" },
-        { status: response.status }
+        { error: "Failed to post data" ,
+          data: response
+        },
+        { status: response.status ,
+          
+        }
       );
     }
 

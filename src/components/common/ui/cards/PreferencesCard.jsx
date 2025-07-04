@@ -46,18 +46,14 @@ export const PreferencesCard = ({ data }) => {
           {/* Pages thumbnails Grid */}
           {data.thumbnail?.length > 0 && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full pt-2">
-                {data.thumbnail.map((work) => (
-                  <Card key={work.id}>
-                    <CardContent
-                      className={
-                        "bg-muted/5 cursor-pointer p-0"
-                      }
-                    >
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-5 w-full pt-2">
+                {data.thumbnail.map((work, index) => (
+                  <Card key={work.id || `thumb-${index}`}>
+                    <CardContent className={"bg-muted/5 cursor-pointer p-0"}>
                       <img
                         src={work.image}
                         alt={work.title}
-                        className="w-full h-[180px] object-cover"
+                        className="w-full h-[180px] object-cover rounded-[20px]"
                       />
                     </CardContent>
                     <CardFooter className="justify-start">

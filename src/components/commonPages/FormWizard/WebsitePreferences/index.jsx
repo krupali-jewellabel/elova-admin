@@ -35,10 +35,12 @@ const WebsitePreferences = () => {
         Website Design Preferences
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:gap-7.5 max-w-[75%] mx-auto">
+      <div className="grid grid-cols-1 gap-5 lg:gap-7.5 xl:max-w-[75%] mx-auto">
         {templateData.data?.length > 0 ? (
           templateData.data?.map((item, idx) => {
-            return <PreferencesCard key={item.id} data={item} />;
+            return (
+              <PreferencesCard key={item.id || `template-${idx}`} data={item} />
+            );
           })
         ) : (
           <div className="text-center text-muted-foreground">

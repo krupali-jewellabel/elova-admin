@@ -176,9 +176,6 @@ const BusinessDetails = () => {
   useEffect(() => {
     if (stepData?.questions) {
       const newDefaultValues = createDefaultValues(stepData.questions);
-      const newSchema = createDynamicSchema(stepData.questions);
-
-      // Reset form with new default values and schema
       form.reset(newDefaultValues);
     }
   }, [stepData]);
