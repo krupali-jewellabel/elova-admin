@@ -1,10 +1,11 @@
 export const storeAdminCrud = (baseUrl) => {
   return {
-    fetchAll: async (search = "") => {
-      const params = new URLSearchParams();
-      if (search) params.append("search", search);
+    fetchAll: async () => {
+      // const params = new URLSearchParams();
+      // if (search) params.append("search", search);
 
-      const res = await fetch(`${baseUrl}?${params.toString()}`);
+      // const res = await fetch(`${baseUrl}?${params.toString()}`);
+      const res = await fetch(`${baseUrl}`);
       if (!res.ok) throw new Error("Failed to fetch data");
       return res.json();
     },
@@ -18,8 +19,9 @@ export const storeAdminCrud = (baseUrl) => {
     create: async (payload) => {
       const res = await fetch(baseUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        // body: payload,
       });
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));

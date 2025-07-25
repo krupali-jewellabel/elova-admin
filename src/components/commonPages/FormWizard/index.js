@@ -1,6 +1,6 @@
 "use client";
 import { WelcomeMessageDialog } from "@/components/common/welcome-message-dialog";
-import React, { useState } from "react";
+import React from "react";
 
 const FormWizard = () => {
   return <WelcomeMessageDialog open={true} />;

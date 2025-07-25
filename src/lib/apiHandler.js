@@ -2,9 +2,12 @@ import { NextResponse } from "next/server";
 
 const BASE_URL = process.env.API_BASE_URL || "https://api.jewellabel.in";
 
-export async function handleGET(apiPath, headers = {}) {
+export async function handleGET(apiPath, headers = {}, queryParams = {}) {
   try {
-    const res = await fetch(`${BASE_URL}${apiPath}`, {
+    const queryString = new URLSearchParams(queryParams).toString();
+    const url = `${BASE_URL}${apiPath}${queryString ? `?${queryString}` : ""}`;
+
+    const res = await fetch(url, {
       method: "GET",
       credentials: "include",
       headers,
@@ -23,30 +26,70 @@ export async function handleGET(apiPath, headers = {}) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+// export async function handlePOST(req, apiPath, customHeaders = {}) {
+//   try {
+//     // const body = await req.json();
+//     let body;
+//     const contentType = req.headers.get("content-type") || "";
+//     if (contentType.includes("application/json")) {
+//       body = await req.json();
+//     } else if (contentType.includes("multipart/form-data")) {
+//       const formData = await req.formData();
+//       body = Object.fromEntries(formData.entries()); // optional: convert to object if needed
+//     }
+//     const headers = {
+//       "Content-Type": "application/json",
+//       ...customHeaders,
+//     };
 
+//     const response = await fetch(`${BASE_URL}${apiPath}`, {
+//       method: "POST",
+//       credentials: "include",
+//       headers,
+//       body: JSON.stringify(body),
+//     });
+
+//     if (!response.ok) {
+//       return NextResponse.json(
+//         { error: "Failed to post data" },
+//         { status: response.status }
+//       );
+//     }
+
+//     const result = await response.json();
+//     return NextResponse.json(result);
+//   } catch (error) {
+//     return NextResponse.json({ error: error.message }, { status: 500 });
+//   }
+// }
 export async function handlePOST(req, apiPath, customHeaders = {}) {
   try {
-    const body = await req.json();
-    const headers = {
-      "Content-Type": "application/json",
+    const contentType = req.headers.get("content-type") || "";
+    let body;
+    let headers = {
       ...customHeaders,
     };
+
+    if (contentType.includes("application/json")) {
+      body = await req.json();
+      headers["Content-Type"] = "application/json";
+      body = JSON.stringify(body);
+    } else if (contentType.includes("multipart/form-data")) {
+      body = await req.formData(); // do not stringify!
+      // Do NOT set Content-Type, let fetch/browser set it with proper boundary
+    }
 
     const response = await fetch(`${BASE_URL}${apiPath}`, {
       method: "POST",
       credentials: "include",
       headers,
-      body: JSON.stringify(body),
+      body,
     });
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: "Failed to post data" ,
-          data: response
-        },
-        { status: response.status ,
-          
-        }
+        { error: "Failed to post data" },
+        { status: response.status }
       );
     }
 

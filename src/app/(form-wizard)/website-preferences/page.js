@@ -2,11 +2,7 @@ import WebsitePreferences from "@/components/commonPages/FormWizard/WebsitePrefe
 import React from "react";
 
 export const page = () => {
-  return (
-    <>
-      <WebsitePreferences />
-    </>
-  );
+  return <WebsitePreferences />;
 };
 
 export default page;

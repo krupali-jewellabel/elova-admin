@@ -1,8 +1,8 @@
-import BusinessDetails from "@/components/commonPages/FormWizard/BusinessDetails";
 import React from "react";
+import BusinessDetailsForm from "@/components/commonPages/FormWizard/BusinessDetailsForm";
 
 const page = () => {
-  return <BusinessDetails />;
+  return <BusinessDetailsForm />;
 };
 
 export default page;

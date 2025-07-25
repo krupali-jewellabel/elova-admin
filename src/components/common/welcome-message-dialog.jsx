@@ -40,7 +40,11 @@ export function WelcomeMessageDialog({ open }) {
             more.
           </div>
 
-          <Button onClick={() => router.push("/business-details")}>
+          <Button
+            onClick={() => {
+              router.push("/business-details");
+            }}
+          >
             Let’s Get Started
           </Button>
         </DialogBody>

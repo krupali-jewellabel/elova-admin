@@ -1,8 +1,8 @@
 import React from "react";
-import Branding from "@/components/commonPages/FormWizard/Branding";
+import BrandingForm from "@/components/commonPages/FormWizard/BrandingForm";
 
 const page = () => {
-  return <Branding />;
+  return <BrandingForm />;
 };
 
 export default page;

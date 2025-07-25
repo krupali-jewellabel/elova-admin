@@ -26,8 +26,9 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useWizardPaths } from "@/hooks/useWizardPaths";
 import { ContentLoader } from "@/components/common/ui/Loader/content-loader";
+import { useWizard } from "@/context/WizardContext";
 
-const BusinessDetails = () => {
+const BusinessDetailsForm = () => {
   const [stepData, setStepData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +36,9 @@ const BusinessDetails = () => {
   const { next, previous } = useWizardPaths();
   const { fetchAll } = useCrudApi("/api/onboarding/business-details");
   const { create } = useCrudApi("/api/store-profile");
+  const { wizardData } = useWizard();
 
+  console.log("wizardData", wizardData);
   const FIELD_MAPPING = {
     1: "business_name",
     2: "business_type",
@@ -135,13 +138,23 @@ const BusinessDetails = () => {
   };
 
   const createDefaultValues = (questions) => {
-    if (!questions || questions.length === 0) {
-      return {};
-    }
+    if (!questions || questions.length === 0) return {};
 
     const defaultValues = {};
+    const profile = wizardData?.profile || {};
     questions.forEach((question) => {
-      defaultValues[`question_${question.id}`] = "";
+      const fieldName = `question_${question.id}`;
+      let defaultValue = "";
+
+      const payloadField =
+        FIELD_MAPPING[question.id] ||
+        mapQuestionToField(question.question_text);
+
+      if (payloadField && profile[payloadField]) {
+        defaultValue = profile[payloadField];
+      }
+
+      defaultValues[fieldName] = defaultValue;
     });
 
     return defaultValues;
@@ -174,18 +187,18 @@ const BusinessDetails = () => {
   });
 
   useEffect(() => {
-    if (stepData?.questions) {
+    if (stepData?.questions && wizardData?.profile) {
       const newDefaultValues = createDefaultValues(stepData.questions);
       form.reset(newDefaultValues);
     }
-  }, [stepData]);
+  }, [stepData, wizardData]);
 
   const onSubmit = async (formValues) => {
     try {
       setLoading(true);
-
+      const profile = wizardData?.profile || {};
       const payload = {
-        store_id: "1",
+        store_id: parseInt(profile.store_id || 1, 10),
         business_name: "",
         business_type: "",
         gst_pan: "",
@@ -196,22 +209,15 @@ const BusinessDetails = () => {
 
       // Map form values to payload fields
       Object.entries(formValues).forEach(([key, value]) => {
-        const questionId = parseInt(key.replace("question_", ""));
+        const questionId = parseInt(key.replace("question_", ""), 10);
         const question = stepData.questions.find((q) => q.id === questionId);
 
-        if (question && value) {
-          let payloadField = FIELD_MAPPING[questionId];
-
-          if (!payloadField) {
-            payloadField = mapQuestionToField(question.question_text);
-          }
-
+        if (question && value?.trim()) {
+          let payloadField =
+            FIELD_MAPPING[questionId] ||
+            mapQuestionToField(question.question_text);
           if (payloadField && payload.hasOwnProperty(payloadField)) {
-            payload[payloadField] = value;
-          } else {
-            console.warn(
-              `No mapping found for question: ${question.question_text} (ID: ${questionId})`
-            );
+            payload[payloadField] = value.trim();
           }
         }
       });
@@ -351,4 +357,4 @@ const BusinessDetails = () => {
   );
 };
 
-export default BusinessDetails;
+export default BusinessDetailsForm;

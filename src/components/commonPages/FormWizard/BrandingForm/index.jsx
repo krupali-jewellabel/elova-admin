@@ -28,18 +28,23 @@ import { useCrudApi } from "@/hooks/useCrudApi";
 import { useWizardPaths } from "@/hooks/useWizardPaths";
 import { useRouter } from "next/navigation";
 import { ContentLoader } from "@/components/common/ui/Loader/content-loader";
+import { toast } from "sonner";
+import { useWizard } from "@/context/WizardContext";
 
-const Branding = () => {
+const BrandingForm = () => {
   const [stepData, setStepData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [bypassValidation, setBypassValidation] = useState(false);
+  const [actionType, setActionType] = useState("next");
   const { fetchAll } = useCrudApi("/api/onboarding/branding");
   const { create } = useCrudApi("/api/store-branding");
   const router = useRouter();
   const { next, previous } = useWizardPaths();
-
+  const { wizardData } = useWizard();
+  console.log("wizardData", wizardData);
   // Field mapping for API payload keys
   const FIELD_MAPPING = {
     33: "font_style",
@@ -212,74 +217,53 @@ const Branding = () => {
     try {
       setLoading(true);
 
-      // Log form values and errors for debugging
-      const errors = form.formState.errors;
-      console.log("Form Values:", formValues);
-      console.log("Form Errors:", errors);
-
-      if (Object.keys(errors).length > 0) {
-        setError("Form validation failed. Please check the inputs.");
-        return;
+      if (actionType === "next") {
+        const isValid = await form.trigger(); // Manually trigger validation
+        if (!isValid) {
+          setError("Form validation failed. Please check the inputs.");
+          return;
+        }
       }
 
       const formData = new FormData();
-      const payload = {};
 
-      // Map form values to payload object
       for (const [key, value] of Object.entries(formValues)) {
         const questionId = parseInt(key.replace("question_", ""));
         const question = stepData.questions.find((q) => q.id === questionId);
+        if (!question) continue;
 
-        if (question && (value || question.answer_type === "file")) {
-          let payloadKey =
-            FIELD_MAPPING[questionId] ||
-            mapQuestionToField(question.question_text);
+        const payloadKey =
+          FIELD_MAPPING[questionId] ||
+          mapQuestionToField(question.question_text);
 
-          if (payloadKey) {
-            if (question.answer_type === "file" && value) {
-              formData.append("logo_path", value); // Send file as logo_path
-              payload[payloadKey] = value; // Temporary, will be updated by server
-            } else {
-              payload[payloadKey] = value || "";
-            }
-          } else {
-            console.warn(
-              `No mapping found for question: ${question.question_text} (ID: ${questionId})`
-            );
+        if (payloadKey) {
+          if (question.answer_type === "file" && value instanceof File) {
+            formData.append(payloadKey, value);
+          } else if (question.answer_type !== "file") {
+            formData.append(payloadKey, value || "");
           }
         }
       }
-      payload["store_id"] = 1;
 
-      // Append JSON payload to FormData
-      formData.append("data", JSON.stringify(payload));
+      formData.append("store_id", "1");
 
-      // Log payload and FormData for debugging
-      console.log("Payload:", payload);
-      console.log("FormData:", Array.from(formData.entries()));
-
-      // Send POST request to /api/store-branding
-      const res = await create(formData, {
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
-      });
+      const res = await create(formData);
 
       console.log("API response:", res);
-      router.push(next.path);
+
+      if (actionType === "next") {
+        router.push(next.path);
+      } else {
+        toast.success("Draft saved successfully!");
+      }
     } catch (err) {
-      console.error("Submit error:", err.response?.data || err.message);
-      setError(
-        err.response?.data?.errors?.join(", ") ||
-          err.response?.data?.message ||
-          err.message ||
-          "Failed to submit branding details"
-      );
+      console.error("Submit error:", err);
+      setError(err.message || "Failed to submit branding details");
+      toast.error("Failed to save draft");
     } finally {
       setLoading(false);
     }
   };
-
   const mapQuestionToField = (questionText) => {
     const text = questionText.toLowerCase();
     if (text.includes("logo") || text.includes("image")) return "logo_path";
@@ -501,14 +485,28 @@ const Branding = () => {
               })}
 
               <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-10">
-                <Button variant="ghost">Save Draft</Button>
+                <Button
+                  variant="ghost"
+                  type="button"
+                  onClick={() => {
+                    setActionType("draft");
+                    onSubmit(form.getValues());
+                  }}
+                >
+                  Save Draft
+                </Button>
                 <Button
                   variant="outline"
                   onClick={() => router.push(previous.path)}
                 >
                   Previous
                 </Button>
-                <Button type="submit" disabled={loading}>
+
+                <Button
+                  type="submit"
+                  onClick={() => setActionType("next")}
+                  disabled={loading}
+                >
                   {loading ? "Submitting..." : "Next"}
                 </Button>
               </div>
@@ -520,4 +518,4 @@ const Branding = () => {
   );
 };
 
-export default Branding;
+export default BrandingForm;

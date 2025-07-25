@@ -5,9 +5,13 @@ import { AvatarSingle } from "@/components/common/ui/avatar-single";
 import Link from "next/link";
 import { Button } from "../button";
 
-export const PreferencesCard = ({ data }) => {
+export const PreferencesCard = ({ data, selected }) => {
   return (
-    <Card className="max-w-full overflow-hidden">
+    <Card
+      className={`max-w-full overflow-hidden border-2 transition-all ${
+        selected ? "border-primary shadow-md" : "border-border"
+      }`}
+    >
       <div
         className="relative h-[230px] w-full bg-cover bg-top"
         style={{ backgroundImage: `url(${data?.cover_image})` }}
