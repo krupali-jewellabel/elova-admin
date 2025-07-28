@@ -113,7 +113,7 @@ export const useStockSelections = ({ onClick, onView }) => {
         ),
         accessorFn: (row) => row.orderChannel,
         cell: ({ row }) => (
-          <div className="flex gap-[10px]">
+          <div className="flex items-center">
             <Button
               mode="icon"
               variant="outline"
@@ -122,9 +122,9 @@ export const useStockSelections = ({ onClick, onView }) => {
               <EyeIcon />
             </Button>
 
-            <Button variant="outline" className="ms-2 shrink-0">
+            {/* <Button variant="outline" className="ms-2 shrink-0">
               <ShoppingCart /> Add
-            </Button>
+            </Button> */}
           </div>
         ),
       },
