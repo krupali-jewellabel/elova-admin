@@ -115,8 +115,6 @@ export const series = [
   },
 ];
 
-
-
 export const statistics = [
   { total: "8,924", description: "Total Views" },
   { total: "10,1,154", description: "Total Add-to-Carts" },
@@ -159,5 +157,23 @@ export const PRODUCTS_IMAGES = [
   "/images/products/1.png",
   "/images/products/1.png",
   "/images/products/1.png",
-  "/images/products/1.png"
+  "/images/products/1.png",
+];
+
+export const FILTERS_CONFIG = [
+  {
+    label: "Style",
+    key: "style",
+    options: ["Show all", "Modern", "Vintage", "Classic"],
+  },
+  {
+    label: "Shape",
+    key: "shape",
+    options: ["Show all", "Round", "Oval", "Princess"],
+  },
+  {
+    label: "Price Range",
+    key: "price",
+    options: ["Show all", "₹0–10k", "₹10k–25k", "₹25k+"],
+  },
 ];
