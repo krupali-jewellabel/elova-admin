@@ -107,7 +107,7 @@ const MarginSetup = () => {
       />
 
       {diamondTier === "intermediate" ? (
-        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr] xl:grid-cols-[360px_1fr] gap-6">
           {/* LEFT PANEL */}
           <div>
             <Card>

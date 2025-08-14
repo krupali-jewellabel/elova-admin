@@ -79,7 +79,7 @@ const WebsitePreferences = () => {
       </div>
 
       <div className="w-full fixed bottom-0 px-4 mt-8 max-w-[75%] mx-auto">
-        <div className="flex flex-col md:flex-row gap-3 justify-center">
+        <div className="flex flex-col md:flex-row gap-3 justify-end">
           <Link href="#" className="w-full md:w-auto">
             <Button variant="outline" className="w-full md:w-auto">
               Save Draft
