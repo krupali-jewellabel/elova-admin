@@ -50,14 +50,14 @@ export const StoreSettingsAndLaunchPrep = () => {
 
   return (
     <Card className="flex justify-center px-4 py-10">
-      <div className="w-full max-w-8xl">
+      <div className="w-full">
         <div className="pb-2 text-center">
           <CardTitle className="text-2xl">
             Store Settings & Launch Prep
           </CardTitle>
         </div>
 
-        <CardContent className="max-w-[55%] mx-auto">
+        <CardContent className="w-full max-w-full md:max-w-3xl lg:max-w-2xl mx-auto">
           {/* Contact Info */}
           <div className="grid gap-6">
             <CardTitle className="text-base">Store Contact Info:</CardTitle>
