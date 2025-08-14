@@ -13,21 +13,20 @@ export default function FormWizardLayout({ children }) {
       try {
         const res = await axios.get("/api/wizard-steps", {
           headers: {
-            store_id: 1, // make dynamic later
+            store_id: 1,
           },
         });
 
         if (res?.data?.status && res.data?.data) {
-          console.log("✅ Loaded wizard data:", res.data);
           setWizardData({
             ...res.data.data,
             wizard: res.data.wizard,
           });
         } else {
-          console.error("❌ Unexpected API response", res.data);
+          console.error("Unexpected API response", res.data);
         }
       } catch (error) {
-        console.error("API error fetching wizard data", error);
+        // console.error("API error fetching wizard data", error);
       }
     };
 

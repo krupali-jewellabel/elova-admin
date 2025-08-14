@@ -37,18 +37,17 @@ const BrandingForm = () => {
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [bypassValidation, setBypassValidation] = useState(false);
   const [actionType, setActionType] = useState("next");
   const { fetchAll } = useCrudApi("/api/onboarding/branding");
   const { create } = useCrudApi("/api/store-branding");
   const router = useRouter();
   const { next, previous } = useWizardPaths();
   const { wizardData } = useWizard();
-  console.log("wizardData", wizardData);
+
   // Field mapping for API payload keys
   const FIELD_MAPPING = {
-    33: "font_style",
-    34: "tone_of_voice",
+    33: "tone_of_voice",
+    34: "font_style",
     35: "tagline",
     36: "branding_contact",
     37: "logo_path",
@@ -56,6 +55,10 @@ const BrandingForm = () => {
     39: "secondary_color",
     40: "store_id",
   };
+
+  console.log(
+    stepData?.questions.map((q) => ({ id: q.id, text: q.question_text }))
+  );
 
   // Dynamic Zod schema for form validation
   const createDynamicSchema = (questions) => {
@@ -153,7 +156,6 @@ const BrandingForm = () => {
 
   const fetchData = async () => {
     try {
-      console.log("Calling fetchAll for /api/onboarding/branding");
       setLoading(true);
       const res = await fetchAll();
       console.log("fetchAll response:", res);
@@ -212,44 +214,64 @@ const BrandingForm = () => {
       field.onChange(file);
     }
   };
-
   const onSubmit = async (formValues) => {
     try {
       setLoading(true);
 
       if (actionType === "next") {
-        const isValid = await form.trigger(); // Manually trigger validation
+        const isValid = await form.trigger();
         if (!isValid) {
           setError("Form validation failed. Please check the inputs.");
           return;
         }
       }
 
-      const formData = new FormData();
+      // Default payload
+      const payload = {
+        font_style: "",
+        tone_of_voice: "",
+        tagline: "",
+        branding_contact: "",
+        logo_path: "",
+        primary_color: "",
+        secondary_color: "",
+        submitted: 1,
+      };
 
+      // Loop over form values
       for (const [key, value] of Object.entries(formValues)) {
-        const questionId = parseInt(key.replace("question_", ""));
+        const questionId = parseInt(key.replace("question_", ""), 10);
         const question = stepData.questions.find((q) => q.id === questionId);
         if (!question) continue;
 
         const payloadKey =
           FIELD_MAPPING[questionId] ||
-          mapQuestionToField(question.question_text);
+          mapQuestionToField(question.question_text) ||
+          `question_${questionId}`;
+        console.log(
+          "Mapping:",
+          question.question_text,
+          "=>",
+          payloadKey,
+          "Value:",
+          value
+        );
 
-        if (payloadKey) {
-          if (question.answer_type === "file" && value instanceof File) {
-            formData.append(payloadKey, value);
-          } else if (question.answer_type !== "file") {
-            formData.append(payloadKey, value || "");
-          }
+        // If it's the tone_of_voice field → store as Base64 text
+        if (payloadKey === "tone_of_voice" && typeof value === "string") {
+          payload[payloadKey] = btoa(value); // simple Base64 for text
+        }
+        // If it's the logo_path field → convert File to Base64
+        else if (payloadKey === "logo_path" && value instanceof File) {
+          payload[payloadKey] = await fileToBase64(value);
+        }
+        // All other fields → store normally
+        else {
+          payload[payloadKey] = value ?? "";
         }
       }
 
-      formData.append("store_id", "1");
-
-      const res = await create(formData);
-
-      console.log("API response:", res);
+      await create(payload);
 
       if (actionType === "next") {
         router.push(next.path);
@@ -264,13 +286,29 @@ const BrandingForm = () => {
       setLoading(false);
     }
   };
+
+  // Helper to convert File → Base64 string
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Reads as "data:image/png;base64,..."
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
   const mapQuestionToField = (questionText) => {
     const text = questionText.toLowerCase();
     if (text.includes("logo") || text.includes("image")) return "logo_path";
     if (text.includes("primary color")) return "primary_color";
     if (text.includes("secondary color")) return "secondary_color";
     if (text.includes("font") || text.includes("style")) return "font_style";
-    if (text.includes("tone") || text.includes("voice")) return "tone_of_voice";
+    if (
+      text.includes("tone") ||
+      text.includes("voice") ||
+      text.includes("tone_of_voice")
+    )
+      return "tone_of_voice";
     if (text.includes("tagline") || text.includes("slogan")) return "tagline";
     if (text.includes("branding_contact") || text.includes("phone"))
       return "branding_contact";

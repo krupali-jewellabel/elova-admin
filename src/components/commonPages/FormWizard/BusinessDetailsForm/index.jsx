@@ -27,6 +27,8 @@ import { useRouter } from "next/navigation";
 import { useWizardPaths } from "@/hooks/useWizardPaths";
 import { ContentLoader } from "@/components/common/ui/Loader/content-loader";
 import { useWizard } from "@/context/WizardContext";
+import { useDispatch } from "react-redux";
+import { setStoreId } from "@/store/slices/storeSlice";
 
 const BusinessDetailsForm = () => {
   const [stepData, setStepData] = useState(null);
@@ -37,6 +39,7 @@ const BusinessDetailsForm = () => {
   const { fetchAll } = useCrudApi("/api/onboarding/business-details");
   const { create } = useCrudApi("/api/store-profile");
   const { wizardData } = useWizard();
+  const dispatch = useDispatch();
 
   console.log("wizardData", wizardData);
   const FIELD_MAPPING = {
@@ -194,17 +197,18 @@ const BusinessDetailsForm = () => {
   }, [stepData, wizardData]);
 
   const onSubmit = async (formValues) => {
+    debugger;
     try {
       setLoading(true);
       const profile = wizardData?.profile || {};
       const payload = {
-        store_id: parseInt(profile.store_id || 1, 10),
         business_name: "",
         business_type: "",
         gst_pan: "",
         business_email: "",
         business_contact: "",
         business_address: "",
+        submitted: 1,
       };
 
       // Map form values to payload fields
@@ -222,7 +226,14 @@ const BusinessDetailsForm = () => {
         }
       });
 
-      const res = await create(payload);
+      const response = await create(payload);
+
+      if (response?.data?.store_id) {
+        localStorage.setItem("store_id", response.data.store_id);
+
+        dispatch(setStoreId(response.data.store_id));
+      }
+
       router.push(next.path);
     } catch (err) {
       console.error("Error submitting:", err.message || err);

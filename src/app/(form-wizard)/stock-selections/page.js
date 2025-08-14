@@ -2,7 +2,7 @@
 import React from "react";
 
 import { STOCK_PRODUCT_DETAIL } from "@/components/commonPages/StockSelections/constant";
-import StockSelections from "@/components/commonPages/StockSelections/stock-selections";
+import StockSelections from "@/components/commonPages/StockSelections";
 
 const Page = () => {
   return (

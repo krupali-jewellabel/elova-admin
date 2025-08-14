@@ -11,15 +11,15 @@ import { toast } from "sonner";
 const WebsitePreferences = () => {
   const [templateData, setTemplateData] = useState({ data: [] });
   const [selectedCardId, setSelectedCardId] = useState(null);
-
-  const { fetchAll } = useCrudApi("/api/template");
-  const { create } = useCrudApi("/api/store-template");
+  const { fetchAll, create } = useCrudApi("/api/store-template");
   const router = useRouter();
   const { next, previous } = useWizardPaths();
 
   const fetchData = async () => {
+    debugger;
     try {
       const res = await fetchAll();
+      console.log("res", res);
       res?.data && Array.isArray(res.data) && setTemplateData(res);
     } catch (err) {
       console.log(err.message || "Error fetching data");
@@ -31,42 +31,18 @@ const WebsitePreferences = () => {
     fetchData();
   }, []);
 
-  // const handleNextClick = async () => {
-  //   debugger;
-  //   if (!selectedCardId) {
-  //     alert("Please select a template before proceeding.");
-  //     return;
-  //   }
-
-  //   try {
-  //     await create({
-  //       store_id: 1,
-  //       template_id: selectedCardId,
-  //     });
-
-  //     router.push(next.path);
-  //   } catch (error) {
-  //     console.error("Failed to save template selection:", error.message);
-  //     alert("Failed to save template. Please try again.");
-  //   }
-  // };
   const handleSubmit = async () => {
-    // setLoading(true);
     try {
       const payload = {
-        store_id: 1,
-        template_id: 7,
+        template_id: selectedCardId,
       };
 
-      await create(data.id, payload);
+      await create(payload);
       toast.success("Updated successfully");
-      setOpen(false);
+      router.push(next.path);
       onSuccess?.();
     } catch (err) {
-      console.error("422 error:", err.message);
-      toast.error("Failed to update. Check input data.");
     } finally {
-      // setLoading(false);
     }
   };
 
@@ -118,11 +94,7 @@ const WebsitePreferences = () => {
             Previous
           </Button>
 
-          <Button
-            className="w-full md:w-auto"
-            // onClick={() => router.push(next.path)}
-            onClick={handleSubmit}
-          >
+          <Button className="w-full md:w-auto" onClick={handleSubmit}>
             Next
           </Button>
         </div>

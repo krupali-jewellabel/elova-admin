@@ -10,13 +10,13 @@ export async function GET(req) {
     Accept: "application/json",
   };
 
-  return handleGET("/api/store-admin/get-templates", headers, {});
+  return handleGET("/api/store-admin/get-categories", headers, {});
 }
 
 export async function POST(req) {
   const authHeader = req.headers.get("authorization");
   const tenantId = req.headers.get("x-tenant-id");
-
+  
   const headers = {
     Authorization: authHeader,
     "Content-Type": "application/json",
@@ -24,5 +24,5 @@ export async function POST(req) {
     Accept: "application/json",
   };
 
-  return handlePOST(req, "/api/store-admin/store-template", headers);
+  return handlePOST(req, "/api/store-admin/store-categories", headers);
 }

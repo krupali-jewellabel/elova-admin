@@ -77,7 +77,7 @@ export const ListWithCardToggle = ({
           </ToggleGroup>
         </div>
 
-        {(renderCardView && currentMode === "cards") && (
+        {renderCardView && currentMode === "cards" && (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
             {filteredData.map(renderCardView)}
           </div>
@@ -96,12 +96,14 @@ export const ListWithCardToggle = ({
               }}
             >
               <Card>
-                <ToolbarComponent
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  pagination={pagination}
-                  setPagination={setPagination}
-                />
+                {ToolbarComponent && (
+                  <ToolbarComponent
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    pagination={pagination}
+                    setPagination={setPagination}
+                  />
+                )}
                 <CardTable>
                   <ScrollArea>
                     <DataGridTable />

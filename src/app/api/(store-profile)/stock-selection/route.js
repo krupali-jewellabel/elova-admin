@@ -1,10 +1,8 @@
 import { handleGET } from "@/lib/apiHandler";
 
 export async function GET() {
-  const storeId = 1;  
   return handleGET(
-    "/api/store-admin/get-wizard-data",
-    {},
-    { store_id: storeId }
+    "/api/store-admin/stock-selection/categories-list",
+    {}
   );
 }

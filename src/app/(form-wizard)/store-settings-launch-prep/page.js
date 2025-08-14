@@ -1,12 +1,8 @@
-import React from 'react'
-import StoreSettingsAndLaunchPrep from '@/components/commonPages/StoreSettingsAndLaunchPrep/store-settings-launch-prep'
+import SettingLaunchPrep from "@/components/commonPages/FormWizard/SettingsLaunchPrep/SettingLaunchPrep";
+import React from "react";
 
 const Page = () => {
-    return (
-        <>
-            <StoreSettingsAndLaunchPrep />
-        </>
-    )
-}
+  return <SettingLaunchPrep />;
+};
 
-export default Page
+export default Page;

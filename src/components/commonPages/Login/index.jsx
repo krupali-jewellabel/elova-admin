@@ -1,8 +1,9 @@
+"use client";
 import { Card, CardContent } from "@/components/common/ui/cards/card";
 import React from "react";
 import LoginForm from "./LoginForm";
 
-const SignIn = () => {
+const Login = () => {
   return (
     <div className="grid lg:grid-cols-2 grow h-screen">
       <div
@@ -39,4 +40,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Login;

@@ -9,5 +9,9 @@ export async function POST(req) {
     Accept: "application/json",
   };
 
-  return handlePOST(req, "/api/store-admin/store-profile", headers);
+  return handlePOST(
+    req,
+    "/api/store-admin/store-setting-and-launch-prep",
+    headers
+  );
 }

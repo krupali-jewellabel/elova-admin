@@ -49,12 +49,12 @@ export const useStockSelections = ({ onClick, onView }) => {
         size: 135,
       },
       {
-        id: "baseprice",
+        id: "base_price",
         header: ({ column }) => (
           <DataGridColumnHeader title="Base Price" column={column} />
         ),
-        accessorFn: (row) => row.baseprice,
-        cell: ({ row }) => <span>{row.original.baseprice}</span>,
+        accessorFn: (row) => row.base_price,
+        cell: ({ row }) => <span>{row.original.base_price}</span>,
         size: 135,
       },
       {
