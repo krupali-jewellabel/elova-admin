@@ -5,8 +5,6 @@ import {
   DataGridTableRowSelectAll,
 } from "@/components/common/ui/data-grid-table";
 import { Skeleton } from "@/components/common/ui/skeleton";
-import { Button } from "@/components/common/ui/button";
-import { EyeIcon, ShoppingCart } from "lucide-react";
 
 export const useStockSelections = ({ onClick, onView }) => {
   return useMemo(
@@ -20,7 +18,7 @@ export const useStockSelections = ({ onClick, onView }) => {
         size: 48,
       },
       {
-        id: "variants",
+        id: "image",
         header: ({ column }) => (
           <DataGridColumnHeader
             title="Variants"
@@ -28,9 +26,9 @@ export const useStockSelections = ({ onClick, onView }) => {
             onClick={() => onClick("Variants")}
           />
         ),
-        accessorFn: (row) => row.variantsimg,
+        accessorFn: (row) => row.image,
         cell: ({ row }) => (
-          <img src={row.original.variantsimg} className="w-[50px] h-[50px]" />
+          <img src={row.original.image} className="w-[50px] h-[50px]" />
         ),
         enableSorting: true,
         size: 100,
@@ -39,12 +37,12 @@ export const useStockSelections = ({ onClick, onView }) => {
         },
       },
       {
-        id: "name",
+        id: "variant_shape",
         header: ({ column }) => (
           <DataGridColumnHeader title="Name" column={column} />
         ),
-        accessorFn: (row) => row.name,
-        cell: ({ row }) => <p>{row.original.name}</p>,
+        accessorFn: (row) => row.variant_shape,
+        cell: ({ row }) => <p>{row.original.variant_shape}</p>,
         enableSorting: true,
         size: 135,
       },
@@ -58,31 +56,31 @@ export const useStockSelections = ({ onClick, onView }) => {
         size: 135,
       },
       {
-        id: "defaultmargin",
+        id: "store_margin",
         header: ({ column }) => (
           <DataGridColumnHeader title="Default Margin " column={column} />
         ),
-        accessorFn: (row) => row.defaultmargin,
-        cell: ({ row }) => <span>{row.original.defaultmargin}</span>,
+        accessorFn: (row) => row.store_margin,
+        cell: ({ row }) => <span>{row.original.store_margin}</span>,
         size: 135,
       },
       {
-        id: "sellingprice",
+        id: "selling_price",
         header: ({ column }) => (
           <DataGridColumnHeader title="Selling Price" column={column} />
         ),
-        accessorFn: (row) => row.sellingprice,
-        cell: ({ row }) => row.original.sellingprice,
+        accessorFn: (row) => row.selling_price,
+        cell: ({ row }) => row.original.selling_price,
         size: 135,
       },
       {
-        id: "metal",
+        id: "metal_color",
         header: ({ column }) => (
           <DataGridColumnHeader title="Metal" column={column} />
         ),
-        accessorFn: (row) => row.metal,
+        accessorFn: (row) => row.metal_color,
         cell: ({ row }) => {
-          let metals = row.original.metal;
+          let metals = row.original.metal_color;
 
           if (typeof metals === "string") {
             metals = metals.split(",").map((c) => c.trim());
@@ -100,33 +98,11 @@ export const useStockSelections = ({ onClick, onView }) => {
                   className="w-4 h-4 rounded-sm"
                   style={{ backgroundColor: color }}
                 />
-              ))}                 
+              ))}
             </div>
           );
         },
         size: 135,
-      },
-      {
-        id: "action",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Action" column={column} />
-        ),
-        accessorFn: (row) => row.orderChannel,
-        cell: ({ row }) => (
-          <div className="flex items-center">
-            <Button
-              mode="icon"
-              variant="outline"
-              onClick={() => onView(row.original)}
-            >
-              <EyeIcon />
-            </Button>
-
-            {/* <Button variant="outline" className="ms-2 shrink-0">
-              <ShoppingCart /> Add
-            </Button> */}
-          </div>
-        ),
       },
     ],
     [onView]
