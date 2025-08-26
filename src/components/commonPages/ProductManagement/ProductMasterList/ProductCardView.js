@@ -377,48 +377,6 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Product Performance Overview */}
-            <div className="my-[38px]">
-              <Card>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 mt-3">
-                    {/* Left: Chart */}
-                    <div className="flex flex-col">
-                      <div className="space-y-4 bg-white p-6  flex flex-wrap justify-between">
-                        <h2 className="text-base font-semibold">Trend Graph</h2>
-                        <Button variant="outline" onClick={handleButtonClick}>
-                          30 Jan 2025
-                          <CalendarRangeIcon />
-                        </Button>
-                      </div>
-                      <ApexChart
-                        options={options}
-                        series={series}
-                        type="area"
-                        height={300}
-                      />
-                    </div>
-
-                    {/* Right: Metric Breakdown */}
-                    <div className="p-6 rounded-lg flex flex-col justify-between w-[260px] h-[220px]">
-                      <MetricBreakdownCard
-                        total="18,325"
-                        isCurrency={true}
-                        title="Top Performing Store"
-                        badgeValue="+2.2%"
-                        badgeProps={{
-                          variant: "success",
-                          appearance: "outline",
-                          size: "sm",
-                        }}
-                        items={TOP_PERFORMING_STORE}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </ScrollArea>
         </SheetBody>
       </SheetContent>

@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/common/ui/skeleton";
 import { Button } from "@/components/common/ui/button";
 import { Edit2Icon, EyeIcon } from "lucide-react";
 
-export const useOrderListColumns = ({ orderListView, handleView }) => {
+export const useOrderListColumns = ({ onEdit, onView }) => {
   return useMemo(
     () => [
       {
@@ -27,7 +27,7 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         accessorFn: (row) => row.orderId,
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{row.original.orderId}</span>
+            <span className="text-sm font-medium">{row.original.id}</span>
           </div>
         ),
         enableSorting: true,
@@ -41,11 +41,11 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Image" column={column} />
         ),
-        accessorFn: (row) => row.image,
+        accessorFn: (row) => row.items[0]?.product?.image,
         cell: ({ row }) => (
           <img
-            src={row.original.image}
-            className="w-[50px] h-[50px] p-[9px] bg-[#F1F1F2] rounded-[6px]"
+            src={row.original.items[0]?.product?.image}
+            className="w-[50px] h-[50px] p-[9px] rounded-[6px]"
           />
         ),
         enableSorting: true,
@@ -56,8 +56,10 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Product Name" column={column} />
         ),
-        accessorFn: (row) => row.productName,
-        cell: ({ row }) => <span>{row.original.productName}</span>,
+        accessorFn: (row) => row.original?.items[0]?.product?.title || "",
+        cell: ({ row }) => (
+          <span>{row.original?.items[0]?.product?.title || ""}</span>
+        ),
         size: 135,
       },
       // {
@@ -74,8 +76,11 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Order Date" column={column} />
         ),
-        accessorFn: (row) => row.orderDate,
-        cell: ({ row }) => row.original.orderDate,
+        accessorFn: (row) => row.created_at,
+        cell: ({ row }) => {
+          const date = row.original?.created_at;
+          return date ? new Date(date).toLocaleDateString() : "-";
+        },
         size: 135,
       },
       {
@@ -83,8 +88,8 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Quantity" column={column} />
         ),
-        accessorFn: (row) => row.quantity,
-        cell: ({ row }) => <span>{row.original.quantity}</span>,
+        accessorFn: (row) => row.items[0]?.quantity,
+        cell: ({ row }) => <span>{row.original.items[0]?.quantity}</span>,
         size: 135,
       },
       {
@@ -92,8 +97,8 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Total Value" column={column} />
         ),
-        accessorFn: (row) => row.totalValue,
-        cell: ({ row }) => <span>{row.original.totalValue}</span>,
+        accessorFn: (row) => row.subtotal,
+        cell: ({ row }) => <span>{row.original.subtotal}</span>,
         size: 135,
       },
 
@@ -102,17 +107,17 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Payment Status" column={column} />
         ),
-        accessorFn: (row) => row.paymentStatus,
-        cell: ({ row }) => <span>{row.original.paymentStatus}</span>,
+        accessorFn: (row) => row.payment_status,
+        cell: ({ row }) => <span>{row.original.payment_status}</span>,
         size: 135,
       },
       {
         id: "fulfilmentStatus",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Fulfilment Status" column={column} />
+          <DataGridColumnHeader title="Order Status" column={column} />
         ),
-        accessorFn: (row) => row.fulfilmentStatus,
-        cell: ({ row }) => <span>{row.original.fulfilmentStatus}</span>,
+        accessorFn: (row) => row.order_status,
+        cell: ({ row }) => <span>{row.original.order_status}</span>,
         size: 135,
       },
       {
@@ -120,8 +125,8 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Order Channel" column={column} />
         ),
-        accessorFn: (row) => row.orderChannel,
-        cell: ({ row }) => <span>{row.original.orderChannel}</span>,
+        accessorFn: (row) => row.payment_method,
+        cell: ({ row }) => <span>{row.original.payment_method}</span>,
         size: 130,
       },
       {
@@ -132,14 +137,20 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         accessorFn: (row) => row.orderChannel,
         cell: ({ row }) => (
           <div className="flex gap-[10px]">
-            <Button mode="icon" variant="outline">
+            <Button
+              mode="icon"
+              variant="outline"
+              onClick={() => onEdit(row.original)}
+            >
               <Edit2Icon />
             </Button>
 
             <Button
               mode="icon"
               variant="outline"
-              onClick={() => handleView(row.original)}
+              onClick={() => {
+                onView(row.original.id);
+              }}
             >
               <EyeIcon />
             </Button>
@@ -147,6 +158,6 @@ export const useOrderListColumns = ({ orderListView, handleView }) => {
         ),
       },
     ],
-    [handleView, orderListView]
+    [onEdit, onView]
   );
 };

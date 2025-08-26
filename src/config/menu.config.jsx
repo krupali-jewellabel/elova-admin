@@ -92,21 +92,31 @@ export const MENU_SIDEBAR = [
         title: "My Products",
         children: [
           { title: "Product List", path: "/product-management/my-products" },
-          {
-            title: "Edit Product Info",
-            path: "/store-detail-view/assign-products",
-          },
+          // {
+          //   title: "Edit Product Info",
+          //   path: "/store-detail-view/assign-products",
+          // },
           {
             title: "Product Detail View",
             path: "/product-management/category",
           },
         ],
       },
+      // {
+      //   title: "Browse Other Products",
+      //   path: "/account/notifications",
+      // },
+      // { title: "Product History & Logs", path: "/public-profile/works" },
+    ],
+  },
+  {
+    title: "Customer Data",
+    icon: Users,
+    children: [
       {
-        title: "Browse Other Products",
-        path: "/account/notifications",
+        title: "All Customers",
+        path: "/customer-data",
       },
-      { title: "Product History & Logs", path: "/public-profile/works" },
     ],
   },
   {
@@ -117,11 +127,14 @@ export const MENU_SIDEBAR = [
         title: "Apply Margin",
         children: [
           { title: "By Category", path: "/pricing-margin/by-category" },
-          { title: "By Individual Products", path: "/pricing-margin/by-individual" },
+          {
+            title: "By Individual Products",
+            path: "/pricing-margin/by-individual",
+          },
         ],
       },
-      { title: "Real-Time Price Preview", path: "/account/notifications" },
-      { title: "Margin Rules & Limits", path: "/account/api-keys" },
+      // { title: "Real-Time Price Preview", path: "/account/notifications" },
+      // { title: "Margin Rules & Limits", path: "/account/api-keys" },
     ],
   },
   {
@@ -129,38 +142,50 @@ export const MENU_SIDEBAR = [
     icon: ListChecks,
     children: [
       { title: "All Orders", path: "/order-management/all" },
-      { title: "Fulfilled Orders", path: "/order-management/fulfilled" },
-      { title: "In Transit Orders", path: "/order-management/in-transit" },
+      // { title: "Fulfilled Orders", path: "/order-management/fulfilled" },
+      // { title: "In Transit Orders", path: "/order-management/in-transit" },
       {
         title: "Return/ Repair Orders",
         path: "/order-management/return-repair",
       },
-      { title: "Manual Order Entry", path: "/order-management/manual" },
-      { title: "Invoices & Receipts", path: "/order-management/invoices" },
+      // { title: "Manual Order Entry", path: "/order-management/manual" },
+      // { title: "Invoices & Receipts", path: "/order-management/invoices" },
     ],
   },
   {
     title: "Custom Jewelry",
     icon: ArrowUpNarrowWideIcon,
     children: [
-      { title: "All Custom Requests", path: "/custom-jewelary/all-custom-request" },
       {
-        title: "Request Details View",
-        path: "/custom-jewelary",
+        title: "All Custom Requests",
+        path: "/custom-jewelary/all-custom-request",
       },
-      {
-        title: "Quotation and CAD File",
-        path: "/pricing-margin/pricing-tier-rule",
-      },
-      { title: "Communication", path: "/pricing-margin/store-lists" },
+      // {
+      //   title: "Request Details View",
+      //   path: "/custom-jewelary",
+      // },
+      // {
+      //   title: "Quotation and CAD File",
+      //   path: "/pricing-margin/pricing-tier-rule",
+      // },
+      // { title: "Communication", path: "/pricing-margin/store-lists" },
     ],
   },
+  // {
+  //   title: "Content & Branding",
+  //   icon: ArrowUpNarrowWideIcon,
+  //   children: [
+  //     { title: "Store Branding", path: "/custom-request" },
+  //     { title: "Request Website Content", path: "/custom-requests-details" },
+  //   ],
+  // },
   {
-    title: "Content & Branding",
-    icon: ArrowUpNarrowWideIcon,
+    title: "Coupons Management",
+    icon: Settings,
     children: [
-      { title: "Store Branding", path: "/custom-request" },
-      { title: "Request Website Content", path: "/custom-requests-details" },
+      { title: "Coupons", path: "/coupons-management" },
+      // { title: "Notifications", path: "/social/accounts" },
+      // { title: "Jewel Label Announcements", path: "/social/performance" },
     ],
   },
   {
@@ -168,23 +193,23 @@ export const MENU_SIDEBAR = [
     icon: PieChart,
     children: [
       { title: "Internal Support Tickets", path: "/support" },
-      { title: "Notifications", path: "/social/accounts" },
-      { title: "Jewel Label Announcements", path: "/social/performance" },
+      // { title: "Notifications", path: "/social/accounts" },
+      // { title: "Jewel Label Announcements", path: "/social/performance" },
     ],
   },
-  {
-    title: "Reports & Analytics",
-    icon: ChartNoAxesCombined,
-    children: [
-      { title: "Sales Reports", path: "/users/super-admins" },
-      {
-        title: "Product Performance Metrics",
-        path: "/users/roles-permissions",
-      },
-      { title: "Revenue Breakdown", path: "/users/activity-logs" },
-      { title: "Low Performing Products", path: "/users/access-audit" },
-    ],
-  },
+  // {
+  //   title: "Reports & Analytics",
+  //   icon: ChartNoAxesCombined,
+  //   children: [
+  //     { title: "Sales Reports", path: "/users/super-admins" },
+  //     {
+  //       title: "Product Performance Metrics",
+  //       path: "/users/roles-permissions",
+  //     },
+  //     { title: "Revenue Breakdown", path: "/users/activity-logs" },
+  //     { title: "Low Performing Products", path: "/users/access-audit" },
+  //   ],
+  // },
   {
     title: "Settings & Permissions",
     icon: Settings,
@@ -197,7 +222,7 @@ export const MENU_SIDEBAR = [
   },
   {
     title: "Support & Help",
-    icon: Users,
+    icon: HelpCircle,
     children: [
       { title: "Support Ticket", path: "/support/tickets" },
       { title: "Live Chat Support", path: "/support/communication-log" },
