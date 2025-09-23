@@ -122,21 +122,25 @@ const AllOrders = () => {
       setEditData(item);
       setDialogOpen(true);
     },
-    onView: (item) => {debugger
+    onView: (item) => {
       setOrderListView(true);
       setSelectedOrderId(item);
     },
   });
 
   const filterOptions = (data, query) => {
+    if (!query) return data;
+
     const searchLower = query.toLowerCase();
 
     return data.filter((item) => {
-      const category = item?.title?.toLowerCase() || "";
+      const orderId = item?.id?.toString().toLowerCase() || "";
+      const productName = item?.items?.[0]?.product?.title?.toLowerCase() || "";
 
-      return category.includes(searchLower);
+      return orderId.includes(searchLower) || productName.includes(searchLower);
     });
   };
+
   if (error) return <div>Error: {error}</div>;
   // const columns = useOrderListColumns({ orderListView, handleView });
 
@@ -194,10 +198,6 @@ const AllOrders = () => {
         open={orderListView}
         onClose={() => setOrderListView(!orderListView)}
         orderDetails={Array.isArray(editData) ? editData : []}
-
-        // orderId={selectedOrderId} // ✅ Pass selected orderId
-        // open={orderListView}
-        // onClose={() => setOrderListView(false)}
       />
       {/* )} */}
     </>

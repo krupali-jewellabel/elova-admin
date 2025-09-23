@@ -42,7 +42,8 @@ export function WelcomeMessageDialog({ open }) {
 
           <Button
             onClick={() => {
-              router.push("/business-details");
+              // router.push("/business-details");
+              router.push("/dashboard");
             }}
           >
             Let’s Get Started

@@ -45,9 +45,9 @@ const CheckIcon = ({ active = true }) => (
   </svg>
 );
 
-const ViewOrders = ({ open, onClose, orderDetails }) => {
-
-  const order = orderDetails;
+const ViewOrders = ({ open, onClose, orderDetails, orders }) => {
+  // const order = orderDetails;
+  const OrderData = orders?.data ?? {};
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -62,23 +62,23 @@ const ViewOrders = ({ open, onClose, orderDetails }) => {
                 <Card>
                   <CardHeader className="justify-start bg-muted/70 gap-9 h-auto py-5">
                     {[
-                      ["Order ID", order?.id],
-                      [
-                        "Order placed",
-                        order?.created_at
-                          ? new Date(order.created_at).toLocaleDateString(
-                              "en-GB",
-                              {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              }
-                            )
-                          : "-",
-                      ],
-                      ["Total", `$${order?.total}`],
-                      ["Ship to", `${order?.first_name} ${order?.last_name}`],
-                      ["Estimated Delivery", "07 July, 2025"],
+                      ["Order ID", OrderData?.id],
+                      // [
+                      //   "Order placed",
+                      //   order?.created_at
+                      //     ? new Date(order.created_at).toLocaleDateString(
+                      //         "en-GB",
+                      //         {
+                      //           day: "2-digit",
+                      //           month: "short",
+                      //           year: "numeric",
+                      //         }
+                      //       )
+                      //     : "-",
+                      // ],
+                      // ["Total", `$${order?.total}`],
+                      // ["Ship to", `${order?.first_name} ${order?.last_name}`],
+                      // ["Estimated Delivery", "07 July, 2025"],
                     ].map(([label, value], i) => (
                       <div key={i}>
                         <span className="text-xs text-secondary-foreground">
@@ -89,9 +89,9 @@ const ViewOrders = ({ open, onClose, orderDetails }) => {
                     ))}
                   </CardHeader>
 
-                  <CardContent className="p-5 lg:p-7.5 space-y-5">
+                  {/* <CardContent className="p-5 lg:p-7.5 space-y-5">
                     <TwoColCard items={order?.items || []} limit={4} />
-                  </CardContent>
+                  </CardContent> */}
                 </Card>
               </div>
             </div>

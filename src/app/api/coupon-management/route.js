@@ -96,7 +96,7 @@ export async function GET(req) {
   const headers = {
     Authorization: authHeader,
     "Content-Type": "application/json",
-    "x-tenant-id": tenantId || 5, // ✅ dynamic or fallback
+    "x-tenant-id": tenantId || 5,
     Accept: "application/json",
   };
 
@@ -110,7 +110,7 @@ export async function POST(req) {
   const headers = {
     Authorization: authHeader,
     "Content-Type": "application/json",
-    "x-tenant-id": tenantId || 5, // ✅ added
+    "x-tenant-id": tenantId || 5,
     Accept: "application/json",
     "X-XSRF-TOKEN": req.headers.get("x-xsrf-token") || "",
     Cookie: req.headers.get("cookie") || "",

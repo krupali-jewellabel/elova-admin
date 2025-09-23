@@ -375,8 +375,8 @@ export const useProductListColumns = ({
         header: ({ column }) => (
           <DataGridColumnHeader title="Sales Price" column={column} />
         ),
-        accessorFn: (row) => row.salesPrice,
-        cell: ({ row }) => `₹${row.original.salesPrice || 0}`,
+        accessorFn: (row) => row.sales_price,
+        cell: ({ row }) => `₹${row.original.sales_price || 0}`,
         size: 120,
       },
       {

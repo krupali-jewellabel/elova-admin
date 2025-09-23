@@ -6,7 +6,7 @@ import {
 } from "@/components/common/ui/data-grid-table";
 import { Skeleton } from "@/components/common/ui/skeleton";
 
-export const useStockSelections = ({ onClick, onView }) => {
+export const useBrowseColumns = ({ onClick, onView }) => {
   return useMemo(
     () => [
       {

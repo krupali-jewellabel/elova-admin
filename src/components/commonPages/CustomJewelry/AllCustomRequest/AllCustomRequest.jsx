@@ -1,20 +1,39 @@
 "use client";
+
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
-import React from "react";
-import { CUSTOM_REQUEST_DATA } from "../constant";
+import React, { useState, useMemo } from "react";
 import useCustomRequestColumn from "../useCustomRequestColumn";
-import { useFilteredStoreData } from "../../ProductManagement/hooks/useFilteredStoreData";
 import { DataGridToolbar } from "@/components/common/DataGridToolBar";
+import { useCrudList } from "@/hooks/useCrudList";
 
 const AllCustomRequest = () => {
+  const { list } = useCrudList("/api/custom-request");
   const columns = useCustomRequestColumn();
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredList = useMemo(() => {
+    if (!searchQuery) return list;
+
+    return list?.filter((item) =>
+      String(item.category?.name || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, list]);
+
   return (
     <ListWithCardToggle
       title="All Custom Requests"
-      data={CUSTOM_REQUEST_DATA}
+      data={filteredList}
       columns={columns}
-      useFilteredData={useFilteredStoreData}
-      ToolbarComponent={DataGridToolbar}
+      ToolbarComponent={(props) => (
+        <DataGridToolbar
+          {...props}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+      )}
     />
   );
 };

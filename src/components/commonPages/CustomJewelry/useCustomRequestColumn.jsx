@@ -30,8 +30,8 @@ const useCustomRequestColumn = () => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Requested On" column={column} />
         ),
-        accessorFn: (row) => row.request_id,
-        cell: ({ row }) => <span>{row.original.request_id}</span>,
+        accessorFn: (row) => row.id,
+        cell: ({ row }) => <span>{row.original.id}</span>,
         size: 135,
       },
       {
@@ -39,8 +39,8 @@ const useCustomRequestColumn = () => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Type" column={column} />
         ),
-        accessorFn: (row) => row.type,
-        cell: ({ row }) => <span>{row.original.type}</span>,
+        accessorFn: (row) => row.category?.name,
+        cell: ({ row }) => <span>{row.original.category?.name}</span>,
         size: 135,
       },
       {
@@ -48,8 +48,15 @@ const useCustomRequestColumn = () => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Requested On" column={column} />
         ),
-        accessorFn: (row) => row.requestedOn,
-        cell: ({ row }) => row.original.requestedOn,
+        accessorFn: (row) => row.created_at,
+        cell: ({ row }) => {
+          const date = new Date(row.original.created_at);
+          return date.toLocaleDateString("en-GB", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+          });
+        },
         size: 135,
       },
       {
@@ -71,32 +78,32 @@ const useCustomRequestColumn = () => {
         size: 135,
       },
 
-      {
-        id: "assignedDesigner",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Assigned Designer" column={column} />
-        ),
-        accessorFn: (row) => row.assignedDesigner,
-        cell: ({ row }) => <span>{row.original.assignedDesigner}</span>,
-        size: 135,
-      },
+      // {
+      //   id: "assignedDesigner",
+      //   header: ({ column }) => (
+      //     <DataGridColumnHeader title="Assigned Designer" column={column} />
+      //   ),
+      //   accessorFn: (row) => row.assignedDesigner,
+      //   cell: ({ row }) => <span>{row.original.assignedDesigner}</span>,
+      //   size: 135,
+      // },
 
-      {
-        id: "action",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Action" column={column} />
-        ),
-        accessorFn: (row) => row.orderChannel,
-        cell: ({ row }) => (
-          <Button
-            mode="icon"
-            variant="outline"
-            onClick={() => handleView(row.original)}
-          >
-            <EyeIcon />
-          </Button>
-        ),
-      },
+      // {
+      //   id: "action",
+      //   header: ({ column }) => (
+      //     <DataGridColumnHeader title="Action" column={column} />
+      //   ),
+      //   accessorFn: (row) => row.orderChannel,
+      //   cell: ({ row }) => (
+      //     <Button
+      //       mode="icon"
+      //       variant="outline"
+      //       onClick={() => handleView(row.original)}
+      //     >
+      //       <EyeIcon />
+      //     </Button>
+      //   ),
+      // },
     ],
     []
   );

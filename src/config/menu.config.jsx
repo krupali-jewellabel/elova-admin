@@ -92,20 +92,20 @@ export const MENU_SIDEBAR = [
         title: "My Products",
         children: [
           { title: "Product List", path: "/product-management/my-products" },
-          // {
-          //   title: "Edit Product Info",
-          //   path: "/store-detail-view/assign-products",
-          // },
+          {
+            title: "Edit Product Info",
+            path: "/store-detail-view/assign-products",
+          },
           {
             title: "Product Detail View",
             path: "/product-management/category",
           },
         ],
       },
-      // {
-      //   title: "Browse Other Products",
-      //   path: "/account/notifications",
-      // },
+      {
+        title: "Browse Other Products",
+        path: "/product-management/browse-products",
+      },
       // { title: "Product History & Logs", path: "/public-profile/works" },
     ],
   },
@@ -188,15 +188,15 @@ export const MENU_SIDEBAR = [
       // { title: "Jewel Label Announcements", path: "/social/performance" },
     ],
   },
-  {
-    title: "Customers & Com",
-    icon: PieChart,
-    children: [
-      { title: "Internal Support Tickets", path: "/support" },
-      // { title: "Notifications", path: "/social/accounts" },
-      // { title: "Jewel Label Announcements", path: "/social/performance" },
-    ],
-  },
+  // {
+  //   title: "Customers & Com",
+  //   icon: PieChart,
+  //   children: [
+  //     { title: "Internal Support Tickets", path: "/support" },
+  //     // { title: "Notifications", path: "/social/accounts" },
+  //     // { title: "Jewel Label Announcements", path: "/social/performance" },
+  //   ],
+  // },
   // {
   //   title: "Reports & Analytics",
   //   icon: ChartNoAxesCombined,
@@ -210,29 +210,29 @@ export const MENU_SIDEBAR = [
   //     { title: "Low Performing Products", path: "/users/access-audit" },
   //   ],
   // },
-  {
-    title: "Settings & Permissions",
-    icon: Settings,
-    children: [
-      { title: "Store Profile", path: "/support/tickets" },
-      { title: "Team Member Management", path: "/support/communication-log" },
-      { title: "Custom Domain Settings", path: "/support/notifications" },
-      { title: "Store Preferences", path: "/support/announcements" },
-    ],
-  },
-  {
-    title: "Support & Help",
-    icon: HelpCircle,
-    children: [
-      { title: "Support Ticket", path: "/support/tickets" },
-      { title: "Live Chat Support", path: "/support/communication-log" },
-      {
-        title: "Help Center / Documentation",
-        path: "/support/communication-log",
-      },
-      { title: "Tutorial Videos", path: "/support/communication-log" },
-    ],
-  },
+  // {
+  //   title: "Settings & Permissions",
+  //   icon: Settings,
+  //   children: [
+  //     { title: "Store Profile", path: "/support/tickets" },
+  //     { title: "Team Member Management", path: "/support/communication-log" },
+  //     { title: "Custom Domain Settings", path: "/support/notifications" },
+  //     { title: "Store Preferences", path: "/support/announcements" },
+  //   ],
+  // },
+  // {
+  //   title: "Support & Help",
+  //   icon: HelpCircle,
+  //   children: [
+  //     { title: "Support Ticket", path: "/support/tickets" },
+  //     { title: "Live Chat Support", path: "/support/communication-log" },
+  //     {
+  //       title: "Help Center / Documentation",
+  //       path: "/support/communication-log",
+  //     },
+  //     { title: "Tutorial Videos", path: "/support/communication-log" },
+  //   ],
+  // },
 ];
 
 export const MENU_SIDEBAR_CUSTOM = [

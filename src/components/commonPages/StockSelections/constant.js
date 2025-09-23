@@ -9,6 +9,14 @@ export const STOCK_PRODUCT_DETAIL = [
     category: "Sneakers",
     image: "/images/ring.png",
   },
+  {
+    id: "1101-01111",
+    title: "Engagement",
+    style: "Solitaire",
+    collection: "Best Seller",
+    category: "Sneakers",
+    image: "/images/ring.png",
+  },
 ];
 
 export const STOCK_DETAIL = [
