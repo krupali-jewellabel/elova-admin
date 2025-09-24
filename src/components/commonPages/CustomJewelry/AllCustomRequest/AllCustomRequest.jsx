@@ -27,13 +27,6 @@ const AllCustomRequest = () => {
       title="All Custom Requests"
       data={filteredList}
       columns={columns}
-      ToolbarComponent={(props) => (
-        <DataGridToolbar
-          {...props}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
-      )}
     />
   );
 };

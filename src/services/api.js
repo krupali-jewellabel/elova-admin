@@ -10,24 +10,60 @@ export const apiGet = async (url, token) => {
   return res.json();
 };
 
-export const apiPost = async (url, body) => {
-  const token = localStorage.getItem("token");
-  const storeId = localStorage.getItem("store_id");
+// export const apiPost = async (url, body) => {
+//   const token = localStorage.getItem("token");
+//   const storeId = localStorage.getItem("store_id");
 
+//   const response = await fetch(url, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       ...(token && { Authorization: `Bearer ${token}` }),
+//       ...(storeId && { "X-Tenant-Id": storeId }),
+//     },
+//     body: JSON.stringify(body),
+//   });
+
+//   const result = await response.json();
+
+//   if (!response.ok) {
+//     throw result;
+//   }
+
+//   return result;
+// };
+
+export const apiPost = async (url, body) => {
+  const token = localStorage.getItem("authTokenStoreAdmin");
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...(storeId && { "X-Tenant-Id": storeId }),
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+      "x-tenant-id": process.env.NEXT_PUBLIC_TENANT_ID,
     },
+    credentials: "include",
     body: JSON.stringify(body),
   });
 
-  const result = await response.json();
+  const text = await response.text();
+
+  let result;
+  try {
+    result = text ? JSON.parse(text) : null;
+  } catch {
+    result = text;
+  }
 
   if (!response.ok) {
-    throw result;
+    // always throw an object with message
+    throw {
+      message:
+        (result && result.message) ||
+        (typeof result === "string" ? result : null) ||
+        "Request failed",
+    };
   }
 
   return result;

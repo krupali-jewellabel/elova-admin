@@ -1,7 +1,9 @@
 export const storeAdminCrud = (baseUrl) => {
   const getAuthHeaders = () => {
     const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      typeof window !== "undefined"
+        ? localStorage.getItem("authTokenStoreAdmin")
+        : null;
     const storeId =
       typeof window !== "undefined" ? localStorage.getItem("store_id") : null;
 

@@ -16,7 +16,7 @@ const SidebarHeader = () => {
   };
 
   return (
-    <div className="sidebar-header hidden lg:flex items-center relative justify-between px-3 lg:px-6 shrink-0">
+    <div className="sidebar-header hidden lg:flex items-center relative justify-between px-3 lg:px-6 shrink-0 py-5">
       <Link href="/">
         <div>
           <img

@@ -16,7 +16,6 @@ const WebsitePreferences = () => {
   const { next, previous } = useWizardPaths();
 
   const fetchData = async () => {
-    debugger;
     try {
       const res = await fetchAll();
       console.log("res", res);

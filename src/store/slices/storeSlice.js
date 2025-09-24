@@ -7,7 +7,6 @@ const storeSlice = createSlice({
   },
   reducers: {
     setStoreId: (state, action) => {
-      debugger;
       state.storeId = action.payload;
     },
   },

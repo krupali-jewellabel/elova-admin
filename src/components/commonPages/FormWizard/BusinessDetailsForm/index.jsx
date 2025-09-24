@@ -197,7 +197,6 @@ const BusinessDetailsForm = () => {
   }, [stepData, wizardData]);
 
   const onSubmit = async (formValues) => {
-    debugger;
     try {
       setLoading(true);
       const profile = wizardData?.profile || {};

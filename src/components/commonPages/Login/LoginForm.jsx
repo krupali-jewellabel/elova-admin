@@ -17,8 +17,8 @@ import { Button } from "@/components/common/ui/button";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Checkbox } from "@/components/common/ui/checkbox";
-import { loginUser } from "@/store/slices/authSlice";
 import { toast } from "sonner";
+import { loginUser } from "@/store/authThunks";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -41,36 +41,18 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values) => {
-    setError(null);
-
     try {
-      const resultAction = await dispatch(
+      await dispatch(
         loginUser({
           email: values.email,
           password: values.password,
           remember: values.rememberMe,
         })
-      );
+      ).unwrap();
 
-      if (loginUser.fulfilled.match(resultAction)) {
-        const data = resultAction.payload;
-
-        // Store token in localStorage (optional, for client-side use)
-        localStorage.setItem("token", data.token);
-
-        // Also set cookie so middleware can read it server-side
-        document.cookie = `token=${data.token}; path=/; max-age=86400; secure; samesite=strict`;
-
-        toast.success("Login Successfully");
-
-        // Redirect to wizard immediately
-        router.push("/");
-      } else {
-        throw new Error(resultAction.payload || "Login failed");
-      }
+      router.push("/");
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Invalid credentials. Please try again.");
+      toast.error(err?.message || String(err) || "Login failed");
     }
   };
 
@@ -118,6 +100,7 @@ const LoginForm = () => {
               <div className="relative">
                 <Input
                   placeholder="Your password"
+                  autoComplete="current-password"
                   type={passwordVisible ? "text" : "password"}
                   {...field}
                 />

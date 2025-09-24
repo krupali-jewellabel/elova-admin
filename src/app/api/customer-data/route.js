@@ -1,6 +1,5 @@
 import { handleGET } from "@/lib/apiHandler";
 
-// ✅ GET orders list
 export async function GET(req) {
   const authHeader = req.headers.get("authorization");
   const tenantId = req.headers.get("x-tenant-id");

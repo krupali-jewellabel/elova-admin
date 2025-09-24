@@ -56,13 +56,6 @@ const AllCustomer = () => {
       data={filteredData}
       columns={columns}
       useFilteredData={null}
-      ToolbarComponent={(props) => (
-        <DataGridToolbar
-          {...props}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
-      )}
       loading={loading}
     />
   );
