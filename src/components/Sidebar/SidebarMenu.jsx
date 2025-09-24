@@ -14,6 +14,7 @@ import {
   AccordionMenuSubContent,
   AccordionMenuSubTrigger,
 } from "../common/ui/accordion-menu";
+import { LogOutIcon } from "lucide-react";
 
 const SidebarMenu = () => {
   const pathname = usePathname();
@@ -89,17 +90,38 @@ const SidebarMenu = () => {
     });
 
   return (
-    <div className="overflow-y-auto py-5 px-5 max-h-[calc(100vh-5.5rem)] custom-scrollbar">
-      <AccordionMenu
-        selectedValue={pathname}
-        matchPath={matchPath}
-        type="single"
-        collapsible
-        classNames={classNames}
-      >
-        {renderMenu(MENU_SIDEBAR)}
-      </AccordionMenu>
-    </div>
+    <>
+      <div className="overflow-y-auto py-5 px-5 max-h-[calc(100vh-5.5rem)] custom-scrollbar">
+        <AccordionMenu
+          selectedValue={pathname}
+          matchPath={matchPath}
+          type="single"
+          collapsible
+          classNames={classNames}
+        >
+          {renderMenu(MENU_SIDEBAR)}
+        </AccordionMenu>
+      </div>
+
+      <div className="p-5 w-full sticky bottom-0 mt-100">
+        <div className="flex items-center gap-3">
+          <img
+            className="size-10 rounded-full border-2 border-success shrink-0"
+            src="/images/avatars/300-2.png"
+            alt="User Avatar"
+          />
+          <div className="flex flex-col">
+            <span className="font-semibold">Harper Nelson</span>
+            <span className="text-sm">Admin Manager</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 mt-4 cursor-pointer hover:text-primary group">
+          <LogOutIcon className="h-5 w-5 group-hover:text-primary" />
+          <span className="group-hover:text-primary">Logout</span>
+        </div>
+      </div>
+    </>
   );
 };
 

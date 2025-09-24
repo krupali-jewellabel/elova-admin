@@ -1,16 +1,29 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useBrowseColumns } from "./ProductMasterList/hooks/useBrowseColumns";
 import { Button } from "@/components/common/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/common/ui/select";
-import { BROWSE_PRODUCTS, FILTERS, FILTERS_CONFIG, PRODUCTS_DETAILS } from "./constant";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/common/ui/select";
+import {
+  BROWSE_PRODUCTS,
+  FILTERS,
+  FILTERS_CONFIG,
+  PRODUCTS_DETAILS,
+} from "./constant";
 import { toTitleCase } from "@/lib/utils";
 import { Card, CardHeader } from "@/components/common/ui/cards/card";
 import Link from "next/link";
 import { useFilteredStoreData } from "../StockSelections/hooks/useFilteredData";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
 import { ShoppingCart } from "lucide-react";
+import { useCrudApi } from "@/hooks/useCrudApi";
+import { Skeleton } from "@/components/common/ui/skeleton";
 
 const StockSelectionCard = ({ product, onView }) => {
   return (
@@ -51,6 +64,10 @@ const BrowseProducts = () => {
   const [openProductDetailSheet, setOpenProductDetailSheet] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [filters, setFilters] = useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   const handleView = useCallback((product) => {
     setSelectedProduct(product);
@@ -66,6 +83,47 @@ const BrowseProducts = () => {
     onView: handleView,
   });
 
+  const { fetchAll } = useCrudApi("/api/product-management/category");
+
+  const { fetchAll: filterOptions } = useCrudApi(
+    "/api/stock-selection/stock-filter-options"
+  );
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const categoriesRes = await fetchAll();
+      if (Array.isArray(categoriesRes?.data)) setCategories(categoriesRes.data);
+
+      const filterOptionsRes = await filterOptions();
+      if (filterOptionsRes?.data) {
+        const dropdownData = Object.entries(filterOptionsRes.data).map(
+          ([key, arr]) => ({
+            key: key || `filter-${Math.random()}`,
+            label: key
+              ? key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+              : "Unnamed Filter",
+            options: Array.isArray(arr)
+              ? arr.map((item, idx) => ({
+                  value: String(item.id || idx),
+                  label: item.name || item.value || `Option ${idx + 1}`,
+                }))
+              : [],
+          })
+        );
+        setFilters({ data: dropdownData });
+      }
+    } catch (err) {
+      console.error("Error fetching categories/filters:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col space-y-[10px]">
@@ -76,21 +134,33 @@ const BrowseProducts = () => {
           </Button>
 
           <div className="relative">
-            <Select
-              value={selectedCategory}
-              onValueChange={(val) => setSelectedCategory(val)}
-            >
-              <SelectTrigger className="w-fit min-w-[150px]">
-                <SelectValue placeholder="Select Category" />
-              </SelectTrigger>
-              <SelectContent>
-                {BROWSE_PRODUCTS.map((item) => (
-                  <SelectItem key={item.id} value={item.id.toString()}>
-                    {toTitleCase(item.title)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {loading ? (
+              <Skeleton className="h-10 w-[150px]" />
+            ) : (
+              <Select
+                value={selectedCategory}
+                onValueChange={(val) => {
+                  setSelectedCategory(val);
+                  setSelectedSubCategory("");
+                  setProductsData({ products: [], sub_categories: [] });
+                  console.log("Category selected:", val);
+                }}
+              >
+                <SelectTrigger className="w-fit min-w-[150px]">
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((item, idx) => (
+                    <SelectItem
+                      key={item.id || `cat-${idx}`}
+                      value={item.id?.toString() || `cat-${idx}`}
+                    >
+                      {toTitleCase(item.name || `Category ${idx + 1}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
 
