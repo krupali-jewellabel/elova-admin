@@ -349,7 +349,7 @@ export const ListWithCardToggle = ({
   onSearchChange,
   filterFunction,
   serverSidePagination = false,
-  ToolbarComponent, // ✅ added
+  ToolbarComponent,
 }) => {
   const [currentMode, setCurrentMode] = useState("list");
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -490,7 +490,7 @@ export const ListWithCardToggle = ({
             >
               <Card>
                 <CardHeader className="flex-col sm:flex-row items-stretch sm:items-center py-5 gap-2.5 justify-between">
-                  {/* ✅ Use custom Toolbar if passed */}
+                  {/*Use custom Toolbar if passed */}
                   {ToolbarComponent ? (
                     <ToolbarComponent
                       searchQuery={currentSearchValue}
