@@ -18,17 +18,21 @@ export const useBrowseColumns = ({ onClick, onView }) => {
         size: 48,
       },
       {
-        id: "variantsimg",
+        id: "image",
         header: ({ column }) => (
           <DataGridColumnHeader
-            title="Variants"
+            title="Variant Image"
             column={column}
             onClick={() => onClick("Variants")}
           />
         ),
-        accessorFn: (row) => row.variantsimg,
+        accessorFn: (row) => row.image,
         cell: ({ row }) => (
-          <img src={row.original.variantsimg} className="w-[50px] h-[50px]" />
+          <img
+            src={row.original.data ? row.original.data.product[0].image : ""} // this now comes from variant
+            // alt={row.original.designno}
+            className="w-[50px] h-[50px] object-cover rounded"
+          />
         ),
         enableSorting: true,
         size: 100,
@@ -39,10 +43,10 @@ export const useBrowseColumns = ({ onClick, onView }) => {
       {
         id: "name",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Name" column={column} />
+          <DataGridColumnHeader title="Variant Name" column={column} />
         ),
-        accessorFn: (row) => row.name,
-        cell: ({ row }) => <p>{row.original.name}</p>,
+        accessorFn: (row) => row.category,
+        cell: ({ row }) => <p>{row.original.category}</p>,
         enableSorting: true,
         size: 135,
       },
@@ -56,21 +60,12 @@ export const useBrowseColumns = ({ onClick, onView }) => {
         size: 135,
       },
       {
-        id: "defaultmargin",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Default Margin " column={column} />
-        ),
-        accessorFn: (row) => row.defaultmargin,
-        cell: ({ row }) => <span>{row.original.defaultmargin}</span>,
-        size: 135,
-      },
-      {
         id: "selling_price",
         header: ({ column }) => (
           <DataGridColumnHeader title="Selling Price" column={column} />
         ),
-        accessorFn: (row) => row.sellingprice,
-        cell: ({ row }) => row.original.sellingprice,
+        accessorFn: (row) => row.selling_price,
+        cell: ({ row }) => <span>{row.original.selling_price}</span>,
         size: 135,
       },
       {
@@ -78,17 +73,11 @@ export const useBrowseColumns = ({ onClick, onView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Metal" column={column} />
         ),
-        accessorFn: (row) => row.metal,
+        accessorFn: (row) => row.metal_color,
         cell: ({ row }) => {
-          let metals = row.original.metal;
-
-          if (typeof metals === "string") {
-            metals = metals.split(",").map((c) => c.trim());
-          }
-
-          if (!Array.isArray(metals)) {
-            metals = [];
-          }
+          const metals = Array.isArray(row.original.metal_color)
+            ? row.original.metal_color
+            : [];
 
           return (
             <div className="flex gap-1">
@@ -96,7 +85,16 @@ export const useBrowseColumns = ({ onClick, onView }) => {
                 <span
                   key={index}
                   className="w-4 h-4 rounded-sm"
-                  style={{ backgroundColor: color }}
+                  style={{
+                    backgroundColor:
+                      color.toLowerCase() === "yellow"
+                        ? "#D6B34C"
+                        : color.toLowerCase() === "white"
+                        ? "#E8E8E8"
+                        : color.toLowerCase() === "rose"
+                        ? "#D8A083"
+                        : color,
+                  }}
                 />
               ))}
             </div>
