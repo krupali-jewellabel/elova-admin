@@ -55,7 +55,7 @@ export function Sidebar({ sideBarMenus, dashboardSidebar }) {
         <>
           <div className="p-5 border-b border-muted-foreground">
             <Link href="/">
-              <img src="/app/logo.png" alt="Logo" className="w-[178px]" />
+              <img src="/app/elova-jewel.png" alt="Logo" className="w-[160px]" />
             </Link>
           </div>
           <div className="p-6 overflow-hidden">

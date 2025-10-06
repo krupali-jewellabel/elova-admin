@@ -109,6 +109,10 @@ export const MENU_SIDEBAR = [
         title: "Browse Other Products",
         path: "/dashboard/product-management/browse-products",
       },
+      {
+        title: "Manage Collection",
+        path: "/dashboard/product-management/manage-collection",
+      },
       // { title: "Product History & Logs", path: "/public-profile/works" },
     ],
   },
@@ -129,7 +133,10 @@ export const MENU_SIDEBAR = [
       {
         title: "Apply Margin",
         children: [
-          { title: "By Category", path: "/dashboard/pricing-margin/by-category" },
+          {
+            title: "By Category",
+            path: "/dashboard/pricing-margin/by-category",
+          },
           {
             title: "By Individual Products",
             path: "/dashboard/pricing-margin/by-individual",

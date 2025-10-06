@@ -118,24 +118,24 @@ const ProductMasterList = () => {
     <>
       <ListWithCardToggle
         title="Product Master List"
-        data={filteredRows} // use filteredRows with search
+        data={filteredRows}
         columns={columns}
         renderCardView={renderStoreCardsView}
         pagination={pageInfo}
         onPaginationChange={setPageInfo}
         pageCount={pagination?.totalPages}
         totalCount={pagination?.total}
-        serverSidePagination={true} // keeps API-based pagination
-        ToolbarComponent={(props) => (
-          <DataGridToolbar
-            {...props}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            pagination={pageInfo}
-            setPagination={setPageInfo}
-            searchPlaceholder="Search Products"
-          />
-        )}
+        serverSidePagination={true}
+        // ToolbarComponent={(props) => (
+        //   <DataGridToolbar
+        //     {...props}
+        //     searchQuery={searchQuery}
+        //     setSearchQuery={setSearchQuery}
+        //     pagination={pageInfo}
+        //     setPagination={setPageInfo}
+        //     searchPlaceholder="Search Products"
+        //   />
+        // )}
       />
 
       <ProductCardView

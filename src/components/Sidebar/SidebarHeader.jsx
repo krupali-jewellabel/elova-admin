@@ -16,12 +16,12 @@ const SidebarHeader = () => {
   };
 
   return (
-    <div className="sidebar-header hidden lg:flex items-center relative justify-between px-3 lg:px-6 shrink-0 py-5">
+    <div className="sidebar-header hidden lg:flex items-center relative justify-center px-3 lg:px-6 shrink-0 py-5">
       <Link href="/">
-        <div>
+        <div> 
           <img
-            src={"/app/logo.png"}
-            className="default-logo w-[178px]"
+            src={"/app/elova-jewel.png"}
+            className="default-logo w-[160px]"
             alt="Default Logo"
           />
         </div>
