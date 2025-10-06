@@ -1,7 +1,7 @@
 import { apiPost } from "@/services/api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "sonner";
 
-// Login
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, thunkAPI) => {
@@ -12,13 +12,23 @@ export const loginUser = createAsyncThunk(
         return thunkAPI.rejectWithValue(res.error);
       }
 
-      if (res?.data?.token) {
-        localStorage.setItem("authTokenStoreAdmin", res?.data?.token);
+      const token = res?.data?.token;
+
+      if (token) {
+        localStorage.setItem("authTokenStoreAdmin", token);
+        document.cookie = `token=${token}; path=/; secure; SameSite=Strict;`;
       }
+
+      if (res?.data?.on_boarding_exists !== undefined) {
+        document.cookie = `on_boarding_exists=${res.data.on_boarding_exists}; path=/; secure; SameSite=Strict;`;
+      }
+
+      // Persist in localStorage
+      localStorage.setItem("auth", JSON.stringify(res.data));
 
       return {
         user: res?.data?.user,
-        token: res?.data?.token,
+        token,
         on_boarding_request_status: res?.data?.on_boarding_request_status,
         on_boarding_exists: res?.data?.on_boarding_exists,
         is_plan_purchase: res?.data?.is_plan_purchase,
@@ -30,65 +40,40 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Register
-export const registerUser = createAsyncThunk(
-  "auth/register",
-  async (payload, thunkAPI) => {
-    try {
-      const res = await fetch("/api/auth/sign-up", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Registration failed");
-
-      return { customer: data.customer };
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.message);
-    }
-  }
-);
-
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const token = state.auth.token;
+
     try {
-      // Get token from localStorage
-      const token = localStorage.getItem("authTokenStoreAdmin");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/store-admin/logout`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
 
-      if (!token) {
-        return thunkAPI.rejectWithValue("No token found, logout failed");
-      }
-
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // Safely parse JSON response
-      let data = {};
-      const text = await res.text();
-      try {
-        data = text ? JSON.parse(text) : {};
-      } catch {
-        data = { error: "Backend returned non-JSON response", raw: text };
-      }
-
-      // Only remove token if logout succeeded
-      if (!res.ok) {
-        return thunkAPI.rejectWithValue(data.error || "Logout failed");
-      }
+      if (!res.ok) throw new Error("Logout failed");
 
       localStorage.removeItem("authTokenStoreAdmin");
+      localStorage.removeItem("auth");
 
-      return data.message || "Logout successful";
+      document.cookie =
+        "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; SameSite=Strict;";
+      document.cookie =
+        "on_boarding_exists=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; SameSite=Strict;";
+
+      toast.success("Logout successful");
+
+      return true;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || "Logout failed");
+      toast.error("Logout failed");
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );

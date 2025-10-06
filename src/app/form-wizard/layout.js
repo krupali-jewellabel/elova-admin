@@ -1,12 +1,23 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Sidebar } from "@/components/Sidebar/Sidebar";
 import { FORM_WIZARD_MENU } from "@/services/constant";
 import { WizardProvider } from "@/context/WizardContext";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export default function FormWizardLayout({ children }) {
   const [wizardData, setWizardData] = useState(null);
+  // const { on_boarding_exists } = useSelector((state) => state.auth);
+  // const router = useRouter();
+  // const on_boarding_exists = false;
+  // useEffect(() => {
+  //   if (on_boarding_exists) {
+  //     router.replace("/dashboard");
+  //   }
+  // }, [on_boarding_exists, router]);
 
   useEffect(() => {
     const fetchWizardData = async () => {
@@ -26,12 +37,14 @@ export default function FormWizardLayout({ children }) {
           console.error("Unexpected API response", res.data);
         }
       } catch (error) {
-        // console.error("API error fetching wizard data", error);
+        console.error("API error fetching wizard data", error);
       }
     };
 
     fetchWizardData();
   }, []);
+
+  // if (on_boarding_exists) return null
 
   return (
     <WizardProvider initialData={wizardData}>

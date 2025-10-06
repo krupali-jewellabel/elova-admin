@@ -285,6 +285,7 @@ import {
 import { Skeleton } from "@/components/common/ui/skeleton";
 import { Button } from "@/components/common/ui/button";
 import { Edit2Icon, EyeIcon } from "lucide-react";
+import { toTitleCase } from "@/lib/utils";
 
 export const useProductListColumns = ({
   editingCell,
@@ -296,13 +297,22 @@ export const useProductListColumns = ({
 }) => {
   const columns = useMemo(
     () => [
+      // {
+      //   accessorKey: "id",
+      //   header: () => <DataGridTableRowSelectAll />,
+      //   cell: ({ row }) => <DataGridTableRowSelect row={row} />,
+      //   enableSorting: false,
+      //   enableHiding: false,
+      //   size: 48,
+      // },
       {
-        accessorKey: "id",
-        header: () => <DataGridTableRowSelectAll />,
-        cell: ({ row }) => <DataGridTableRowSelect row={row} />,
-        enableSorting: false,
-        enableHiding: false,
-        size: 48,
+        id: "id",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Id" column={column} />
+        ),
+        accessorFn: (row) => row.id,
+        cell: ({ row }) => row.original.id || "-",
+        size: 60,
       },
       {
         id: "product_image",
@@ -335,6 +345,15 @@ export const useProductListColumns = ({
         },
       },
       {
+        id: "title",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Title" column={column} />
+        ),
+        accessorFn: (row) => row.title,
+        cell: ({ row }) => toTitleCase(row.original.title) || "-",
+        size: 120,
+      },
+      {
         id: "design_no",
         header: ({ column }) => (
           <DataGridColumnHeader title="Design No" column={column} />
@@ -349,7 +368,7 @@ export const useProductListColumns = ({
           <DataGridColumnHeader title="Category" column={column} />
         ),
         accessorFn: (row) => row.category,
-        cell: ({ row }) => row.original.category,
+        cell: ({ row }) => toTitleCase(row.original.category),
         size: 120,
       },
       {
@@ -358,7 +377,7 @@ export const useProductListColumns = ({
           <DataGridColumnHeader title="Style" column={column} />
         ),
         accessorFn: (row) => row.style,
-        cell: ({ row }) => row.original.style,
+        cell: ({ row }) => toTitleCase(row.original.style),
         size: 120,
       },
       {
@@ -368,6 +387,17 @@ export const useProductListColumns = ({
         ),
         accessorFn: (row) => row.shape,
         cell: ({ row }) => row.original.shape,
+        size: 120,
+      },
+      {
+        id: "base_price",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Base Price" column={column} />
+        ),
+        accessorFn: (row) => row?.base_price,
+        cell: ({ row }) => {
+          return `₹${row?.original?.base_price || 0}`;
+        },
         size: 120,
       },
       {
@@ -385,7 +415,7 @@ export const useProductListColumns = ({
           <DataGridColumnHeader title="Collection" column={column} />
         ),
         accessorFn: (row) => row.collection,
-        cell: ({ row }) => row.original.collection,
+        cell: ({ row }) => toTitleCase(row.original.collection),
         size: 140,
       },
       {
@@ -418,7 +448,7 @@ export const useProductListColumns = ({
           <DataGridColumnHeader title="Gender" column={column} />
         ),
         accessorFn: (row) => row.gender,
-        cell: ({ row }) => row.original.gender,
+        cell: ({ row }) => toTitleCase(row.original.gender),
         size: 100,
       },
       {

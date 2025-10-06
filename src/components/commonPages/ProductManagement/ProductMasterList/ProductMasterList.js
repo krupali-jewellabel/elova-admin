@@ -23,17 +23,19 @@ const ProductMasterList = () => {
     useCrudList("/api/product-management", {
       page: pageInfo.pageIndex + 1,
       limit: pageInfo.pageSize,
-      search: searchQuery, // Pass search query to API if supported
+      search: searchQuery,
     });
 
   const rows = (list?.result?.items || list?.items || list || []).map(
     (item) => ({
       id: item.id,
+      title: item.title,
       productImg: item.product_img,
       design_no: item.design_no,
       category: item.category,
       style: item.style,
       shape: item.shape,
+      base_price: item.base_price,
       sales_price: item.sales_price,
       collection: item.collection,
       gender: item.gender,
@@ -89,11 +91,13 @@ const ProductMasterList = () => {
   const renderStoreCardsView = (item) => (
     <ProductCard
       key={item.id}
+      title={item.title}
       product_image={item.product_image}
       design_no={item.design_no}
       category={item.category}
       style={item.style}
       shape={item.shape}
+      bsPrice={item.base_price}
       salesPrice={item.sales_price}
       collection={item.collection}
       created_at={item.created_at}

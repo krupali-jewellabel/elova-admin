@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const BASE_URL = process.env.API_BASE_URL || "https://api.jewellabel.in";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.jewellabel.in";
 
 export async function handleGET(apiPath, headers = {}, queryParams = {}) {
   try {

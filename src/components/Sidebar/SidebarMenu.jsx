@@ -2,7 +2,7 @@
 import React, { useCallback } from "react";
 
 import { MENU_SIDEBAR } from "@/config/menu.config";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
@@ -15,9 +15,28 @@ import {
   AccordionMenuSubTrigger,
 } from "../common/ui/accordion-menu";
 import { LogOutIcon } from "lucide-react";
+import { logoutUser } from "@/store/authThunks";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 const SidebarMenu = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    debugger;
+    dispatch(logoutUser())
+      .unwrap()
+      .then(() => {
+        debugger;
+        toast.success("Logout Successfull");
+        router.push("/login");
+      })
+      .catch((err) => {
+        toast.error("Logout failed ", err);
+      });
+  };
 
   const matchPath = useCallback(
     (path) => {
@@ -116,7 +135,10 @@ const SidebarMenu = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mt-4 cursor-pointer hover:text-primary group">
+        <div
+          className="flex items-center gap-2 mt-4 cursor-pointer hover:text-primary group"
+          onClick={handleLogout}
+        >
           <LogOutIcon className="h-5 w-5 group-hover:text-primary" />
           <span className="group-hover:text-primary">Logout</span>
         </div>

@@ -468,9 +468,14 @@ import {
 import { useCrudApi } from "@/hooks/useCrudApi";
 import { toTitleCase } from "@/lib/utils";
 import { Skeleton } from "@/components/common/ui/skeleton";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const BrowseProducts = () => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState(
+    searchParams.get("category_id") || ""
+  );
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [filters, setFilters] = useState([]);
   const [productsData, setProductsData] = useState([]);
@@ -567,6 +572,28 @@ const BrowseProducts = () => {
     onView: (product) => console.log("View product:", product),
   });
 
+  const handleCategoryChange = (val) => {
+    setSelectedCategory(val);
+
+    // Update search params in URL
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    params.set("category_id", val); // add or replace category_id
+    params.delete("page");
+
+    router.replace(`?${params.toString()}`);
+  };
+
+  const handleSubCategoryChange = (val) => {
+    debugger;
+    setSelectedSubCategory(val);
+
+    // Update search params in URL
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    params.set("subcat", val); // add or replace category_id
+    params.delete("page");
+
+    router.replace(`?${params.toString()}`);
+  };
   return (
     <>
       {/* Category & Sub-Category Selectors */}
@@ -581,11 +608,7 @@ const BrowseProducts = () => {
           ) : (
             <Select
               value={selectedCategory}
-              onValueChange={(val) => {
-                setSelectedCategory(val);
-                setSelectedSubCategory("");
-                setProductsData({ products: [], sub_categories: [] });
-              }}
+              onValueChange={handleCategoryChange}
             >
               <SelectTrigger className="w-fit min-w-[150px]">
                 <SelectValue placeholder="Select Category" />
@@ -608,7 +631,7 @@ const BrowseProducts = () => {
           <div className="relative">
             <Select
               value={selectedSubCategory}
-              onValueChange={(val) => setSelectedSubCategory(val)}
+              onValueChange={handleSubCategoryChange}
             >
               <SelectTrigger className="w-fit min-w-[150px]">
                 <SelectValue placeholder="Select Sub Category" />
@@ -619,7 +642,7 @@ const BrowseProducts = () => {
                     key={sub.id || `sub-${idx}`}
                     value={sub.id?.toString() || `sub-${idx}`}
                   >
-                    {toTitleCase(sub.name || `Sub Category ${idx + 1}`)}
+                    {sub.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -642,9 +665,10 @@ const BrowseProducts = () => {
                 <label className="text-muted-foreground">{filter.label}</label>
                 <div className="relative">
                   <Select
-                    onValueChange={(val) =>
-                      console.log("Filter selected:", val)
-                    }
+                    onValueChange={(val) => {
+                      debugger;
+                      console.log("Filter selected:", val);
+                    }}
                   >
                     <SelectTrigger className="w-fit min-w-[150px]">
                       <SelectValue placeholder={filter.label} />

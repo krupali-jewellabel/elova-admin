@@ -4,6 +4,7 @@ import React from "react";
 import { Checkbox } from "@/components/common/ui/checkbox";
 import { RiDeleteBinFill } from "@remixicon/react";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
+import { toTitleCase } from "@/lib/utils";
 
 const ProductCard = ({
   id,
@@ -12,7 +13,8 @@ const ProductCard = ({
   category,
   style,
   shape,
-  sales_price,
+  salesPrice,
+  basePrice,
   collection,
   created_at,
   updated_at,
@@ -35,7 +37,7 @@ const ProductCard = ({
           alt="product"
           className="h-[163px] w-[163px] mx-auto object-cover"
           onError={(e) => {
-            e.currentTarget.src = "/images/products/1.png"; // fallback if 404
+            e.currentTarget.src = "/images/products/1.png";
           }}
         />
       </div>
@@ -51,7 +53,7 @@ const ProductCard = ({
             <div className="text-[12px] text-secondary-foreground font-[400] pb-4">
               Category
               <p className="text-[14px] font-[500] text-foreground">
-                {category}
+                {toTitleCase(category)}
               </p>
             </div>
           </div>
@@ -59,7 +61,10 @@ const ProductCard = ({
         <div className="grid grid-cols-2 items-center gap-4">
           <div className="text-[12px] text-secondary-foreground font-[400]">
             Style
-            <p className="text-[14px] font-[500] text-foreground"> {style}</p>
+            <p className="text-[14px] font-[500] text-foreground">
+              {" "}
+              {toTitleCase(style)}
+            </p>
           </div>
           <div className="text-[12px] text-secondary-foreground font-[400]">
             Shape
@@ -68,19 +73,30 @@ const ProductCard = ({
           <div className="text-[12px] text-secondary-foreground font-[400]">
             Collection
             <p className="text-[14px] font-[500] text-foreground">
-              {collection}
+              {toTitleCase(collection)}
             </p>
           </div>
 
           <div className="text-[12px] text-secondary-foreground font-[400]">
             Sales Price
             <p className="text-[14px] font-[500] text-foreground">
-              {sales_price}
+              $ {salesPrice}
             </p>
           </div>
+
+          <div className="text-[12px] text-secondary-foreground font-[400]">
+            Base Price
+            <p className="text-[14px] font-[500] text-foreground">
+              $ {basePrice}
+            </p>
+          </div>
+
           <div className="text-[12px] text-secondary-foreground font-[400]">
             Gender
-            <p className="text-[14px] font-[500] text-foreground"> {gender}</p>
+            <p className="text-[14px] font-[500] text-foreground">
+              {" "}
+              {toTitleCase(gender)}
+            </p>
           </div>
 
           <div className="text-[12px] text-secondary-foreground font-[400]">

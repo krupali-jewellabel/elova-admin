@@ -85,8 +85,12 @@
 // export default authSlice.reducer;
 
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, logoutUser, registerUser } from "../authThunks";
-const initialState = {
+import { loginUser, logoutUser } from "../authThunks";
+import { loadAuthState } from "../authStorage";
+
+const persistedAuth = loadAuthState();
+
+const initialState = persistedAuth || {
   user: null,
   loading: false,
   error: null,
@@ -118,18 +122,21 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        const { user, token, on_boarding_exists } = action.payload;
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload?.token;
+        state.user = user;
+        state.token = token;
+        state.on_boarding_exists = on_boarding_exists;
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("auth", JSON.stringify(state));
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Register
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-      })
+
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.token = null;

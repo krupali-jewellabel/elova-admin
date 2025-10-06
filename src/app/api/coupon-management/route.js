@@ -22,8 +22,6 @@ export async function POST(req) {
     "Content-Type": "application/json",
     "x-tenant-id": tenantId || 5,
     Accept: "application/json",
-    "X-XSRF-TOKEN": req.headers.get("x-xsrf-token") || "",
-    Cookie: req.headers.get("cookie") || "",
   };
 
   return handlePOST(

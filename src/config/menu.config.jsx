@@ -73,16 +73,16 @@ import {
 } from "lucide-react";
 
 export const MENU_SIDEBAR = [
-  {
-    title: "Dashboard",
-    icon: LayoutGrid,
-    children: [
-      { title: "Overview", path: "/" },
-      { title: "Sales Trends & Graphs", path: "/dark-sidebar" },
-      { title: "Store Setup Progress Tracker", path: "/alert" },
-      { title: "Recent Orders Summary", path: "/alert" },
-    ],
-  },
+  // {
+  //   title: "Dashboard",
+  //   icon: LayoutGrid,
+  //   children: [
+  //     { title: "Overview", path: "/" },
+  //     { title: "Sales Trends & Graphs", path: "/dark-sidebar" },
+  //     { title: "Store Setup Progress Tracker", path: "/alert" },
+  //     { title: "Recent Orders Summary", path: "/alert" },
+  //   ],
+  // },
   // { heading: "User" },
   {
     title: "Product Management",
@@ -91,20 +91,23 @@ export const MENU_SIDEBAR = [
       {
         title: "My Products",
         children: [
-          { title: "Product List", path: "/product-management/my-products" },
+          {
+            title: "Product List",
+            path: "/dashboard/product-management/my-products",
+          },
           {
             title: "Edit Product Info",
-            path: "/store-detail-view/assign-products",
+            path: "/dashboard/store-detail-view/assign-products",
           },
           {
             title: "Product Detail View",
-            path: "/product-management/category",
+            path: "/dashboard/product-management/category",
           },
         ],
       },
       {
         title: "Browse Other Products",
-        path: "/product-management/browse-products",
+        path: "/dashboard/product-management/browse-products",
       },
       // { title: "Product History & Logs", path: "/public-profile/works" },
     ],
@@ -115,7 +118,7 @@ export const MENU_SIDEBAR = [
     children: [
       {
         title: "All Customers",
-        path: "/customer-data",
+        path: "/dashboard/customer-data",
       },
     ],
   },
@@ -126,10 +129,10 @@ export const MENU_SIDEBAR = [
       {
         title: "Apply Margin",
         children: [
-          { title: "By Category", path: "/pricing-margin/by-category" },
+          { title: "By Category", path: "/dashboard/pricing-margin/by-category" },
           {
             title: "By Individual Products",
-            path: "/pricing-margin/by-individual",
+            path: "/dashboard/pricing-margin/by-individual",
           },
         ],
       },
@@ -141,12 +144,12 @@ export const MENU_SIDEBAR = [
     title: "Order Management",
     icon: ListChecks,
     children: [
-      { title: "All Orders", path: "/order-management/all" },
+      { title: "All Orders", path: "/dashboard/order-management/all" },
       // { title: "Fulfilled Orders", path: "/order-management/fulfilled" },
       // { title: "In Transit Orders", path: "/order-management/in-transit" },
       {
         title: "Return/ Repair Orders",
-        path: "/order-management/return-repair",
+        path: "/dashboard/order-management/return-repair",
       },
       // { title: "Manual Order Entry", path: "/order-management/manual" },
       // { title: "Invoices & Receipts", path: "/order-management/invoices" },
@@ -158,7 +161,7 @@ export const MENU_SIDEBAR = [
     children: [
       {
         title: "All Custom Requests",
-        path: "/custom-jewelary/all-custom-request",
+        path: "/dashboard/custom-jewelary/all-custom-request",
       },
       // {
       //   title: "Request Details View",
@@ -183,7 +186,7 @@ export const MENU_SIDEBAR = [
     title: "Coupons Management",
     icon: Settings,
     children: [
-      { title: "Coupons", path: "/coupons-management" },
+      { title: "Coupons", path: "/dashboard/coupons-management" },
       // { title: "Notifications", path: "/social/accounts" },
       // { title: "Jewel Label Announcements", path: "/social/performance" },
     ],
