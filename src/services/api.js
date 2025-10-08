@@ -1,47 +1,32 @@
-export const apiGet = async (url, token) => {
+export const apiGet = async (url) => {
+  const token = localStorage.getItem("authTokenStoreAdmin");
+  const storeId = localStorage.getItem("storeId");
+
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
+      ...(storeId && { "x-tenant-id": storeId }),
     },
+    credentials: "include",
   });
 
   if (!res.ok) throw new Error("Failed to fetch data");
   return res.json();
 };
 
-// export const apiPost = async (url, body) => {
-//   const token = localStorage.getItem("token");
-//   const storeId = localStorage.getItem("store_id");
-
-//   const response = await fetch(url, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       ...(token && { Authorization: `Bearer ${token}` }),
-//       ...(storeId && { "X-Tenant-Id": storeId }),
-//     },
-//     body: JSON.stringify(body),
-//   });
-
-//   const result = await response.json();
-
-//   if (!response.ok) {
-//     throw result;
-//   }
-
-//   return result;
-// };
-
 export const apiPost = async (url, body) => {
   const token = localStorage.getItem("authTokenStoreAdmin");
+  const storeId = localStorage.getItem("storeId");
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-      "x-tenant-id": process.env.NEXT_PUBLIC_TENANT_ID,
+      ...(token && { Authorization: `${token}` }),
+      ...(storeId && { "x-tenant-id": storeId }),
     },
     credentials: "include",
     body: JSON.stringify(body),
@@ -57,7 +42,6 @@ export const apiPost = async (url, body) => {
   }
 
   if (!response.ok) {
-    // always throw an object with message
     throw {
       message:
         (result && result.message) ||

@@ -56,10 +56,6 @@ const BrandingForm = () => {
     40: "store_id",
   };
 
-  console.log(
-    stepData?.questions.map((q) => ({ id: q.id, text: q.question_text }))
-  );
-
   // Dynamic Zod schema for form validation
   const createDynamicSchema = (questions) => {
     if (!questions || questions.length === 0) {
@@ -158,7 +154,6 @@ const BrandingForm = () => {
     try {
       setLoading(true);
       const res = await fetchAll();
-      console.log("fetchAll response:", res);
       const rawData = res.data;
       if (!rawData?.questions) {
         throw new Error("No questions found in response");
@@ -248,14 +243,6 @@ const BrandingForm = () => {
           FIELD_MAPPING[questionId] ||
           mapQuestionToField(question.question_text) ||
           `question_${questionId}`;
-        console.log(
-          "Mapping:",
-          question.question_text,
-          "=>",
-          payloadKey,
-          "Value:",
-          value
-        );
 
         // If it's the tone_of_voice field → store as Base64 text
         if (payloadKey === "tone_of_voice" && typeof value === "string") {

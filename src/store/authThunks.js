@@ -13,26 +13,32 @@ export const loginUser = createAsyncThunk(
       }
 
       const token = res?.data?.token;
+      const storeId = res?.data?.store_id;
+      const onBoardingExists = res?.data?.on_boarding_exists;
 
       if (token) {
         localStorage.setItem("authTokenStoreAdmin", token);
         document.cookie = `token=${token}; path=/; secure; SameSite=Strict;`;
       }
 
-      if (res?.data?.on_boarding_exists !== undefined) {
-        document.cookie = `on_boarding_exists=${res.data.on_boarding_exists}; path=/; secure; SameSite=Strict;`;
+      if (onBoardingExists !== undefined) {
+        document.cookie = `on_boarding_exists=${onBoardingExists}; path=/; secure; SameSite=Strict;`;
       }
 
-      // Persist in localStorage
+      if (storeId) {
+        localStorage.setItem("storeId", storeId);
+        document.cookie = `store_id=${storeId}; path=/; secure; SameSite=Strict;`;
+      }
+
       localStorage.setItem("auth", JSON.stringify(res.data));
 
       return {
         user: res?.data?.user,
         token,
+        store_id: storeId,
         on_boarding_request_status: res?.data?.on_boarding_request_status,
-        on_boarding_exists: res?.data?.on_boarding_exists,
+        on_boarding_exists: onBoardingExists,
         is_plan_purchase: res?.data?.is_plan_purchase,
-        store_id: res?.data?.store_id,
       };
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message || "Login failed");
@@ -47,16 +53,7 @@ export const logoutUser = createAsyncThunk(
     const token = state.auth.token;
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/store-admin/logout`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
-      );
+      const res = await apiPost(`/api/logout`);
 
       if (!res.ok) throw new Error("Logout failed");
 

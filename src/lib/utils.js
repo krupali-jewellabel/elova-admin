@@ -14,11 +14,11 @@ export function cn(...inputs) {
 export function toTitleCase(str) {
   const lowerWords = ["and", "of", "the"];
   return str
-    .trim()
+    ?.trim()
     .toLowerCase()
     .split(" ")
     .map((word, index) =>
-      lowerWords.includes(word) && index !== 0
+      lowerWords?.includes(word) && index !== 0
         ? word
         : word.charAt(0).toUpperCase() + word.slice(1)
     )

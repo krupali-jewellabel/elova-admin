@@ -5,9 +5,8 @@ import { useSelector } from "react-redux";
 
 export default function FormWizard() {
   const router = useRouter();
-  // const { on_boarding_exists } = useSelector((state) => state.auth);
-  const on_boarding_exists = false;
-  console.log("on_boardi", on_boarding_exists);
+  const { on_boarding_exists } = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (on_boarding_exists) {
       router.replace("/dashboard");

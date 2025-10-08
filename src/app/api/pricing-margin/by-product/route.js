@@ -1,4 +1,4 @@
-import { handleGET, handlePOST } from "@/lib/apiHandler";
+import { handleGET } from "@/lib/apiHandler";
 
 export async function GET(req) {
   const authHeader = req.headers.get("authorization");
@@ -7,10 +7,9 @@ export async function GET(req) {
   const headers = {
     Authorization: authHeader,
     "Content-Type": "application/json",
-    "x-tenant-id": 5,
+    "x-tenant-id": tenantId || 5,
     Accept: "application/json",
   };
 
-  return handleGET("/api/store-admin/order-management/list", headers, {});
+  return handleGET("/api/store-admin/product-management/list", headers);
 }
-

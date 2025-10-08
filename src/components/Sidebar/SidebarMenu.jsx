@@ -16,20 +16,19 @@ import {
 } from "../common/ui/accordion-menu";
 import { LogOutIcon } from "lucide-react";
 import { logoutUser } from "@/store/authThunks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
 const SidebarMenu = () => {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    debugger;
     dispatch(logoutUser())
       .unwrap()
       .then(() => {
-        debugger;
         toast.success("Logout Successfull");
         router.push("/login");
       })
@@ -130,7 +129,7 @@ const SidebarMenu = () => {
             alt="User Avatar"
           />
           <div className="flex flex-col">
-            <span className="font-semibold">Harper Nelson</span>
+            <span className="font-semibold">{user?.name}</span>
             <span className="text-sm">Admin Manager</span>
           </div>
         </div>

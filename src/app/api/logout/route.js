@@ -15,7 +15,6 @@ export async function POST(req) {
       Accept: "application/json",
     };
 
-    // Just pass req directly — handlePOST handles everything
     const response = await handlePOST(req, "/api/store-admin/logout", headers);
 
     return response;

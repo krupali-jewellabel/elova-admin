@@ -19,7 +19,6 @@ const AllCustomer = () => {
     const loadCustomers = async () => {
       try {
         const result = await fetchAll();
-        console.log("Customers API result:", result);
 
         const mappedCustomers = (result?.data?.data || []).map((c) => ({
           id: c.id,
@@ -28,7 +27,6 @@ const AllCustomer = () => {
           email: c.email,
         }));
 
-        console.log("Mapped customers:", mappedCustomers);
         setCustomers(mappedCustomers);
       } catch (error) {
         console.error("Error fetching customers:", error);

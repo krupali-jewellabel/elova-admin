@@ -12,8 +12,8 @@ export const useCustomMarginProductsColumns = ({
   onClick = () => {},
   onView = () => {},
 }) => {
-  return useMemo(
-    () => [
+  return useMemo(() => {
+    return [
       {
         accessorKey: "id",
         header: () => <DataGridTableRowSelectAll />,
@@ -23,7 +23,17 @@ export const useCustomMarginProductsColumns = ({
         size: 48,
       },
       {
-        id: "image",
+        id: "id",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Id" column={column} />
+        ),
+        accessorFn: (row) => row.id,
+        cell: ({ row }) => <p>{row.original.id}</p>,
+        enableSorting: false,
+        size: 100,
+      },
+      {
+        id: "product_image",
         header: ({ column }) => (
           <DataGridColumnHeader
             title="Product Image"
@@ -31,9 +41,9 @@ export const useCustomMarginProductsColumns = ({
             onClick={() => onClick("image")}
           />
         ),
-        accessorFn: (row) => row.productImg,
+        accessorFn: (row) => row.product_image,
         cell: ({ row }) => (
-          <img src={row.original.productImg} className="w-[50px] h-[50px]" />
+          <img src={row.original.product_image} className="w-[50px] h-[50px]" />
         ),
         enableSorting: true,
         size: 100,
@@ -42,12 +52,12 @@ export const useCustomMarginProductsColumns = ({
         },
       },
       {
-        id: "designNo",
+        id: "design_no",
         header: ({ column }) => (
           <DataGridColumnHeader title="Design Number" column={column} />
         ),
-        accessorFn: (row) => row.designNo,
-        cell: ({ row }) => <p>{row.original.designNo}</p>,
+        accessorFn: (row) => row.design_no,
+        cell: ({ row }) => <p>{row.original.design_no}</p>,
         enableSorting: true,
         size: 135,
       },
@@ -61,21 +71,21 @@ export const useCustomMarginProductsColumns = ({
         size: 165,
       },
       {
-        id: "jewellabelPrice",
+        id: "base_price",
         header: ({ column }) => (
           <DataGridColumnHeader title="Jewellabel Price" column={column} />
         ),
-        accessorFn: (row) => row.jewellabelPrice,
-        cell: ({ row }) => <span>{row.original.jewellabelPrice}</span>,
+        accessorFn: (row) => row.base_price,
+        cell: ({ row }) => <span>${row.original.base_price}</span>,
         size: 135,
       },
       {
-        id: "nioraPrice",
+        id: "sales_price",
         header: ({ column }) => (
           <DataGridColumnHeader title="Niora Price" column={column} />
         ),
-        accessorFn: (row) => row.nioraPrice,
-        cell: ({ row }) => <span>{row.original.nioraPrice}</span>,
+        accessorFn: (row) => row.sales_price,
+        cell: ({ row }) => <span>${row.original.sales_price}</span>,
         size: 135,
       },
       {
@@ -84,17 +94,8 @@ export const useCustomMarginProductsColumns = ({
           <DataGridColumnHeader title="Margin" column={column} />
         ),
         accessorFn: (row) => row.margin,
-        cell: ({ row }) => <span>{row.original.margin}%</span>,
+        cell: ({ row }) => <span>{row.original.store_margin}%</span>,
         size: 100,
-      },
-      {
-        id: "active",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Active" column={column} />
-        ),
-        accessorFn: (row) => row.active,
-        cell: ({ row }) => <span>{row.original.active}</span>,
-        size: 135,
       },
       {
         id: "actions",
@@ -110,20 +111,10 @@ export const useCustomMarginProductsColumns = ({
             >
               <EyeIcon />
             </Button>
-            <Button mode="icon" 
-            variant="outline"
-            onClick={() => onView(row.original)}
-            >
-              <Edit2Icon />
-            </Button>
-            <Button mode="icon" variant="outline">
-              <Trash2Icon />
-            </Button>
           </div>
         ),
         size: 125,
       },
-    ],
-    [onClick, onView]
-  );
+    ];
+  }, [onClick, onView]);
 };

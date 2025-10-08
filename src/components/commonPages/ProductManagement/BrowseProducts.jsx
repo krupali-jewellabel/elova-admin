@@ -584,7 +584,6 @@ const BrowseProducts = () => {
   };
 
   const handleSubCategoryChange = (val) => {
-    debugger;
     setSelectedSubCategory(val);
 
     // Update search params in URL
@@ -666,7 +665,6 @@ const BrowseProducts = () => {
                 <div className="relative">
                   <Select
                     onValueChange={(val) => {
-                      debugger;
                       console.log("Filter selected:", val);
                     }}
                   >

@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { Checkbox } from "@/components/common/ui/checkbox";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -19,10 +17,12 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/common/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/common/ui/radio-group";
-import { PRICE_LIST } from "../constant";
+import { useCrudApi } from "@/hooks/useCrudApi";
+import { toTitleCase } from "@/lib/utils";
+import MarginCard from "./MarginCard";
+import { toast } from "sonner";
 
-// === UI FIELD COMPONENTS ===
+/* -------------------- SelectField -------------------- */
 const SelectField = ({ label, value, onChange, options }) => (
   <div className="flex flex-col gap-2.5">
     <Label className="w-full max-w-56">{label}</Label>
@@ -31,8 +31,8 @@ const SelectField = ({ label, value, onChange, options }) => (
         <SelectValue placeholder="Select" />
       </SelectTrigger>
       <SelectContent>
-        {options.map((opt) => (
-          <SelectItem key={opt.value} value={opt.value}>
+        {options.map((opt, idx) => (
+          <SelectItem key={`${opt.value}-${idx}`} value={opt.value}>
             {opt.label}
           </SelectItem>
         ))}
@@ -41,6 +41,7 @@ const SelectField = ({ label, value, onChange, options }) => (
   </div>
 );
 
+/* -------------------- SliderField -------------------- */
 const SliderField = ({ label, value, onChange, disabled }) => (
   <div className="flex flex-col gap-2.5">
     <div className="flex justify-between">
@@ -62,245 +63,145 @@ const SliderField = ({ label, value, onChange, disabled }) => (
   </div>
 );
 
+/* -------------------- Main Component -------------------- */
 const ByCategory = () => {
-  const [selectedStore, setSelectedStore] = useState("1");
-  const [diamondPercentage, setDiamondPercentage] = useState(5);
-  const [labourPercentage, setLabourPercentage] = useState(5);
-  const [isDiamondCustom, setIsDiamondCustom] = useState(true);
-  const [isLabourCustom, setIsLabourCustom] = useState(true);
-  const [diamondTier, setDiamondTier] = useState("intermediate");
+  const [categories, setCategories] = useState([]);
+  const [selectedCat, setSelectedCat] = useState("");
+  const [productPricingList, setProductPricingList] = useState([]);
+  const [marginPercentage, setMarginPercentage] = useState(0);
 
-  const RadioGroupField = ({ label, value, onChange, options }) => (
-    <div className="flex items-center gap-6 mb-6">
-      <Label className="text-sm font-medium whitespace-nowrap">{label}</Label>
-      <RadioGroup
-        value={value}
-        onValueChange={onChange}
-        className="flex items-center gap-6"
-      >
-        {options.map((opt) => (
-          <div key={opt.id} className="flex items-center space-x-2">
-            <RadioGroupItem value={opt.value} id={opt.id} />
-            <Label htmlFor={opt.id} className="text-xs font-medium">
-              {opt.label}
-            </Label>
-          </div>
-        ))}
-      </RadioGroup>
-    </div>
+  const { fetchAll: getCategories } = useCrudApi(
+    "/api/pricing-margin/by-category/categories"
+  );
+  const { fetchAll: getByCategory, create } = useCrudApi(
+    "/api/pricing-margin/by-category"
   );
 
-  const renderedMarginCards = PRICE_LIST.map((item) => {
-    return <MarginCard key={item.id} {...item} />;
-  });
+  /* Fetch categories only once */
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const cat = await getCategories();
+        const list = cat?.data || [];
+        setCategories(list);
+
+        // Auto-select the first category
+        if (list.length && !selectedCat) {
+          setSelectedCat(String(list[0].id));
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [getCategories]);
+
+  /* Fetch product list only when a valid category is selected */
+  useEffect(() => {
+    if (!selectedCat) return;
+
+    const fetchProducts = async () => {
+      try {
+        const res = await getByCategory({ category_id: selectedCat });
+        setProductPricingList(res?.products || []);
+      } catch (error) {
+        console.error("Error fetching product pricing:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [selectedCat, getByCategory]);
+
+  /* Save margin changes */
+  const handleSaveChanges = async () => {
+    if (!selectedCat) {
+      toast.error("Please select a category first.");
+      return;
+    }
+
+    try {
+      const payload = {
+        margin_type: 1,
+        store_margin: 10,
+        categories: [
+          {
+            category_id: Number(selectedCat),
+            store_margin: marginPercentage,
+          },
+        ],
+      };
+
+      await create(payload);
+      toast.success("Margin configuration saved successfully!");
+    } catch (error) {
+      console.error("Error saving configuration:", error);
+      toast.error("Failed to save configuration.");
+    }
+  };
+
+  /* Render product cards */
+  const renderedMarginCards = productPricingList.map((item, index) => (
+    <MarginCard
+      key={item?.id || `product-${index}`}
+      productImg={item?.image}
+      designNo={item?.design_number}
+      category={item?.category_name}
+      diamondStorePrice={item?.diamond_store_price}
+      diamondSellingPrice={item?.diamond_selling_price}
+      metalStorePrice={item?.metal_store_price}
+      metalSellingPrice={item?.metal_selling_price}
+      labourStorePrice={item?.labour_store_price}
+      labourSellingPrice={item?.labour_selling_price}
+      totalStorePrice={item?.total_store_price}
+      totalSellingPrice={item?.total_selling_price}
+    />
+  ));
 
   return (
     <>
-      {diamondTier === "intermediate" ? (
-        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
-          {/* LEFT PANEL */}
-          <div>
-            <Card className="mt-13">
-              <CardHeader>Pricing Margin Configuration</CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <SelectField
-                    label="Categories"
-                    value={selectedStore}
-                    onChange={setSelectedStore}
-                    options={[
-                      { label: "Ring", value: "1" },
-                      { label: "Necklace", value: "2" },
-                    ]}
-                  />
+      <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
+        {/* LEFT PANEL */}
+        <div>
+          <Card className="mt-13 fixed w-[18%]">
+            <CardHeader>Pricing Margin Configuration</CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <SelectField
+                  label="Categories"
+                  value={selectedCat}
+                  onChange={setSelectedCat}
+                  options={categories.map((cat) => ({
+                    label: toTitleCase(cat.name),
+                    value: String(cat.id),
+                  }))}
+                />
 
+                {selectedCat && (
                   <SliderField
-                    label="Ring Margin (%)"
-                    value={diamondPercentage}
-                    onChange={setDiamondPercentage}
-                    disabled={!isDiamondCustom}
+                    label={`${toTitleCase(
+                      categories.find((cat) => String(cat.id) === selectedCat)
+                        ?.name
+                    )} Margin (%)`}
+                    value={marginPercentage}
+                    onChange={setMarginPercentage}
                   />
+                )}
 
-                  <SliderField
-                    label="Necklace Margin (%)"
-                    value={labourPercentage}
-                    onChange={setLabourPercentage}
-                    disabled={!isLabourCustom}
-                  />
-
-                  <SliderField
-                    label="Wedding Band Margin (%)"
-                    value={labourPercentage}
-                    onChange={setLabourPercentage}
-                    disabled={!isLabourCustom}
-                  />
-
-                  <SliderField
-                    label="Earrings Margin (%)"
-                    value={labourPercentage}
-                    onChange={setLabourPercentage}
-                    disabled={!isLabourCustom}
-                  />
-
-                  <SliderField
-                    label="Bracelet Margin (%)"
-                    value={labourPercentage}
-                    onChange={setLabourPercentage}
-                    disabled={!isLabourCustom}
-                  />
-
-                  <SliderField
-                    label="Mangalsutra Margin (%)"
-                    value={labourPercentage}
-                    onChange={setLabourPercentage}
-                    disabled={!isLabourCustom}
-                  />
-
-                  <div className="flex justify-end">
-                    <Button asChild>
-                      <Link href="#">Save Changes</Link>
-                    </Button>
-                  </div>
+                <div className="flex justify-end">
+                  <Button onClick={handleSaveChanges}>Save Changes</Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* RIGHT PANEL */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {renderedMarginCards}
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      ) : null}
 
-      {/* Footer Buttons */}
-      {/* <div className="flex flex-col md:flex-row justify-end items-end gap-3 mt-8 px-4">
-        <Link href="#" className="w-full md:w-auto">
-          <Button variant="outline" className="w-full">
-            Save Draft
-          </Button>
-        </Link>
-
-        <Link href="#" className="w-full md:w-auto">
-          <Button variant="outline" className="w-full bg-[#F1F1F2]">
-            Previous
-          </Button>
-        </Link>
-
-        <Link href="#" className="w-full md:w-auto">
-          <Button className="w-full">Next</Button>
-        </Link>
-      </div> */}
+        {/* RIGHT PANEL */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          {renderedMarginCards}
+        </div>
+      </div>
     </>
-  );
-};
-
-const MarginCard = ({
-  id,
-  productImg,
-  designNo,
-  category,
-  diamondStorePrice,
-  diamondSellingPrice,
-  metalStorePrice,
-  metalSellingPrice,
-  labourStorePrice,
-  labourSellingPrice,
-  totalStorePrice,
-  totalSellingPrice,
-}) => {
-  return (
-    <div className="mt-13">
-      <Card className="shadow-none">
-        <div className="rounded-t-xl relative p-[17px] w-auto h-[196px] bg-[#FCFCFC]">
-          <div className="absolute left-[17px]">
-            <Checkbox />
-          </div>
-          <img
-            src={productImg}
-            alt="Product"
-            className="h-[163px] w-[163px] mx-auto object-cover"
-          />
-        </div>
-
-        <div className="card-border card-rounded-b px-3.5 pt-5 pb-3.5">
-          <div className="grid grid-cols-2 gap-4 pb-4">
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Design Number
-              <p className="text-[14px] font-[500] text-foreground">
-                {designNo}
-              </p>
-            </div>
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Category
-              <p className="text-[14px] font-[500] text-foreground">
-                {category}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Diamond Store Price
-              <p className="text-[14px] font-[500] text-foreground">
-                {diamondStorePrice}
-              </p>
-            </div>
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Selling Price
-              <p className="text-[14px] font-[500] text-foreground">
-                {diamondSellingPrice}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-4">
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Metal Store Price
-              <p className="text-[14px] font-[500] text-foreground">
-                {metalStorePrice}
-              </p>
-            </div>
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Selling Price
-              <p className="text-[14px] font-[500] text-foreground">
-                {metalSellingPrice}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-4">
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Labour Store Price
-              <p className="text-[14px] font-[500] text-foreground">
-                {labourStorePrice}
-              </p>
-            </div>
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Selling Price
-              <p className="text-[14px] font-[500] text-foreground">
-                {labourSellingPrice}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 pt-4">
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Total Store Price
-              <p className="text-[14px] font-[500] text-primary">
-                {totalStorePrice}
-              </p>
-            </div>
-            <div className="text-[12px] text-secondary-foreground font-[400]">
-              Total Selling Price
-              <p className="text-[14px] font-[500] text-foreground">
-                {totalSellingPrice}
-              </p>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </div>
   );
 };
 
