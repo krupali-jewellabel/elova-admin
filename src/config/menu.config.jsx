@@ -4,6 +4,9 @@ import {
   RiCurrencyFill,
   RiPriceTag2Fill,
   RiPriceTag2Line,
+  RiCommunityFill,
+  RiCommunityLine,
+  RiLoopLeftLine,
 } from "@remixicon/react";
 import {
   AlertCircle,
@@ -66,6 +69,7 @@ import {
   TrendingUp,
   UserCheck,
   UserCircle,
+  UserRoundCogIcon,
   Users,
   Briefcase as WorkIcon,
   Wrench,
@@ -197,6 +201,44 @@ export const MENU_SIDEBAR = [
       // { title: "Notifications", path: "/social/accounts" },
       // { title: "Jewel Label Announcements", path: "/social/performance" },
     ],
+  },
+  {
+    title: "CMS",
+    icon: Settings,
+    children: [{ title: "Elova CMS", path: "/dashboard/cms" }],
+  },
+  // {
+  //   title: "Communication & Support",
+  //   path: "/dashboard/coupons-management",
+  //   icon: LifeBuoy,
+  // },
+  {
+    title: "Communication",
+    icon: Settings,
+    children: [{ title: "Communication", path: "/dashboard/support" }],
+  },
+  {
+    title: "Billing & Finance",
+    icon: ChartNoAxesCombined,
+    children: [{ title: "Store Invoices", path: "/dashboard/billing-finance" }],
+  },
+  {
+    title: "Users & Roles",
+    icon: RiLoopLeftLine,
+    children: [
+      { title: "All Users List", path: "/dashboard/users-roles" },
+      { title: "Roles & Access", path: "/social/accounts" },
+    ],
+  },
+  {
+    title: "Tools & Help",
+    icon: BookCopy,
+    children: [{ title: "Knowledge Base", path: "/dashboard/help-center" }],
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    children: [{ title: "Store Settings", path: "/dashboard/settings" }],
   },
   // {
   //   title: "Customers & Com",
