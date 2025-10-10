@@ -13,14 +13,14 @@ export default function CMS() {
     <div className="min-h-screen">
       <div>
         <div>
-          <h1>Content Management System</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-semibold">Content Management System</h1>
+          <p className="text-muted-foreground text-md mt-1">
             Manage your website content from one place
           </p>
         </div>
 
         <Tabs defaultValue="static-pages" className="w-full mt-5">
-          <TabsList className="grid w-full grid-cols-3 max-w-md">
+          <TabsList className="grid w-[50%] grid-cols-3">
             <TabsTrigger value="static-pages">Static Pages</TabsTrigger>
             <TabsTrigger value="blog">Blog Manager</TabsTrigger>
             <TabsTrigger value="faq">FAQ Manager</TabsTrigger>

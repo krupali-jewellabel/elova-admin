@@ -129,34 +129,34 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         cell: ({ row }) => <span>{row.original.payment_method}</span>,
         size: 130,
       },
-      // {
-      //   id: "action",
-      //   header: ({ column }) => (
-      //     <DataGridColumnHeader title="Action" column={column} />
-      //   ),
-      //   accessorFn: (row) => row.orderChannel,
-      //   cell: ({ row }) => (
-      //     <div className="flex gap-[10px]">
-      //       <Button
-      //         mode="icon"
-      //         variant="outline"
-      //         onClick={() => onEdit(row.original)}
-      //       >
-      //         <Edit2Icon />
-      //       </Button>
+      {
+        id: "action",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Action" column={column} />
+        ),
+        accessorFn: (row) => row.orderChannel,
+        cell: ({ row }) => (
+          <div className="flex gap-[10px]">
+            <Button
+              mode="icon"
+              variant="outline"
+              onClick={() => onEdit(row.original)}
+            >
+              <Edit2Icon />
+            </Button>
 
-      //       <Button
-      //         mode="icon"
-      //         variant="outline"
-      //         onClick={() => {
-      //           onView(row.original.id);
-      //         }}
-      //       >
-      //         <EyeIcon />
-      //       </Button>
-      //     </div>
-      //   ),
-      // },
+            <Button
+              mode="icon"
+              variant="outline"
+              onClick={() => {
+                onView(row.original.id);
+              }}
+            >
+              <EyeIcon />
+            </Button>
+          </div>
+        ),
+      },
     ],
     [onEdit, onView]
   );

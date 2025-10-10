@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
 import { STATIC_PAGES_DATA } from "../constant";
 import { Button } from "@/components/common/ui/button";
@@ -11,8 +11,7 @@ import { useStaticPageColumns } from "./hooks/useStaticPageColumns";
 const StaticPageManager = () => {
   const [previewData, setPreviewData] = useState(null);
   const [pageInfo, setPageInfo] = useState({ pageIndex: 0, pageSize: 10 });
-  const [pagination, setPagination] = useState({ totalPages: 5, total: 50 });
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [openDialog, setDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState(null);
 
@@ -27,18 +26,39 @@ const StaticPageManager = () => {
     },
   });
 
+  const filteredData = useMemo(() => {
+    return STATIC_PAGES_DATA.filter((page) =>
+      (page.title || "").toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
+  const paginatedData = useMemo(() => {
+    const start = pageInfo.pageIndex * pageInfo.pageSize;
+    const end = start + pageInfo.pageSize;
+    return filteredData.slice(start, end);
+  }, [filteredData, pageInfo]);
+
+  const totalPages = Math.ceil(filteredData.length / pageInfo.pageSize);
+
   return (
     <div>
       <ListWithCardToggle
         title="Static Page List"
         description="Manage your static pages here"
-        data={STATIC_PAGES_DATA}
+        data={paginatedData}
         columns={columns}
         pagination={pageInfo}
         onPaginationChange={setPageInfo}
-        pageCount={pagination?.totalPages}
-        totalCount={pagination?.total}
-        serverSidePagination
+        pageCount={totalPages}
+        totalCount={filteredData.length}
+        search={{
+          value: searchQuery,
+          onChange: (e) => {
+            setSearchQuery(e.target.value);
+            setPageInfo({ ...pageInfo, pageIndex: 0 });
+          },
+          placeholder: "Search pages...",
+        }}
         createBtn={
           <Button
             onClick={() => {
@@ -52,7 +72,6 @@ const StaticPageManager = () => {
         }
       />
 
-      {/* Modal opens for Add or Edit */}
       <StaticPageModel
         open={openDialog}
         onOpenChange={(open) => {
@@ -60,7 +79,6 @@ const StaticPageManager = () => {
           if (!open) setEditRow(null);
         }}
         editRow={editRow}
-        // onSuccess={fetchAllPages} // optional
       />
 
       {previewData && (
