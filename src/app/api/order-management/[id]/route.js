@@ -39,20 +39,41 @@
 // }
 
 // app/api/order-management/[id]/route.js
+// export async function GET(req, { params }) {
+//   const { id } = params;
+//   const authHeader = req.headers.get("authorization");
+//   const tenantId = req.headers.get("x-tenant-id");
+
+//   const headers = {
+//     Authorization: authHeader,
+//     "Content-Type": "application/json",
+//     "x-tenant-id": 5,
+//     Accept: "application/json",
+//   };
+
+//   return handleGET(
+//     `/api/store-admin/order-management/view-order/${id}`,
+//     headers
+//   );
+// }
+
+import { handleGET } from "@/lib/apiHandler";
+import { cookies } from "next/headers";
+
 export async function GET(req, { params }) {
   const { id } = params;
-  const authHeader = req.headers.get("authorization");
-  const tenantId = req.headers.get("x-tenant-id");
+  const token = req.headers.get("authorization");
 
   const headers = {
-    Authorization: authHeader,
-    "Content-Type": "application/json",
-    "x-tenant-id": 5,
     Accept: "application/json",
+    "x-tenant-id": 5,
+    "Content-Type": "application/json",
+    ...(token && { Authorization: token }),
   };
 
   return handleGET(
     `/api/store-admin/order-management/view-order/${id}`,
-    headers
+    headers,
+    queryParams
   );
 }

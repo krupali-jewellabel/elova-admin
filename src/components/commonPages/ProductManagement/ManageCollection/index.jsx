@@ -1,46 +1,76 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/common/ui/select";
 import { Button } from "@/components/common/ui/button";
 import { Plus, Settings } from "lucide-react";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
-import { MANAGE_COLLECTION_DATA } from "../constant";
-import { useManageCollectionColumns } from "../hooks/useManageCollectionColumns";
 import ManageCollectionModel from "./ManageCollectionModel";
+import ConfirmDialog from "@/components/common/ui/ConfirmDialog";
+import { useManageCollectionColumns } from "../hooks/useManageCollectionColumns";
+import { useCrudList } from "@/hooks/useCrudList";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/common/ui/select";
 
 const ManageCollection = () => {
-  const [pageInfo, setPageInfo] = useState({ pageIndex: 0, pageSize: 10 });
-  const [pagination, setPagination] = useState({ totalPages: 5, total: 50 });
+  const {
+    list,
+    editData,
+    setEditData,
+    setDeleteId,
+    dialogOpen,
+    setDialogOpen,
+    confirmOpen,
+    setConfirmOpen,
+    fetchData,
+    handleDelete,
+  } = useCrudList("/api/product-management/manage-collection");
 
-  const [openModal, setOpenModal] = useState(false);
-  const [editData, setEditData] = useState(null);
+  const [filters, setFilters] = useState({
+    collection: "all",
+    status: "show-all",
+    visibility: "show-all",
+  });
 
-  // ✅ Pass modal controls into columns hook
   const columns = useManageCollectionColumns({
-    setEditingCell: (row) => {
-      setEditData(row);
-      setOpenModal(true);
+    setEditingCell: (item) => {
+      setEditData(item);
+      setDialogOpen(true);
+    },
+    onDelete: (id) => {
+      setDeleteId(id);
+      setConfirmOpen(true);
     },
   });
 
+  // Function to open modal for creating a new collection
   const handleCreate = () => {
     setEditData(null);
-    setOpenModal(true);
+    setDialogOpen(true);
   };
 
-  const handleSuccess = () => {
-    console.log("Collection list refreshed");
+  // Function to reload data with filters and pagination
+  const handleFetchData = (page) => {
+    const pageIndex = page?.pageIndex ?? 0;
+    const pageSize = page?.pageSize ?? 10;
+
+    fetchData({
+      pageIndex,
+      pageSize,
+      filters,
+    });
   };
+
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error}</div>;
 
   return (
-    <>
+    <div className="space-y-4">
+      {/* Header + Filters */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-[700px]">
           {/* Collection Filter */}
@@ -104,23 +134,35 @@ const ManageCollection = () => {
         </div>
       </div>
 
+      {/* Collection List */}
       <ListWithCardToggle
-        data={MANAGE_COLLECTION_DATA}
+        data={list}
         columns={columns}
-        pagination={pageInfo}
-        onPaginationChange={setPageInfo}
-        pageCount={pagination?.totalPages}
-        totalCount={pagination?.total}
         serverSidePagination
+        pagination={{ pageIndex: 0, pageSize: 10 }}
+        onPaginationChange={handleFetchData}
       />
 
+      {/* Create / Edit Modal */}
       <ManageCollectionModel
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        onSuccess={handleSuccess}
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setEditData(null);
+        }}
+        onSuccess={handleFetchData}
         editData={editData}
       />
-    </>
+
+      {/* Delete Confirmation */}
+      <ConfirmDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleDelete}
+        title="Delete Collection"
+        message="Are you sure you want to delete this collection? This action cannot be undone."
+      />
+    </div>
   );
 };
 

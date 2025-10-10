@@ -26,7 +26,9 @@ import { toast } from "sonner";
 import { useCrudApi } from "@/hooks/useCrudApi";
 
 const ManageCollectionModel = ({ open, onClose, onSuccess, editData }) => {
-  const { create, update } = useCrudApi("/api/collections");
+  const { create, update } = useCrudApi(
+    "/api/product-management/manage-collection"
+  );
   const [loading, setLoading] = useState(false);
   const fileRefs = useRef(null);
 
@@ -43,27 +45,27 @@ const ManageCollectionModel = ({ open, onClose, onSuccess, editData }) => {
   const { setValue } = form;
 
   // ✅ Handle edit mode
-  //   useEffect(() => {
-  //     if (editData?.id) {
-  //       form.reset({
-  //         collection_name: editData.collection_name || "",
-  //         description: editData.description || "",
-  //         product_image: editData.product_image
-  //           ? [{ file: editData.product_image }]
-  //           : [],
-  //         is_active: editData.is_active ?? true,
-  //         visibility: editData.status === 1 ? "public" : "private",
-  //       });
-  //     } else {
-  //       form.reset({
-  //         collection_name: "",
-  //         description: "",
-  //         product_image: [],
-  //         is_active: true,
-  //         visibility: "public",
-  //       });
-  //     }
-  //   }, [editData, form]);
+  useEffect(() => {
+    if (editData?.id) {
+      form.reset({
+        collection_name: editData.collection_name || "",
+        description: editData.description || "",
+        product_image: editData.product_image
+          ? [{ file: editData.product_image }]
+          : [],
+        is_active: editData.is_active ?? true,
+        visibility: editData.status === 1 ? "public" : "private",
+      });
+    } else {
+      form.reset({
+        collection_name: "",
+        description: "",
+        product_image: [],
+        is_active: true,
+        visibility: "public",
+      });
+    }
+  }, [editData, form]);
 
   // ✅ Handle file upload
   const handleFileChange = async (e) => {

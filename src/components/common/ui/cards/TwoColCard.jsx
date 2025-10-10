@@ -12,9 +12,9 @@ export function TwoColCard({ items = [], limit = items.length }) {
         <div className="flex items-center gap-3.5">
           <Card className="flex items-center justify-center bg-accent/50 h-[70px] w-[90px] shadow-none">
             <img
-              src={item.image}
+              src={item?.product?.image}
               className="cursor-pointer h-[70px]"
-              alt={item.title}
+              alt={item?.product?.title}
             />
           </Card>
 
@@ -23,17 +23,10 @@ export function TwoColCard({ items = [], limit = items.length }) {
               href="#"
               className="hover:text-primary text-sm font-medium text-mono leading-5.5"
             >
-              {item.title}
+              {item?.product?.title}
             </Link>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-normal text-secondary-foreground uppercase">
-                sku:{" "}
-                <span className="text-xs font-medium text-foreground">
-                  {item.sku}
-                </span>
-              </span>
-
               {item.badge && (
                 <Badge size="sm" variant="destructive" className="uppercase">
                   save 25%
@@ -41,34 +34,34 @@ export function TwoColCard({ items = [], limit = items.length }) {
               )}
             </div>
 
-            {item.metal && (
+            {item?.product?.metal && (
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-normal text-secondary-foreground uppercase">
                   Metal:{" "}
                   <span className="text-xs font-medium text-foreground">
-                    {item.metal}
+                    {item?.product?.metal}
                   </span>
                 </span>
               </div>
             )}
 
-            {item.dimondCaret && (
+            {item?.center_diamond_weight && (
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-normal text-secondary-foreground uppercase">
-                  Diamond Carat:{" "}
+                  Diamond Weight:{" "}
                   <span className="text-xs font-medium text-foreground">
-                    {item.dimondCaret}
+                    {item?.center_diamond_weight}
                   </span>
                 </span>
               </div>
             )}
 
-            {item.Style && (
+            {item?.product?.subcategory?.name && (
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-normal text-secondary-foreground uppercase">
                   Style:{" "}
                   <span className="text-xs font-medium text-foreground">
-                    {item.Style}
+                    {item?.product?.subcategory?.name}
                   </span>
                 </span>
               </div>
@@ -78,16 +71,16 @@ export function TwoColCard({ items = [], limit = items.length }) {
 
         <div className="flex flex-col gap-1.5">
           <span className="text-xs font-normal text-secondary-foreground text-end">
-            1 x
+            {item?.quantity} x
           </span>
           <div className="flex items-center flex-wrap gap-1.5">
-            {item.total && (
-              <span className="text-sm font-normal text-secondary-foreground line-through">
-                {item.total}
+            {item?.subtotal && (
+              <span className="text-sm font-normal text-secondary-foreground ">
+                {item?.subtotal}
               </span>
             )}
             <span className="text-sm font-semibold text-mono">
-              {item.label}
+              {item?.label}
             </span>
           </div>
         </div>

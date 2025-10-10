@@ -31,7 +31,7 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
           </div>
         ),
         enableSorting: true,
-        size: 180,
+        size: 135,
         meta: {
           skeleton: <Skeleton className="h-4 w-[125px]" />,
         },
@@ -137,19 +137,19 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         accessorFn: (row) => row.orderChannel,
         cell: ({ row }) => (
           <div className="flex gap-[10px]">
-            <Button
+            {/* <Button
               mode="icon"
               variant="outline"
               onClick={() => onEdit(row.original)}
             >
               <Edit2Icon />
-            </Button>
+            </Button> */}
 
             <Button
               mode="icon"
               variant="outline"
               onClick={() => {
-                onView(row.original.id);
+                onView(row.original);
               }}
             >
               <EyeIcon />

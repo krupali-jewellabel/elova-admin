@@ -266,7 +266,6 @@ export const MANAGE_COLLECTION_DATA = [
   {
     id: 1,
     collection_name: "Diamond Rings",
-    product_image: "/images/products/collection-ring.png",
     description: "Elegant diamond ring with gold finish",
     products: 12,
     created_at: "2025-09-15T10:30:00Z",
@@ -276,7 +275,6 @@ export const MANAGE_COLLECTION_DATA = [
   {
     id: 2,
     collection_name: "Pearl Necklace",
-    product_image: "/images/products/collection-necklace.png",
     description: "Classic pearl necklace with silver chain",
     products: 8,
     created_at: "2025-08-28T14:10:00Z",
@@ -286,7 +284,6 @@ export const MANAGE_COLLECTION_DATA = [
   {
     id: 3,
     collection_name: "Rose Bracelet",
-    product_image: "/images/products/collection-bracelet.png",
     description: "Rose gold bracelet with diamond charms",
     products: 5,
     created_at: "2025-07-22T08:45:00Z",
@@ -296,7 +293,6 @@ export const MANAGE_COLLECTION_DATA = [
   {
     id: 4,
     collection_name: "Stud Earrings",
-    product_image: "/images/products/collection-earrings.png",
     description: "Minimalist stud earrings set",
     products: 9,
     created_at: "2025-07-01T11:00:00Z",
@@ -306,7 +302,6 @@ export const MANAGE_COLLECTION_DATA = [
   {
     id: 5,
     collection_name: "Platinum Chain",
-    product_image: "/images/products/collection-chain.png",
     description: "Men’s platinum chain with modern design",
     products: 6,
     created_at: "2025-06-18T16:20:00Z",

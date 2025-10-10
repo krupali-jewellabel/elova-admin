@@ -1,11 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
+import { useRouter } from "next/navigation"; // ✅ for navigation
 import { DataGridColumnHeader } from "@/components/common/ui/data-grid-column-header";
-import {
-  DataGridTableRowSelect,
-  DataGridTableRowSelectAll,
-} from "@/components/common/ui/data-grid-table";
 import { Skeleton } from "@/components/common/ui/skeleton";
 import { Button } from "@/components/common/ui/button";
 import { Edit2Icon, EyeIcon, PlusIcon, Trash2Icon } from "lucide-react";
@@ -13,7 +10,6 @@ import { toTitleCase } from "@/lib/utils";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
 import { StatusBadge } from "@/components/common/ui/badge";
 
-// ✅ Default parameter added (= {})
 export const useManageCollectionColumns = ({
   editingCell,
   setEditingCell,
@@ -22,6 +18,8 @@ export const useManageCollectionColumns = ({
   onClick,
   onView,
 } = {}) => {
+  const router = useRouter(); // ✅ initialize router
+
   const columns = useMemo(
     () => [
       {
@@ -44,17 +42,9 @@ export const useManageCollectionColumns = ({
         ),
         accessorFn: (row) => row.collection_name,
         cell: ({ row }) => {
-          const { product_image, collection_name } = row.original;
+          const { collection_name } = row.original;
           return (
             <div className="flex items-center gap-3">
-              <img
-                src={product_image || "/images/products/1.png"}
-                className="w-[45px] h-[45px] object-cover"
-                alt={collection_name}
-                onError={(e) => {
-                  e.currentTarget.src = "/images/products/1.png";
-                }}
-              />
               <span className="text-sm font-medium text-gray-800">
                 {collection_name || "-"}
               </span>
@@ -62,7 +52,7 @@ export const useManageCollectionColumns = ({
           );
         },
         enableSorting: true,
-        size: 180,
+        size: 120,
         meta: {
           skeleton: <Skeleton className="h-4 w-[125px]" />,
         },
@@ -77,15 +67,6 @@ export const useManageCollectionColumns = ({
         size: 120,
       },
       {
-        id: "products",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Products" column={column} />
-        ),
-        accessorFn: (row) => row.products,
-        cell: ({ row }) => row.original.products,
-        size: 120,
-      },
-      {
         id: "createdAt",
         header: ({ column }) => (
           <DataGridColumnHeader title="Created At" column={column} />
@@ -95,7 +76,7 @@ export const useManageCollectionColumns = ({
           row.original.created_at
             ? new Date(row.original.created_at).toLocaleDateString()
             : "-",
-        size: 160,
+        size: 120,
       },
       {
         id: "is_active",
@@ -110,16 +91,16 @@ export const useManageCollectionColumns = ({
             toggleStatus={() => console.log("Toggle", row.original.id)}
           />
         ),
-        size: 100,
+        size: 120,
       },
       {
-        id: "status",
+        id: "visibility",
         header: ({ column }) => (
           <DataGridColumnHeader title="Visibility" column={column} />
         ),
-        accessorFn: (row) => (row.status === 1 ? "published" : "draft"),
+        accessorFn: (row) => (row.visibility === 1 ? "published" : "draft"),
         cell: ({ row }) => {
-          const isPublished = row.original.status === 1;
+          const isPublished = row.original.visibility === 1;
           const statusText = isPublished ? "published" : "draft";
           return (
             <StatusBadge
@@ -134,7 +115,7 @@ export const useManageCollectionColumns = ({
             />
           );
         },
-        size: 110,
+        size: 120,
       },
       {
         id: "actions",
@@ -151,21 +132,25 @@ export const useManageCollectionColumns = ({
             <Button
               variant="outline"
               mode="icon"
-              onClick={() => setEditingCell?.(row.original)} // ✅ opens modal
+              onClick={() => setEditingCell?.(row.original)}
             >
               <Edit2Icon className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               mode="icon"
-              onClick={() => onView?.(row.original)}
+              onClick={() =>
+                router.push(
+                  `/dashboard/product-management/manage-collection/${row.original.id}`
+                )
+              }
             >
               <PlusIcon className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               mode="icon"
-              onClick={() => onView?.(row.original)}
+              onClick={() => console.log("Delete", row.original.id)}
             >
               <Trash2Icon className="h-4 w-4" />
             </Button>
@@ -174,7 +159,15 @@ export const useManageCollectionColumns = ({
         size: 115,
       },
     ],
-    [editingCell, setEditingCell, editedValue, handleSaveEdit, onView, onClick]
+    [
+      editingCell,
+      setEditingCell,
+      editedValue,
+      handleSaveEdit,
+      onView,
+      onClick,
+      router,
+    ]
   );
 
   return columns;
