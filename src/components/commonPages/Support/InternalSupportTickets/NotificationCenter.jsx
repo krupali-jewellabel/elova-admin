@@ -25,6 +25,7 @@ import {
 import { Card, CardContent } from "@/components/common/ui/cards/card";
 import { Sheet, SheetContent } from "@/components/common/ui/sheet";
 import { Separator } from "@/components/common/ui/separator";
+import { ScrollArea } from "@/components/common/ui/scroll-area";
 
 const mockNotifications = [
   {
@@ -85,11 +86,6 @@ export function NotificationCenterSheet({ isOpen, onOpenChange }) {
 
     return matchesSearch && matchesType && matchesPriority && matchesRead;
   });
-
-  // const unreadCount = notifications.filter((n) => !n.isRead).length;
-  // const highPriorityCount = notifications.filter(
-  //   (n) => (n.priority === "high" || n.priority === "urgent") && !n.isRead
-  // ).length;
 
   const unreadCount = Array.isArray(notifications)
     ? notifications.filter((n) => !n.isRead).length
@@ -175,9 +171,10 @@ export function NotificationCenterSheet({ isOpen, onOpenChange }) {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => onOpenChange(open)}>
-      <SheetContent className="max-w-[600px] sm:max-w-[800px]">
+      <SheetContent className="w-[90%] md:max-w-[70vw] lg:max-w-[50vw] xl:max-w-[80vw] inset-5 start-auto h-[100vh] rounded-lg p-0">
         <div className="flex h-full">
-          <div className="flex-1 flex flex-col">
+          {/* Left Panel: Notifications */}
+          <div className="flex-1 flex flex-col border-r border-border">
             <div className="p-4 border-b border-border">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -208,6 +205,7 @@ export function NotificationCenterSheet({ isOpen, onOpenChange }) {
                     className="pl-9"
                   />
                 </div>
+
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
                   <SelectTrigger className="w-32">
                     <SelectValue placeholder="Type" />
@@ -223,6 +221,7 @@ export function NotificationCenterSheet({ isOpen, onOpenChange }) {
                     <SelectItem value="store">Store</SelectItem>
                   </SelectContent>
                 </Select>
+
                 <Select
                   value={priorityFilter}
                   onValueChange={setPriorityFilter}
@@ -238,6 +237,7 @@ export function NotificationCenterSheet({ isOpen, onOpenChange }) {
                     <SelectItem value="low">Low</SelectItem>
                   </SelectContent>
                 </Select>
+
                 <Select value={readFilter} onValueChange={setReadFilter}>
                   <SelectTrigger className="w-32">
                     <SelectValue placeholder="Status" />
@@ -251,7 +251,7 @@ export function NotificationCenterSheet({ isOpen, onOpenChange }) {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <ScrollArea className="flex-1">
               {Object.entries(groupedNotifications).map(([date, items]) => (
                 <div key={date}>
                   <div className="sticky top-0 bg-muted/50 px-4 py-2 text-sm font-medium text-muted-foreground border-b border-border">
@@ -339,9 +339,10 @@ export function NotificationCenterSheet({ isOpen, onOpenChange }) {
                   </div>
                 </div>
               )}
-            </div>
+            </ScrollArea>
           </div>
 
+          {/* Right Panel: Notification Summary */}
           <div className="w-80 border-l border-border p-4 space-y-4">
             <h3 className="font-semibold">Notification Summary</h3>
             <div className="grid grid-cols-2 gap-3">

@@ -33,6 +33,22 @@ export const STATIC_PAGES_DATA = [
     content: "Page 4 content",
     active: <Switch size="sm" />,
   },
+  {
+    id: 5,
+    srno: "5",
+    pageTitle: "Terms and Conditions",
+    slug: "terms-and-conditions",
+    content: "Page 5 content",
+    active: <Switch size="sm" />,
+  },
+  {
+    id: 6,
+    srno: "6",
+    pageTitle: "Refund Policy",
+    slug: "refund-policy",
+    content: "Page 6 content",
+    active: <Switch size="sm" />,
+  },
 ];
 
 export const BLOG_POSTS_DATA = [

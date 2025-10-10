@@ -48,6 +48,8 @@ export const CommunicationandSupportDetais = ({
           {/* )} */}
         </Container>
       </Fragment>
+
+      
       <TicketCreationSheet
         isOpen={isNewTicketSheetOpen}
         onOpenChange={setIsNewTicketSheetOpen}

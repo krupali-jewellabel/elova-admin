@@ -332,8 +332,8 @@ import {
 export const ListWithCardToggle = ({
   title,
   description,
-  data,
-  columns,
+  data = [],
+  columns = [],
   pagination: externalPagination,
   onPaginationChange,
   pageCount,

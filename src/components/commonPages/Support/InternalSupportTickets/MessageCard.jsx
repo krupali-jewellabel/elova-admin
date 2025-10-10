@@ -15,7 +15,7 @@ export default function MessageCard({
   // attachments = [],
 }) {
   return (
-    <Card className="border border-primary shadow-primary-500/350">
+    <Card className="border shadow-primary-500/350">
       <div className="flex items-center justify-between grow gap-5 p-5 rtl:bg-[center_left_-8rem] bg-[center_right_-8rem] bg-no-repeat bg-[length:700px] upgrade-bg">
         <div className="flex items-center gap-4">
           {(ccUsers ?? []).map((cc) => (

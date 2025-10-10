@@ -8,13 +8,8 @@ import {
 import { StatusBadge } from "@/components/common/ui/badge";
 import { Button } from "@/components/common/ui/button";
 import { EyeIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 
-const useCustomRequestColumn = () => {
-  const route = useRouter();
-  const handleView = (row) => {
-    route.push(`/custom-jewelary/${row.request_id}`);
-  };
+const useCustomRequestColumn = ({ onView } = {}) => {
   return useMemo(
     () => [
       {
@@ -28,10 +23,19 @@ const useCustomRequestColumn = () => {
       {
         id: "request_id",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Requested On" column={column} />
+          <DataGridColumnHeader title="Requested ID" column={column} />
         ),
         accessorFn: (row) => row.id,
         cell: ({ row }) => <span>{row.original.id}</span>,
+        size: 135,
+      },
+      {
+        id: "store_name",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Store Name" column={column} />
+        ),
+        accessorFn: (row) => row.store_name,
+        cell: ({ row }) => <span>{row.original.store_name}</span>,
         size: 135,
       },
       {
@@ -40,7 +44,12 @@ const useCustomRequestColumn = () => {
           <DataGridColumnHeader title="Type" column={column} />
         ),
         accessorFn: (row) => row.category?.name,
-        cell: ({ row }) => <span>{row.original.category?.name}</span>,
+        cell: ({ row }) => {
+          const name = row.original.category?.name || "";
+          const formattedName =
+            name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+          return <span>{formattedName}</span>;
+        },
         size: 135,
       },
       {
@@ -87,25 +96,25 @@ const useCustomRequestColumn = () => {
       //   cell: ({ row }) => <span>{row.original.assignedDesigner}</span>,
       //   size: 135,
       // },
-
-      // {
-      //   id: "action",
-      //   header: ({ column }) => (
-      //     <DataGridColumnHeader title="Action" column={column} />
-      //   ),
-      //   accessorFn: (row) => row.orderChannel,
-      //   cell: ({ row }) => (
-      //     <Button
-      //       mode="icon"
-      //       variant="outline"
-      //       onClick={() => handleView(row.original)}
-      //     >
-      //       <EyeIcon />
-      //     </Button>
-      //   ),
-      // },
+      {
+        id: "action",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Action" column={column} />
+        ),
+        accessorFn: (row) => row.orderChannel,
+        cell: ({ row }) => (
+          <Button
+            mode="icon"
+            variant="outline"
+            onClick={() => onView(row.original)}
+          >
+            <EyeIcon />
+          </Button>
+        ),
+        size: 130,
+      },
     ],
-    []
+    [onView]
   );
 };
 

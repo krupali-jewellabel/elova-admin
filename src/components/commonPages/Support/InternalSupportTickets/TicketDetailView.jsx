@@ -5,10 +5,7 @@ import { Card, CardContent } from "@/components/common/ui/cards/card";
 import { Avatar, AvatarFallback } from "@/components/common/ui/avatar";
 import { Button } from "@/components/common/ui/button";
 import { Badge } from "@/components/common/ui/badge";
-import {
-  Dialog,
-  DialogTrigger,
-} from "@/components/common/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/common/ui/dialog";
 import {
   Select,
   SelectTrigger,
@@ -17,16 +14,8 @@ import {
   SelectItem,
 } from "@/components/common/ui/select";
 import { Textarea } from "@/components/common/ui/textarea";
-import {
-  Paperclip,
-  Mail,
-  Loader,
-  UserPlus,
-  X,
-} from "lucide-react";
+import { Paperclip, Mail, Loader, UserPlus, X } from "lucide-react";
 import MessageCard from "./MessageCard";
-
-// Helper functions like `getFileIcon`, `formatFileSize`, `isImageFile` should be imported or defined above
 
 const TicketDetailsView = ({
   selectedTicket,
@@ -92,7 +81,14 @@ const TicketDetailsView = ({
               <h2 className="text-lg font-semibold text-primary">
                 {selectedTicket.subject}
               </h2>
-              <Badge variant={getStatusColor(selectedTicket.status)}>
+              <Badge
+                variant={getStatusColor(selectedTicket.status)}
+                className={
+                  selectedTicket.status === "open"
+                    ? "bg-primary text-white"
+                    : ""
+                }
+              >
                 {selectedTicket.status}
               </Badge>
             </div>
@@ -270,7 +266,7 @@ const TicketDetailsView = ({
                   const IconComponent = getFileIcon(file.type);
                   return (
                     <div
-                      key={file.name + file.lastModified}
+                      key={index}
                       className="flex items-center gap-3 p-2 border border-border rounded-lg bg-muted/30"
                     >
                       <IconComponent className="h-4 w-4 text-brand" />

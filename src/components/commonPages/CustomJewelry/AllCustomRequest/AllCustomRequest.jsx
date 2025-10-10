@@ -1,33 +1,52 @@
 "use client";
 
+import React, { useState } from "react";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
-import React, { useState, useMemo } from "react";
 import useCustomRequestColumn from "../useCustomRequestColumn";
-import { DataGridToolbar } from "@/components/common/DataGridToolBar";
 import { useCrudList } from "@/hooks/useCrudList";
+import RequestDetailsSheet from "./RequestDetailsModel";
 
 const AllCustomRequest = () => {
   const { list } = useCrudList("/api/custom-request");
-  const columns = useCustomRequestColumn();
+
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
+  const handleView = (item) => {
+    setSelectedRequest(item);
+    setSheetOpen(true);
+  };
+
+  const columns = useCustomRequestColumn({ onView: handleView });
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredList = useMemo(() => {
-    if (!searchQuery) return list;
-
-    return list?.filter((item) =>
-      String(item.category?.name || "")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, list]);
-
   return (
-    <ListWithCardToggle
-      title="All Custom Requests"
-      data={filteredList}
-      columns={columns}
-    />
+    <>
+      <ListWithCardToggle
+        title="All Custom Requests"
+        data={list}
+        columns={columns}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        filterFunction={(data, query) => {
+          if (!query) return data;
+          const q = query.toLowerCase();
+          return data.filter((item) =>
+            String(item.category?.name || "")
+              .toLowerCase()
+              .includes(q)
+          );
+        }}
+        createBtn={null}
+      />
+
+      <RequestDetailsSheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        requestDetails={selectedRequest}
+      />
+    </>
   );
 };
 
