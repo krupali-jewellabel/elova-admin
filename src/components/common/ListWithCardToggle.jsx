@@ -384,6 +384,7 @@ export const ListWithCardToggle = ({
   const table = useReactTable({
     columns,
     data: serverSidePagination ? data : filteredData,
+    enablePinning: true,
     getRowId: (row) => String(row.id),
     state: {
       pagination: actualPagination,
