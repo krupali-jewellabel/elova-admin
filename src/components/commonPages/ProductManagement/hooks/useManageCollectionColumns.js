@@ -18,7 +18,7 @@ export const useManageCollectionColumns = ({
   onClick,
   onView,
 } = {}) => {
-  const router = useRouter(); // ✅ initialize router
+  const router = useRouter();
 
   const columns = useMemo(
     () => [

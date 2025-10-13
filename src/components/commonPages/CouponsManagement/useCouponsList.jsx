@@ -80,12 +80,34 @@ const useCouponsList = ({ onEdit, onDelete }) => {
         ),
         accessorFn: (row) =>
           row.start_date && row.end_date
-            ? `${row.start_date} - ${row.end_date}`
+            ? `${new Date(row.start_date).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })} - ${new Date(row.end_date).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })}`
             : "-",
         cell: ({ row }) => (
           <span>
             {row.original.start_date && row.original.end_date
-              ? `${row.original.start_date} → ${row.original.end_date}`
+              ? `${new Date(row.original.start_date).toLocaleDateString(
+                  "en-GB",
+                  {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  }
+                )} To ${new Date(row.original.end_date).toLocaleDateString(
+                  "en-GB",
+                  {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  }
+                )}`
               : "—"}
           </span>
         ),

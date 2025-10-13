@@ -47,13 +47,11 @@ const ManageCollection = () => {
     },
   });
 
-  // Function to open modal for creating a new collection
   const handleCreate = () => {
     setEditData(null);
     setDialogOpen(true);
   };
 
-  // Function to reload data with filters and pagination
   const handleFetchData = (page) => {
     const pageIndex = page?.pageIndex ?? 0;
     const pageSize = page?.pageSize ?? 10;
@@ -127,10 +125,10 @@ const ManageCollection = () => {
 
         <div className="flex items-center gap-4 mt-4 md:mt-0">
           <Button variant="primary">Bulk Action</Button>
-          <Settings className="h-5 w-5" />
+          {/* <Settings className="h-5 w-5" />
           <Button variant="outline" onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" /> Create Collection
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -152,15 +150,6 @@ const ManageCollection = () => {
         }}
         onSuccess={handleFetchData}
         editData={editData}
-      />
-
-      {/* Delete Confirmation */}
-      <ConfirmDialog
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onConfirm={handleDelete}
-        title="Delete Collection"
-        message="Are you sure you want to delete this collection? This action cannot be undone."
       />
     </div>
   );

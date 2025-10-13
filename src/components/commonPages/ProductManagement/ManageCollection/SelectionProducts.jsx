@@ -4,99 +4,113 @@ import React, { useEffect, useState } from "react";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
 import { useSelectionColumns } from "../hooks/useSelectionColumns";
 import { useCrudApi } from "@/hooks/useCrudApi";
-import { Button } from "@/components/common/ui/button";
 import { toast } from "sonner";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 const SelectionProducts = () => {
   const params = useParams();
+  const collectionId = params.id; // collection ID from route
+  const storeId = localStorage.getItem("storeId"); // store ID
+
   const [products, setProducts] = useState([]);
-  const [bestSellerIds, setBestSellerIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const columns = useSelectionColumns(bestSellerIds);
-
+  const { fetchAll } = useCrudApi("/api/product-management");
   const { create } = useCrudApi("/api/product-management/selection-products");
 
-  const storeId = localStorage.getItem("storeId");
-  const collectionId = params.id; // Replace with dynamic value if needed
-  const SORT_ORDER = 5; // Replace with dynamic value if needed
-
-  // Fetch existing best sellers
-  useEffect(() => {
-    const fetchBestSellers = async () => {
-      setLoading(true);
-      try {
-        // API requires POST with payload
-        const data = await create({
-          store_id: storeId,
-          collection_id: collectionId,
-          product_ids: [],
-          sort_order: SORT_ORDER,
-        });
-
-        const ids = data.product_ids || [];
-        setBestSellerIds(ids);
-
-        // Map IDs to product objects (replace with real fetch if available)
-        const productsData = ids.map((id) => ({
-          id,
-          name: `Product #${id}`,
-          price: `$${id * 10}`,
-          category: "Rings",
-        }));
-
-        setProducts(productsData);
-      } catch (err) {
-        console.error("Failed to fetch best sellers:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBestSellers();
-  }, [create]);
-
-  // Simulate selecting new products
-  const handleSelectProduct = (productId) => {
-    setBestSellerIds((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
-    );
-  };
-
-  // Save updated best sellers
-  const handleSave = async () => {
-    if (bestSellerIds.length === 0) {
-      toast.error("Please select at least one product.");
-      return;
-    }
-
-    setLoading(true);
+  // Fetch products
+  const fetchAllCollections = async () => {
     try {
-      const payload = {
-        store_id: STORE_ID,
-        collection_id: COLLECTION_ID,
-        product_ids: bestSellerIds,
-        sort_order: SORT_ORDER,
-      };
-
-      const res = await create(payload);
-
-      if (!res.status) {
-        toast.error(res.message || "Failed to save best sellers");
-        console.error(res.error);
+      setLoading(true);
+      const res = await fetchAll();
+      if (res?.data?.length) {
+        // Add checkbox field for UI state
+        const productsWithCheckbox = res.data.map((item) => ({
+          ...item,
+          checkboxes: selectedIds.includes(item.id),
+        }));
+        setProducts(productsWithCheckbox);
       } else {
-        toast.success("Best sellers saved successfully!");
+        setProducts([]);
       }
     } catch (err) {
-      toast.error("Something went wrong while saving best sellers");
-      console.error(err);
+      console.error("Failed to fetch collections:", err);
+      toast.error("Failed to load products");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAllCollections();
+  }, []);
+
+  // Handle checkbox click
+  const handleCheckboxChange = async (item) => {
+    if (!storeId || !collectionId) {
+      toast.error("Store ID or Collection ID is missing!");
+      return;
+    }
+
+    try {
+      const payload = {
+        store_id: storeId,
+        collection_id: collectionId,
+        product_ids: [item.id],
+      };
+
+      await create(payload);
+
+      setSelectedIds((prev) =>
+        prev.includes(item.id)
+          ? prev.filter((id) => id !== item.id)
+          : [...prev, item.id]
+      );
+
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === item.id ? { ...p, checkboxes: !p.checkboxes } : p
+        )
+      );
+
+      toast.success("Product selection updated!");
+    } catch (err) {
+      console.error("Error updating product:", err);
+      toast.error("Failed to update selection");
+    }
+  };
+
+  const checkboxColumn = {
+    id: "checkboxes",
+    header: () => (
+      <div className="flex items-center justify-center">Select</div>
+    ),
+    accessorFn: (row) => row.checkboxes,
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        <input
+          type="checkbox"
+          className="h-4 w-4 cursor-pointer"
+          checked={row.original.checkboxes}
+          onChange={() => handleCheckboxChange(row.original)}
+        />
+      </div>
+    ),
+    size: 80,
+  };
+
+  const columns = [
+    checkboxColumn,
+    ...useSelectionColumns({
+      editingCell: null,
+      setEditingCell: () => {},
+      editedValue: null,
+      handleSaveEdit: () => {},
+      onClick: () => {},
+      onView: () => {},
+    }),
+  ];
 
   return (
     <div className="p-6 space-y-4">
