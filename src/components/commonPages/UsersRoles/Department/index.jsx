@@ -1,70 +1,3 @@
-// "use client";
-
-// import React from "react";
-// import { Button } from "@/components/common/ui/button";
-// import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
-// import { Plus } from "lucide-react";
-// import { userDepartments } from "./hooks/userDepartments";
-// import { useCrudList } from "@/hooks/useCrudList";
-// import { ContentLoader } from "@/components/common/ui/Loader/content-loader";
-
-// const Department = () => {
-//   const {
-//     departmentList,
-//     loading,
-//     error,
-//     editData,
-//     setEditData,
-//     setDeleteId,
-//     dialogOpen,
-//     setDialogOpen,
-//     confirmOpen,
-//     setConfirmOpen,
-//     fetchData,
-//     handleDelete,
-//   } = useCrudList("/api/departments");
-
-//   const columns = userDepartments({
-//     onEdit: (item) => {
-//       setEditData(item);
-//       setDialogOpen(true);
-//     },
-//     onDelete: (id) => {
-//       setDeleteId(id);
-//       setConfirmOpen(true);
-//     },
-//   });
-
-//   const filterFunction = (data, searchTerm) => {
-//     const lowerSearch = searchTerm.toLowerCase();
-//     return data.filter((item) =>
-//       item.name?.toLowerCase().includes(lowerSearch)
-//     );
-//   };
-
-//   if (loading) return <ContentLoader />;
-//   if (error) return <div className="text-red-500">Error: {error}</div>;
-
-//   return (
-//     <div className="space-y-4">
-//       <ListWithCardToggle
-//         title="Departments"
-//         data={departmentList}
-//         columns={columns}
-//         filterFunction={filterFunction}
-//         createBtn={
-//           <Button onClick={() => setDialogOpen(true)}>
-//             <Plus className="mr-2 h-4 w-4" />
-//             Add Department
-//           </Button>
-//         }
-//       />
-//     </div>
-//   );
-// };
-
-// export default Department;
-
 "use client";
 
 import React from "react";
@@ -92,7 +25,7 @@ const Department = () => {
     fetchData,
     handleDelete,
   } = useCrudList("/api/departments");
-
+  console.log("list", list);
   const columns = userDepartments({
     onEdit: (item) => {
       setEditData(item);
@@ -104,22 +37,20 @@ const Department = () => {
     },
   });
 
-  const getListData = (response) => {
-    if (!response) return [];
-    if (Array.isArray(response)) return response;
-    if (Array.isArray(response?.data?.data)) return response.data.data;
-    if (Array.isArray(response?.data)) return response.data;
-    if (Array.isArray(response?.items)) return response.items;
-    return [];
-  };
+  // const filteredList = getListData(list);
 
-  const filteredList = getListData(list);
-
-  const filterFunction = (data, searchTerm) => {
-    const lowerSearch = searchTerm.toLowerCase();
-    return data.filter((item) =>
-      item.name?.toLowerCase().includes(lowerSearch)
-    );
+  // const filterFunction = (data, searchTerm) => {
+  //   const lowerSearch = searchTerm.toLowerCase();
+  //   return data.filter((item) =>
+  //     item.name?.toLowerCase().includes(lowerSearch)
+  //   );
+  // };
+  const filterOptions = (data, query) => {
+    const searchLower = query.toLowerCase();
+    return data.filter((item) => {
+      const name = item?.name?.toLowerCase() || "";
+      return name.includes(searchLower);
+    });
   };
 
   if (loading) return <ContentLoader />;
@@ -129,9 +60,9 @@ const Department = () => {
     <div className="space-y-4">
       <ListWithCardToggle
         title="Departments"
-        data={filteredList}
+        data={list?.data}
         columns={columns}
-        filterFunction={filterFunction}
+        filterFunction={filterOptions}
         createBtn={
           <Button onClick={() => setDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
@@ -146,8 +77,8 @@ const Department = () => {
           setDialogOpen(false);
           setEditData(null);
         }}
-        editData={editData}
         onSuccess={fetchData}
+        editData={editData}
       />
 
       <ConfirmDialog
