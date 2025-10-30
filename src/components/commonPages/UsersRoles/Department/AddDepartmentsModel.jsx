@@ -33,6 +33,7 @@ const AddDepartmentModel = ({ open, onClose, onSuccess, editData }) => {
   useEffect(() => {
     form.reset({ name: editData?.name || "" });
   }, [editData, form]);
+  
 
   const handleSubmit = async (values) => {
     try {

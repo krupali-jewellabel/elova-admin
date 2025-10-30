@@ -99,10 +99,10 @@ export const MENU_SIDEBAR = [
             title: "Product List",
             path: "/dashboard/product-management/my-products",
           },
-          {
-            title: "Edit Product Info",
-            path: "/dashboard/store-detail-view/assign-products",
-          },
+          // {
+          //   title: "Edit Product Info",
+          //   path: "/dashboard/store-detail-view/assign-products",
+          // },
           {
             title: "Product Detail View",
             path: "/dashboard/product-management/category",
@@ -226,7 +226,7 @@ export const MENU_SIDEBAR = [
     title: "Users & Roles",
     icon: RiLoopLeftLine,
     children: [
-      { title: "All Users List", path: "/dashboard/users-roless" },
+      { title: "All Users List", path: "/dashboard/all-user-list" },
       { title: "Roles & Access", path: "/dashboard/users-roles" },
       { title: "Departments", path: "/dashboard/department" },
     ],

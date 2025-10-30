@@ -9,3 +9,22 @@ export const DEPARTMENT_DATA = [
   { id: 2, name: "Engineering" },
   { id: 3, name: "Marketing" },
 ];
+
+export const USER_DATA = [
+  {
+    id: 1,
+    name: "John Doe",
+    email: "3o9iI@example.com",
+    password: "password123",
+    role: "Admin",
+    department: "Human Resources",
+  },
+  {
+    id: 2,
+    name: "Admin",
+    email: "3o9iI@example.com",
+    password: "password123",
+    role: "Admin",
+    department: "Human Resources",
+  },
+];
