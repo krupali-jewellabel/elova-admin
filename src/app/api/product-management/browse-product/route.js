@@ -1,15 +1,20 @@
 import { handleGET } from "@/lib/apiHandler";
 
 export async function GET(req) {
-  const token = req.nextUrl.searchParams.get("token");
+  const { searchParams } = req.nextUrl;
+  const token = req.headers.get("authorization");
+  const tenantId = req.headers.get("x-tenant-id") || 5;
 
-  // Determine Authorization safely
+  const category_id = searchParams.get("category_id");
+
   const headers = {
-    Authorization: token ? `Bearer ${token}` : req.headers.get("authorization"),
+    Authorization: token,
     "Content-Type": "application/json",
-    "x-tenant-id": req.headers.get("x-tenant-id") || 5,
+    "x-tenant-id": tenantId,
     Accept: "application/json",
   };
 
-  return handleGET("/api/store-admin/stock-selection/products", headers);
+  return handleGET("/api/store-admin/stock-selection/products", headers, {
+    category_id,
+  });
 }

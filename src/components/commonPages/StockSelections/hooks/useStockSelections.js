@@ -26,9 +26,9 @@ export const useStockSelections = ({ onClick, onView }) => {
             onClick={() => onClick("Variants")}
           />
         ),
-        accessorFn: (row) => row.variantsimg,
+        accessorFn: (row) => row.image,
         cell: ({ row }) => (
-          <img src={row.original.variantsimg} className="w-[50px] h-[50px]" />
+          <img src={row.original.image} className="w-[50px] h-[50px]" />
         ),
         enableSorting: true,
         size: 100,
@@ -51,17 +51,17 @@ export const useStockSelections = ({ onClick, onView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Base Price" column={column} />
         ),
-        accessorFn: (row) => row.baseprice,
-        cell: ({ row }) => <span>{row.original.baseprice}</span>,
+        accessorFn: (row) => row.base_price,
+        cell: ({ row }) => <span>{row.original.base_price}</span>,
         size: 135,
       },
       {
-        id: "defaultmargin",
+        id: "store_margin",
         header: ({ column }) => (
           <DataGridColumnHeader title="Default Margin " column={column} />
         ),
-        accessorFn: (row) => row.defaultmargin,
-        cell: ({ row }) => <span>{row.original.defaultmargin}</span>,
+        accessorFn: (row) => row.store_margin,
+        cell: ({ row }) => <span>{row.original.store_margin}</span>,
         size: 135,
       },
       {
@@ -69,8 +69,8 @@ export const useStockSelections = ({ onClick, onView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Selling Price" column={column} />
         ),
-        accessorFn: (row) => row.sellingprice,
-        cell: ({ row }) => row.original.sellingprice,
+        accessorFn: (row) => row.selling_price,
+        cell: ({ row }) => row.original.selling_price,
         size: 135,
       },
       {

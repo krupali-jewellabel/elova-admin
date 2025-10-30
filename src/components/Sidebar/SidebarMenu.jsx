@@ -23,8 +23,8 @@ const SidebarMenu = () => {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-
+  const { user, expires_at } = useSelector((state) => state.auth);
+  console.log("user", expires_at);
   const handleLogout = () => {
     dispatch(logoutUser())
       .unwrap()

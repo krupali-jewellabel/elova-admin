@@ -1,3 +1,5 @@
+import { logout } from "@/store/slices/authSlice";
+
 export const storeAdminCrud = (baseUrl) => {
   const getAuthHeaders = () => {
     const token =
@@ -23,6 +25,13 @@ export const storeAdminCrud = (baseUrl) => {
       const res = await fetch(url, {
         headers: getAuthHeaders(),
       });
+
+      if (res.status === 401) {
+        console.warn("Token expired — redirecting to login");
+        dispatch(logout());
+        router.replace("/login");
+        return;
+      }
 
       if (!res.ok) throw new Error("Failed to fetch data");
       return res.json();

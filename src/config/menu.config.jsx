@@ -100,10 +100,6 @@ export const MENU_SIDEBAR = [
             path: "/dashboard/product-management/my-products",
           },
           {
-            title: "Edit Product Info",
-            path: "/dashboard/store-detail-view/assign-products",
-          },
-          {
             title: "Product Detail View",
             path: "/dashboard/product-management/category",
           },

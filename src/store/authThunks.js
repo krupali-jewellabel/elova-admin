@@ -39,6 +39,7 @@ export const loginUser = createAsyncThunk(
         on_boarding_request_status: res?.data?.on_boarding_request_status,
         on_boarding_exists: onBoardingExists,
         is_plan_purchase: res?.data?.is_plan_purchase,
+        expires_at: res?.data?.expires_at,
       };
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message || "Login failed");
