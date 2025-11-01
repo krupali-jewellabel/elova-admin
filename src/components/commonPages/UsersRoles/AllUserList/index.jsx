@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
 import { Button } from "@/components/common/ui/button";
@@ -14,7 +13,6 @@ const AllUserList = () => {
   const { list, confirmOpen, setConfirmOpen, handleDelete, setDeleteId } =
     useCrudList("/api/user-management");
 
-  // ✅ Permission Dialog States
   const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
   const [viewingRoleId, setViewingRoleId] = useState(null);
 
@@ -84,10 +82,8 @@ const AllUserList = () => {
     },
   ];
 
-  // ✅ Permissions object
   const [rolePermissions, setRolePermissions] = useState({});
 
-  // ✅ Update checkbox
   const updatePermission = (roleId, index, type, value) => {
     setRolePermissions((prev) => {
       const arr = [...prev[roleId]];
@@ -96,7 +92,6 @@ const AllUserList = () => {
     });
   };
 
-  // ✅ Add edit + view permission handling
   const [editData, setEditData] = useState(null);
   const { columns, dialogOpen, setDialogOpen } = useUsersList({
     onEdit: (user) => {
@@ -108,7 +103,6 @@ const AllUserList = () => {
 
       setViewingRoleId(roleId);
 
-      // ✅ If permissions for this role do NOT exist, assign static permissions
       setRolePermissions((prev) => {
         if (!prev[roleId]) {
           return {
@@ -154,7 +148,6 @@ const AllUserList = () => {
         }
       />
 
-      {/* ✅ Permission Dialog */}
       <PermissionDialog
         permissionDialogOpen={permissionDialogOpen}
         setPermissionDialogOpen={setPermissionDialogOpen}
@@ -165,7 +158,6 @@ const AllUserList = () => {
         updatePermission={updatePermission}
       />
 
-      {/* ✅ Add/Edit User Modal */}
       <AddUserModal
         open={dialogOpen}
         onClose={handleClose}
