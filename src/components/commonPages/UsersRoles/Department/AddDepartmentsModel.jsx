@@ -27,16 +27,23 @@ const AddDepartmentModel = ({ open, onClose, onSuccess, editData }) => {
 
   const form = useForm({
     resolver: zodResolver(RoleSchema),
-    defaultValues: { name: editData?.name || "" },
+    defaultValues: { department_id: editData?.id, name: editData?.name || "" },
   });
 
   useEffect(() => {
-    form.reset({ name: editData?.name || "" });
+    form.reset({
+      department_id: editData?.id || null,
+      name: editData?.name || "",
+    });
   }, [editData, form]);
 
   const handleSubmit = async (values) => {
+    debugger;
     try {
-      const payload = { name: values.name, id: editData?.id };
+      const payload = {
+        name: values.name,
+        department_id: editData?.id || null,
+      };
       await create(payload);
 
       toast.success(

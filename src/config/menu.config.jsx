@@ -226,7 +226,7 @@ export const MENU_SIDEBAR = [
     title: "Users & Roles",
     icon: RiLoopLeftLine,
     children: [
-      { title: "All Users List", path: "/dashboard/users-roless" },
+      { title: "All Users List", path: "/dashboard/all-user-list" },
       { title: "Roles & Access", path: "/dashboard/users-roles" },
       { title: "Departments", path: "/dashboard/department" },
     ],
