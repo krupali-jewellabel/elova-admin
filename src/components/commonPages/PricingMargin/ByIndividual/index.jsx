@@ -328,7 +328,7 @@ const ByIndividual = () => {
   return (
     <>
       <ListWithCardToggle
-        title="Product Master List"
+        title="By Individual"
         data={Array.isArray(list) ? list : []}
         columns={columns}
         filterOptions={filterOptions}
