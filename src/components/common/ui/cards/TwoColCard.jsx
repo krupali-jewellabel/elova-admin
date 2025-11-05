@@ -12,9 +12,9 @@ export function TwoColCard({ items = [], limit = items.length }) {
         <div className="flex items-center gap-3.5">
           <Card className="flex items-center justify-center bg-accent/50 h-[70px] w-[90px] shadow-none">
             <img
-              src={item?.product?.image}
+              src={item?.product_image}
               className="cursor-pointer h-[70px]"
-              alt={item?.product?.title}
+              alt={item?.product_title}
             />
           </Card>
 
@@ -23,7 +23,7 @@ export function TwoColCard({ items = [], limit = items.length }) {
               href="#"
               className="hover:text-primary text-sm font-medium text-mono leading-5.5"
             >
-              {item?.product?.title}
+              {item?.product_title}
             </Link>
 
             <div className="flex items-center gap-1.5">

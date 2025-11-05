@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Card, CardHeader } from "@/components/common/ui/cards/card";
-import { ListWithCardToggle } from "@/components/common/ui/ListWithCardToggle";
 import { useStockSelections } from "@/components/commonPages/StockSelections/hooks/useStockSelections";
 import { useFilteredStoreData } from "@/components/commonPages/StockSelections/hooks/useFilteredData";
 import { Button } from "@/components/common/ui/button";
@@ -18,6 +17,8 @@ import { useCrudApi } from "@/hooks/useCrudApi";
 import { toTitleCase } from "@/lib/utils";
 import { Skeleton } from "@/components/common/ui/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
 
 const BrowseProducts = () => {
   const searchParams = useSearchParams();
@@ -39,6 +40,7 @@ const BrowseProducts = () => {
     "/api/stock-selection/stock-filter-options"
   );
 
+  const { create } = useCrudApi("/api/stock-selection/add-to-bag");
   const { fetchAll: fetchProducts } = useCrudApi(
     "/api/product-management/browse-product"
   );
@@ -112,14 +114,37 @@ const BrowseProducts = () => {
     fetchData();
   }, []);
 
-  const handleColumnClick = (columnId) =>
-    console.log("Column clicked:", columnId);
+  const handleAddToBag = async (row) => {
+    try {
+      const payload = {
+        items: [
+          {
+            product_id: row.original.product_id,
+            variant_id: row.original.variant_id,
+            price: parseFloat(row.original.selling_price || 0),
+            category_id: selectedCategory,
+          },
+        ],
+      };
+
+      const res = await create(payload);
+
+      if (res?.status || res?.status === 200) {
+        toast.success(res?.message || "Variant added to bag successfully!");
+      } else {
+        toast.error(res?.message || "Failed to add to bag.");
+      }
+    } catch (err) {
+      console.error("Add to bag error:", err);
+      alert("Error adding variant to bag.");
+    }
+  };
 
   const handleVariantSelection = (variants) => setSelectedVariants(variants);
 
   const columns = useStockSelections({
-    onClick: handleColumnClick,
-    onView: (product) => console.log("View product:", product),
+    onClick: handleAddToBag,
+    onSelectChange: setSelectedVariants,
   });
 
   const handleCategoryChange = (val) => {
@@ -293,8 +318,8 @@ const BrowseProducts = () => {
 
       {/* Selected Variants Card */}
       {!loading && (
-        <Card className="w-full mt-4">
-          <CardHeader className="sticky top-0 z-10 bg-white py-5 px-6 shadow-sm border rounded-md">
+        <Card className="w-full mt-4 sticky bottom-0 z-50">
+          <CardHeader className="bg-white py-5 px-6 shadow-sm border rounded-md">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
               <span className="flex items-center gap-x-2 text-sm font-normal text-secondary-foreground">
                 Variants Selected: {selectedVariants.length} /{" "}

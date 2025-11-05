@@ -59,14 +59,11 @@ const ViewOrders = ({ open, onClose, orders, orderId }) => {
                   <CardHeader className="justify-start bg-muted/70 gap-9 h-auto py-5">
                     {[
                       ["Order ID", orderData?.id],
-                      ["Store Name", orderData?.store_name],
+                      // ["Store Name", orderData?.store_name],
                       ["Status", orderData?.order_status],
                       ["Order placed", formatDateShort(orderData?.created_at)],
                       ["Total", orderData?.total],
-                      [
-                        "Ship to",
-                        orderData?.first_name + " " + orderData?.last_name,
-                      ],
+                      ["Ship to", orderData?.customer_name],
                       ["Estimated Delivery", "07 July, 2025"],
                     ].map(([label, value], i) => (
                       <div key={i}>

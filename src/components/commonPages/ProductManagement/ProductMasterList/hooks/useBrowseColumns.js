@@ -5,6 +5,7 @@ import {
   DataGridTableRowSelectAll,
 } from "@/components/common/ui/data-grid-table";
 import { Skeleton } from "@/components/common/ui/skeleton";
+import { Button } from "@/components/common/ui/button";
 
 export const useBrowseColumns = ({ onClick, onView }) => {
   return useMemo(
@@ -77,32 +78,67 @@ export const useBrowseColumns = ({ onClick, onView }) => {
         cell: ({ row }) => {
           const metals = Array.isArray(row.original.metal_color)
             ? row.original.metal_color
+            : typeof row.original.metal_color === "string"
+            ? [row.original.metal_color]
             : [];
+
+          const colorMap = {
+            WHITE: "#ffffff",
+            YELLOW: "#FFD700",
+            ROSE: "#E75480",
+            "WHITE/YELLOW": "linear-gradient(135deg, #ffffff 50%, #FFD700 50%)",
+            "WHITE/ROSE": "linear-gradient(135deg, #ffffff 50%, #E75480 50%)",
+          };
+
+          const getBackground = (value) => {
+            if (!value) return "#ccc";
+            const upper = value.toUpperCase();
+            if (colorMap[upper]) return colorMap[upper];
+
+            if (upper.includes("/")) {
+              const [first, second] = upper.split("/");
+              return `linear-gradient(135deg, ${
+                colorMap[first] || "#ccc"
+              } 50%, ${colorMap[second] || "#ccc"} 50%)`;
+            }
+            return colorMap[upper] || "#ccc";
+          };
 
           return (
             <div className="flex gap-1">
               {metals.map((color, index) => (
-                <span
+                <div
                   key={index}
-                  className="w-4 h-4 rounded-sm"
+                  title={color}
+                  className="w-[18px] h-[18px] rounded-sm border border-gray-300"
                   style={{
-                    backgroundColor:
-                      color.toLowerCase() === "yellow"
-                        ? "#D6B34C"
-                        : color.toLowerCase() === "white"
-                        ? "#E8E8E8"
-                        : color.toLowerCase() === "rose"
-                        ? "#D8A083"
-                        : color,
+                    background: getBackground(color),
                   }}
-                />
+                ></div>
               ))}
             </div>
           );
         },
         size: 135,
       },
+      {
+        id: "actions",
+        header: "Actions",
+        // pinning: "right",
+        cell: ({ row }) => (
+          <div className="flex gap-[10px]">
+            <Button
+              variant="outline"
+              mode="icon"
+              // onClick={() => setEditingCell(row.original)}
+            >
+              Add to Cart
+            </Button>
+          </div>
+        ),
+        size: 100,
+      },
     ],
-    [onView]
+    [onView, onClick]
   );
 };

@@ -21,11 +21,10 @@ import dynamic from "next/dynamic";
 import { formatDateLong, toTitleCase } from "@/lib/utils";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
 import { useCrudApi } from "@/hooks/useCrudApi";
+import { useFileType } from "@/hooks/useFileType";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
-  const { create } = useCrudApi("/api/product-management");
-  console.log("product", product);
   const productData = product || {
     designNo: "N/A",
     category: "N/A",
@@ -117,7 +116,7 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
             <Card className="flex flex-col space-y-3 p-5">
               {/* Product top row */}
               <div className="text-base font-medium flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <label>Cloud Shift Lightweight Runner Pro Edition</label>
+                <label>{toTitleCase(product?.title)}</label>
                 <span className="text-[14px] font-medium flex gap-[10px] items-center">
                   Active
                   <ActiveToggleCell isActive={product?.is_active} />
@@ -183,18 +182,32 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
             {/* Products images */}
             <div className="flex flex-wrap gap-4 md:gap-5 my-6 md:my-8 justify-center md:justify-start">
               {product?.media &&
-                product?.media.map((image, index) => (
-                  <div
-                    className="w-[120px] h-[120px] md:w-[144px] md:h-[144px] p-[10px] bg-[#FCFCFC]"
-                    key={index}
-                  >
-                    <img
-                      src={image?.url}
-                      className="w-full h-full object-contain"
-                      alt={`Product ${index + 1}`}
-                    />
-                  </div>
-                ))}
+                product?.media.map((image, index) => {
+                  const { isVideo } = useFileType(image?.url);
+                  return (
+                    <div
+                      className="w-[120px] h-[120px] md:w-[144px] md:h-[144px] p-[10px] bg-[#FCFCFC]"
+                      key={index}
+                    >
+                      {isVideo ? (
+                        <video
+                          src={image?.url}
+                          className="w-full h-full object-contain"
+                          autoPlay
+                          loop
+                          playsInline
+                          muted
+                        />
+                      ) : (
+                        <img
+                          src={image?.url}
+                          className="w-full h-full object-contain"
+                          alt={`Product ${index + 1}`}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
             </div>
           </ScrollArea>
         </SheetBody>

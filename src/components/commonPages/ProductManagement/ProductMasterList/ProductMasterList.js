@@ -1,23 +1,26 @@
 "use client";
-
 import React, { useState, useCallback, useMemo } from "react";
 import { useProductListColumns } from "./hooks/useProductListColumns";
 import { ProductCardView } from "./ProductCardView";
 import ProductCard from "./ProductCard";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
 import { ContentLoader } from "@/components/common/ui/Loader/content-loader";
-import { DataGridToolbar } from "@/components/common/DataGridToolBar";
 import { useCrudList } from "@/hooks/useCrudList";
+import { toTitleCase } from "@/lib/utils";
 
 const ProductMasterList = () => {
   const [openProductDetailSheet, setOpenProductDetailSheet] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
   const [pageInfo, setPageInfo] = useState({ pageIndex: 0, pageSize: 10 });
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [editingCell, setEditingCell] = useState(null);
-  const [editedValue, setEditedValue] = useState("");
+  // Filters
+  const [filters, setFilters] = useState({
+    category: "",
+    style: "",
+    shape: "",
+    collection: "",
+  });
 
   const { list, loading, error, editData, setEditData, fetchById, pagination } =
     useCrudList("/api/product-management", {
@@ -26,11 +29,12 @@ const ProductMasterList = () => {
       search: searchQuery,
     });
 
+  // Normalize list data
   const rows = (list?.result?.items || list?.items || list || []).map(
     (item) => ({
       id: item.id,
       title: item.title,
-      productImg: item.product_img,
+      product_image: item.product_image,
       design_no: item.design_no,
       category: item.category,
       style: item.style,
@@ -44,16 +48,43 @@ const ProductMasterList = () => {
     })
   );
 
+  // Filtering logic
   const filteredRows = useMemo(() => {
-    if (!searchQuery) return rows;
-    const query = searchQuery.toLowerCase();
-    return rows.filter(
-      (r) =>
-        r.category?.toLowerCase().includes(query) ||
-        r.design_no?.toLowerCase().includes(query) ||
-        r.style?.toLowerCase().includes(query)
-    );
-  }, [searchQuery, rows]);
+    let data = rows;
+
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      data = data.filter(
+        (r) =>
+          r.category?.toLowerCase().includes(query) ||
+          r.design_no?.toLowerCase().includes(query) ||
+          r.style?.toLowerCase().includes(query)
+      );
+    }
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        data = data.filter(
+          (r) => r[key]?.toLowerCase() === value.toLowerCase()
+        );
+      }
+    });
+
+    return data;
+  }, [rows, searchQuery, filters]);
+
+  // Helper to build dropdown options dynamically
+  const buildFilterOptions = (key, label) => [
+    { value: "all", label: `All ${label}` },
+    ...new Map(
+      list
+        ?.filter((item) => item?.[key])
+        .map((item) => [
+          item[key],
+          { value: item[key], label: toTitleCase(item[key]) },
+        ])
+    ).values(),
+  ];
 
   const handleView = useCallback(
     async (product) => {
@@ -74,45 +105,57 @@ const ProductMasterList = () => {
     setSelectedProduct(null);
   }, []);
 
-  const handleSaveEdit = (id, field, value) => {
-    setEditingCell(null);
-  };
+  const handleSaveEdit = () => setEditingCell(null);
 
   const { columns } = useProductListColumns({
-    editingCell,
-    setEditingCell,
-    editedValue,
-    setEditedValue,
     handleSaveEdit,
-    onClick: (field) => console.log("Sort by:", field),
     onView: handleView,
   });
 
+  // Render product cards
   const renderStoreCardsView = (item) => (
     <ProductCard
       key={item.id}
-      title={item.title}
-      product_image={item.product_image}
-      design_no={item.design_no}
-      category={item.category}
-      style={item.style}
-      shape={item.shape}
-      bsPrice={item.base_price}
-      salesPrice={item.sales_price}
-      collection={item.collection}
-      created_at={item.created_at}
-      updated_at={item.updated_at}
-      gender={item.gender}
-      active={item.active}
+      {...item}
       onClick={() => {
-        setOpenProductDetailSheet(true);
         setSelectedProduct(item);
+        setOpenProductDetailSheet(true);
       }}
     />
   );
 
   if (loading) return <ContentLoader />;
   if (error) return <div className="text-red-500">Error: {error}</div>;
+
+  const filterDropdownProps = {
+    category: {
+      value: filters.category,
+      onChange: (val) =>
+        setFilters((prev) => ({ ...prev, category: val === "all" ? "" : val })),
+      options: buildFilterOptions("category", "Categories"),
+    },
+    style: {
+      value: filters.style,
+      onChange: (val) =>
+        setFilters((prev) => ({ ...prev, style: val === "all" ? "" : val })),
+      options: buildFilterOptions("style", "Styles"),
+    },
+    shape: {
+      value: filters.shape,
+      onChange: (val) =>
+        setFilters((prev) => ({ ...prev, shape: val === "all" ? "" : val })),
+      options: buildFilterOptions("shape", "Shapes"),
+    },
+    collection: {
+      value: filters.collection,
+      onChange: (val) =>
+        setFilters((prev) => ({
+          ...prev,
+          collection: val === "all" ? "" : val,
+        })),
+      options: buildFilterOptions("collection", "Collections"),
+    },
+  };
 
   return (
     <>
@@ -125,17 +168,10 @@ const ProductMasterList = () => {
         onPaginationChange={setPageInfo}
         pageCount={pagination?.totalPages}
         totalCount={pagination?.total}
-        serverSidePagination={true}
-        // ToolbarComponent={(props) => (
-        //   <DataGridToolbar
-        //     {...props}
-        //     searchQuery={searchQuery}
-        //     setSearchQuery={setSearchQuery}
-        //     pagination={pageInfo}
-        //     setPagination={setPageInfo}
-        //     searchPlaceholder="Search Products"
-        //   />
-        // )}
+        serverSidePagination
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        filterDropdownProps={filterDropdownProps}
       />
 
       <ProductCardView

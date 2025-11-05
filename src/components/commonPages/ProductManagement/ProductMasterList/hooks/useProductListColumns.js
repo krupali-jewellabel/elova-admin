@@ -41,12 +41,9 @@ export const useProductListColumns = ({
 
           return (
             <img
-              src={productImage || "/images/products/1.png"}
+              src={productImage}
               className="w-[50px] h-[50px] object-cover rounded"
               alt="product"
-              onError={(e) => {
-                e.currentTarget.src = "/images/products/1.png";
-              }}
             />
           );
         },
@@ -166,9 +163,9 @@ export const useProductListColumns = ({
       {
         id: "actions",
         header: "Actions",
-        pinning: "right", 
+        pinning: "right",
         cell: ({ row }) => (
-          <div className="flex gap-[10px]">
+          <div className="flex items-center justify-center gap-[10px]">
             <Button
               variant="outline"
               mode="icon"
@@ -176,13 +173,13 @@ export const useProductListColumns = ({
             >
               <EyeIcon className="h-4 w-4" />
             </Button>
-            <Button
+            {/* <Button
               variant="outline"
               mode="icon"
               onClick={() => setEditingCell(row.original)}
             >
               <Edit2Icon className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
         ),
         size: 100,

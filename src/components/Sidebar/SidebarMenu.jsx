@@ -121,7 +121,7 @@ const SidebarMenu = () => {
         </AccordionMenu>
       </div>
 
-      <div className="p-5 w-full sticky bottom-0 mt-100">
+      <div className="p-5 w-full sticky bottom-0 mt-100 bg-white">
         <div className="flex items-center gap-3">
           <img
             className="size-10 rounded-full border-2 border-success shrink-0"

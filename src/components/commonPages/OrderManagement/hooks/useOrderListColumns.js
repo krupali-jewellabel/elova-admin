@@ -6,7 +6,7 @@ import {
 } from "@/components/common/ui/data-grid-table";
 import { Skeleton } from "@/components/common/ui/skeleton";
 import { Button } from "@/components/common/ui/button";
-import { Edit2Icon, EyeIcon } from "lucide-react";
+import { EyeIcon } from "lucide-react";
 
 export const useOrderListColumns = ({ onEdit, onView }) => {
   return useMemo(
@@ -31,56 +31,18 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
           </div>
         ),
         enableSorting: true,
-        size: 135,
+        size: 100,
         meta: {
           skeleton: <Skeleton className="h-4 w-[125px]" />,
         },
       },
       {
-        id: "image",
+        id: "customer_name",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Image" column={column} />
+          <DataGridColumnHeader title="Customer Name" column={column} />
         ),
-        accessorFn: (row) => row.items[0]?.product?.image,
-        cell: ({ row }) => (
-          <img
-            src={row.original.items[0]?.product?.image}
-            className="w-[50px] h-[50px] p-[9px] rounded-[6px]"
-          />
-        ),
-        enableSorting: true,
-        size: 135,
-      },
-      {
-        id: "productName",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Product Name" column={column} />
-        ),
-        accessorFn: (row) => row.original?.items[0]?.product?.title || "",
-        cell: ({ row }) => (
-          <span>{row.original?.items[0]?.product?.title || ""}</span>
-        ),
-        size: 135,
-      },
-      // {
-      //   id: "storeName",
-      //   header: ({ column }) => (
-      //     <DataGridColumnHeader title="Store Name" column={column} />
-      //   ),
-      //   accessorFn: (row) => row.storeName,
-      //   cell: ({ row }) => <span>{row.original.storeName}</span>,
-      //   size: 135,
-      // },
-      {
-        id: "orderDate",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Order Date" column={column} />
-        ),
-        accessorFn: (row) => row.created_at,
-        cell: ({ row }) => {
-          const date = row.original?.created_at;
-          return date ? new Date(date).toLocaleDateString() : "-";
-        },
+        accessorFn: (row) => row.customer_name,
+        cell: ({ row }) => <span>{row.original.customer_name}</span>,
         size: 135,
       },
       {
@@ -88,8 +50,8 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Quantity" column={column} />
         ),
-        accessorFn: (row) => row.items[0]?.quantity,
-        cell: ({ row }) => <span>{row.original.items[0]?.quantity}</span>,
+        accessorFn: (row) => row.total_quantity,
+        cell: ({ row }) => <span>{row.original.total_quantity}</span>,
         size: 135,
       },
       {
@@ -101,7 +63,35 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         cell: ({ row }) => <span>{row.original.subtotal}</span>,
         size: 135,
       },
+      {
+        id: "orderDate",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Order Date" column={column} />
+        ),
+        accessorFn: (row) => row.created_at,
+        cell: ({ row }) => {
+          const date = row.original?.created_at;
+          if (!date) return "-";
 
+          const formattedDate = new Date(date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+
+          return formattedDate;
+        },
+        size: 135,
+      },
+      {
+        id: "orderChannel",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Order Channel" column={column} />
+        ),
+        accessorFn: (row) => row.payment_method,
+        cell: ({ row }) => <span>{row.original.payment_method}</span>,
+        size: 130,
+      },
       {
         id: "paymentStatus",
         header: ({ column }) => (
@@ -121,15 +111,6 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         size: 135,
       },
       {
-        id: "orderChannel",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Order Channel" column={column} />
-        ),
-        accessorFn: (row) => row.payment_method,
-        cell: ({ row }) => <span>{row.original.payment_method}</span>,
-        size: 130,
-      },
-      {
         id: "action",
         header: ({ column }) => (
           <DataGridColumnHeader title="Action" column={column} />
@@ -137,14 +118,6 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         accessorFn: (row) => row.orderChannel,
         cell: ({ row }) => (
           <div className="flex gap-[10px]">
-            {/* <Button
-              mode="icon"
-              variant="outline"
-              onClick={() => onEdit(row.original)}
-            >
-              <Edit2Icon />
-            </Button> */}
-
             <Button
               mode="icon"
               variant="outline"

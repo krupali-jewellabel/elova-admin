@@ -304,8 +304,8 @@ const ByIndividual = () => {
   const columns = useCustomMarginProductsColumns({
     onView: async (item) => {
       try {
-        setSelectedProductId(item.id);
-        const data = await fetchById(item.id);
+        setSelectedProductId(item?.id);
+        const data = await fetchById(item?.id);
         setEditData(data?.data);
         setOpenProductDetailSheet(true);
       } catch (err) {}
