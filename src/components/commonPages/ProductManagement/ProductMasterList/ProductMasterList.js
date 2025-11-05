@@ -22,33 +22,28 @@ const ProductMasterList = () => {
     collection: "",
   });
 
-  const { list, loading, error, editData, setEditData, fetchById, pagination } =
-    useCrudList("/api/product-management", {
-      page: pageInfo.pageIndex + 1,
-      limit: pageInfo.pageSize,
-      search: searchQuery,
-    });
+  // Fetch full list once (client-side)
+  const { list, loading, error, editData, setEditData, fetchById } =
+    useCrudList("/api/product-management");
 
   // Normalize list data
-  const rows = (list?.result?.items || list?.items || list || []).map(
-    (item) => ({
-      id: item.id,
-      title: item.title,
-      product_image: item.product_image,
-      design_no: item.design_no,
-      category: item.category,
-      style: item.style,
-      shape: item.shape,
-      base_price: item.base_price,
-      sales_price: item.sales_price,
-      collection: item.collection,
-      gender: item.gender,
-      created_at: item.created_at,
-      updated_at: item.updated_at,
-    })
-  );
+  const rows = (list || []).map((item) => ({
+    id: item.id,
+    title: item.title,
+    product_image: item.product_image,
+    design_no: item.design_no,
+    category: item.category,
+    style: item.style,
+    shape: item.shape,
+    base_price: item.base_price,
+    sales_price: item.sales_price,
+    collection: item.collection,
+    gender: item.gender,
+    created_at: item.created_at,
+    updated_at: item.updated_at,
+  }));
 
-  // Filtering logic
+  // Filtering (Client-side)
   const filteredRows = useMemo(() => {
     let data = rows;
 
@@ -73,18 +68,11 @@ const ProductMasterList = () => {
     return data;
   }, [rows, searchQuery, filters]);
 
-  // Helper to build dropdown options dynamically
-  const buildFilterOptions = (key, label) => [
-    { value: "all", label: `All ${label}` },
-    ...new Map(
-      list
-        ?.filter((item) => item?.[key])
-        .map((item) => [
-          item[key],
-          { value: item[key], label: toTitleCase(item[key]) },
-        ])
-    ).values(),
-  ];
+  // CLIENT-SIDE PAGINATION
+  const start = pageInfo.pageIndex * pageInfo.pageSize;
+  const end = start + pageInfo.pageSize;
+  const paginatedData = filteredRows.slice(start, end);
+  const totalPages = Math.ceil(filteredRows.length / pageInfo.pageSize);
 
   const handleView = useCallback(
     async (product) => {
@@ -100,32 +88,34 @@ const ProductMasterList = () => {
     [fetchById, setEditData]
   );
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     setOpenProductDetailSheet(false);
     setSelectedProduct(null);
-  }, []);
-
-  const handleSaveEdit = () => setEditingCell(null);
+  };
 
   const { columns } = useProductListColumns({
-    handleSaveEdit,
     onView: handleView,
   });
 
-  // Render product cards
   const renderStoreCardsView = (item) => (
-    <ProductCard
-      key={item.id}
-      {...item}
-      onClick={() => {
-        setSelectedProduct(item);
-        setOpenProductDetailSheet(true);
-      }}
-    />
+    <ProductCard key={item.id} {...item} onClick={() => handleView(item)} />
   );
 
   if (loading) return <ContentLoader />;
   if (error) return <div className="text-red-500">Error: {error}</div>;
+
+  // Dropdown filter props
+  const buildFilterOptions = (key, label) => [
+    { value: "all", label: `All ${label}` },
+    ...new Map(
+      list
+        ?.filter((item) => item?.[key])
+        .map((item) => [
+          item[key],
+          { value: item[key], label: toTitleCase(item[key]) },
+        ])
+    ).values(),
+  ];
 
   const filterDropdownProps = {
     category: {
@@ -161,14 +151,14 @@ const ProductMasterList = () => {
     <>
       <ListWithCardToggle
         title="Product Master List"
-        data={filteredRows}
+        description="All products available in the store"
+        data={paginatedData}
         columns={columns}
         renderCardView={renderStoreCardsView}
         pagination={pageInfo}
         onPaginationChange={setPageInfo}
-        pageCount={pagination?.totalPages}
-        totalCount={pagination?.total}
-        serverSidePagination
+        pageCount={totalPages}
+        totalCount={filteredRows.length}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         filterDropdownProps={filterDropdownProps}

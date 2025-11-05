@@ -9,8 +9,6 @@ import ViewOrders from "./ViewOrders";
 const AllOrders = () => {
   const [orderListView, setOrderListView] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-  const [statusFilter, setStatusFilter] = useState("");
-  const [paymentFilter, setPaymentFilter] = useState("");
 
   const [pageInfo, setPageInfo] = useState({ pageIndex: 0, pageSize: 10 });
   const [searchQuery, setSearchQuery] = useState("");
