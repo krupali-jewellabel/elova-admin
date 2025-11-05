@@ -21,6 +21,9 @@ const ProductCard = ({
   gender,
   active,
   onClick,
+  hideRemove,
+  hideEdit,
+  hideActiveCell
 }) => {
   return (
     <Card className="shadow-none mb-5">
@@ -28,10 +31,10 @@ const ProductCard = ({
         <div className="absolute left-[17px]">
           <Checkbox />
         </div>
-        <div className="absolute right-[17px] text-[14px] font-[400] flex items-center gap-[10px]">
+       {!hideActiveCell && <div className="absolute right-[17px] text-[14px] font-[400] flex items-center gap-[10px]">
           {/* Active {active} */}
           <ActiveToggleCell id={id} isActive={active} />
-        </div>
+        </div>}
         <img
           src={product_image}
           alt="product"
@@ -115,12 +118,14 @@ const ProductCard = ({
         </div>
 
         <div className="flex justify-between pt-[20px]">
-          <div className="flex items-center gap-2">
-            <Edit2 width={16} />
-            <span className="text-[12px] text-secondary-foreground font-[400]">
-              Edit
-            </span>
-          </div>
+          {!hideEdit && (
+            <div className="flex items-center gap-2">
+              <Edit2 width={16} />
+              <span className="text-[12px] text-secondary-foreground font-[400]">
+                Edit
+              </span>
+            </div>
+          )}
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={onClick}
@@ -130,12 +135,14 @@ const ProductCard = ({
               View
             </span>
           </div>
-          <div className="flex items-center gap-2 ">
-            <RiDeleteBinFill width={16} />
-            <span className="text-[12px] text-secondary-foreground font-[400]">
-              Remove
-            </span>
-          </div>
+          {!hideRemove && (
+            <div className="flex items-center gap-2 ">
+              <RiDeleteBinFill width={16} />
+              <span className="text-[12px] text-secondary-foreground font-[400]">
+                Remove
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </Card>

@@ -7,10 +7,13 @@ import {
 import { Skeleton } from "@/components/common/ui/skeleton";
 import { Edit2Icon, EyeIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/common/ui/button";
+import { EditableMarginCell } from "../../PricingMargin/ByCategory/EditableMarginCell";
+import { toTitleCase } from "@/lib/utils";
 
 export const useCustomMarginProductsColumns = ({
   onClick = () => {},
   onView = () => {},
+  onRefresh = () => {},
 }) => {
   return useMemo(() => {
     return [
@@ -27,8 +30,8 @@ export const useCustomMarginProductsColumns = ({
         header: ({ column }) => (
           <DataGridColumnHeader title="Id" column={column} />
         ),
-        accessorFn: (row) => row.id,
-        cell: ({ row }) => <p>{row.original.id}</p>,
+        accessorFn: (row) => row?.id,
+        cell: ({ row }) => <p>{row.original?.id}</p>,
         enableSorting: false,
         size: 100,
       },
@@ -41,9 +44,12 @@ export const useCustomMarginProductsColumns = ({
             onClick={() => onClick("image")}
           />
         ),
-        accessorFn: (row) => row.product_image,
+        accessorFn: (row) => row?.product_image,
         cell: ({ row }) => (
-          <img src={row.original.product_image} className="w-[50px] h-[50px]" />
+          <img
+            src={row?.original?.product_image}
+            className="w-[50px] h-[50px]"
+          />
         ),
         enableSorting: true,
         size: 100,
@@ -56,8 +62,8 @@ export const useCustomMarginProductsColumns = ({
         header: ({ column }) => (
           <DataGridColumnHeader title="Design Number" column={column} />
         ),
-        accessorFn: (row) => row.design_no,
-        cell: ({ row }) => <p>{row.original.design_no}</p>,
+        accessorFn: (row) => row?.design_no,
+        cell: ({ row }) => <p>{row.original?.design_no}</p>,
         enableSorting: true,
         size: 135,
       },
@@ -66,8 +72,8 @@ export const useCustomMarginProductsColumns = ({
         header: ({ column }) => (
           <DataGridColumnHeader title="Title" column={column} />
         ),
-        accessorFn: (row) => row.title,
-        cell: ({ row }) => <span>{row.original.title}</span>,
+        accessorFn: (row) => row?.title,
+        cell: ({ row }) => <span>{toTitleCase(row.original?.title)}</span>,
         size: 165,
       },
       {
@@ -75,8 +81,8 @@ export const useCustomMarginProductsColumns = ({
         header: ({ column }) => (
           <DataGridColumnHeader title="Jewellabel Price" column={column} />
         ),
-        accessorFn: (row) => row.base_price,
-        cell: ({ row }) => <span>${row.original.base_price}</span>,
+        accessorFn: (row) => row?.base_price,
+        cell: ({ row }) => <span>${row.original?.base_price}</span>,
         size: 135,
       },
       {
@@ -84,17 +90,28 @@ export const useCustomMarginProductsColumns = ({
         header: ({ column }) => (
           <DataGridColumnHeader title="Niora Price" column={column} />
         ),
-        accessorFn: (row) => row.sales_price,
-        cell: ({ row }) => <span>${row.original.sales_price}</span>,
+        accessorFn: (row) => row?.sales_price,
+        cell: ({ row }) => <span>${row.original?.sales_price}</span>,
         size: 135,
       },
+      // {
+      //   id: "margin",
+      //   header: ({ column }) => (
+      //     <DataGridColumnHeader title="Margin" column={column} />
+      //   ),
+      //   accessorFn: (row) => row?.margin,
+      //   cell: ({ row }) => <span>{row.original?.store_margin}%</span>,
+      //   size: 100,
+      // },
       {
         id: "margin",
         header: ({ column }) => (
           <DataGridColumnHeader title="Margin" column={column} />
         ),
-        accessorFn: (row) => row.margin,
-        cell: ({ row }) => <span>{row.original.store_margin}%</span>,
+        accessorFn: (row) => row?.store_margin,
+        cell: ({ row }) => (
+          <EditableMarginCell row={row} onRefresh={onRefresh} />
+        ),
         size: 100,
       },
       {
@@ -107,7 +124,7 @@ export const useCustomMarginProductsColumns = ({
             <Button
               mode="icon"
               variant="outline"
-              onClick={() => onView(row.original)}
+              onClick={() => onView(row?.original)}
             >
               <EyeIcon />
             </Button>

@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useMarginService } from "@/services/marginService";
 
 export const ListWithCardToggle = ({
   title,
@@ -59,6 +60,8 @@ export const ListWithCardToggle = ({
   filterFunction,
   serverSidePagination = false,
   ToolbarComponent,
+  showBulkMargin,
+  onRefresh,
 }) => {
   const [currentMode, setCurrentMode] = useState("list");
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -67,6 +70,11 @@ export const ListWithCardToggle = ({
   const [searchQuery, setSearchQuery] = useState(externalSearchQuery || "");
   const [deletePermissionIds, setDeletePermissionIds] = useState([]);
   const [groupDeleteDialogOpen, setGroupDeleteDialogOpen] = useState(false);
+  const [showBulkInput, setShowBulkInput] = useState(false);
+  const [bulkMargin, setBulkMargin] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const { updateBulkMargin } = useMarginService();
+
   const [columnPinning, setColumnPinning] = useState({
     left: ["expand-column"],
     right: ["actions"],
@@ -88,6 +96,29 @@ export const ListWithCardToggle = ({
     );
   };
 
+  const handleBulkSave = async () => {
+    if (!bulkMargin || deletePermissionIds.length === 0) return;
+
+    setIsSaving(true);
+    try {
+      const selectedProducts = table
+        .getRowModel()
+        .rows.filter((row) => deletePermissionIds.includes(row.id))
+        .map((row) => row.original);
+
+      const success = await updateBulkMargin(selectedProducts, bulkMargin);
+
+      if (success) {
+        onRefresh?.();
+
+        setShowBulkInput(false);
+        setBulkMargin("");
+        setRowSelection({});
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
   const filteredData = useMemo(() => {
     if (serverSidePagination || !searchQuery) return data;
     const filterFunc = filterFunction || defaultFilterFunction;
@@ -278,17 +309,42 @@ export const ListWithCardToggle = ({
                   )}
 
                   <CardToolbar>
-                    {deletePermissionIds.length > 0 && (
-                      <Button
-                        variant="destructive"
-                        onClick={() => setGroupDeleteDialogOpen(true)}
-                      >
-                        Delete {deletePermissionIds.length} permissions
-                      </Button>
-                    )}
-                    {createBtn && (
-                      <div className="flex items-center justify-end">
-                        {createBtn}
+                    {showBulkMargin && deletePermissionIds.length > 0 && (
+                      <div className="flex items-center gap-3">
+                        {!showBulkInput ? (
+                          <Button
+                            variant="primary"
+                            onClick={() => setShowBulkInput(true)}
+                          >
+                            Bulk Action
+                          </Button>
+                        ) : (
+                          <>
+                            <input
+                              type="number"
+                              placeholder="%"
+                              className="border border-gray-300 rounded-md px-3 py-1 w-20 text-center"
+                              value={bulkMargin}
+                              onChange={(e) => setBulkMargin(e.target.value)}
+                            />
+                            <Button
+                              variant="primary"
+                              onClick={handleBulkSave}
+                              disabled={isSaving || !bulkMargin}
+                            >
+                              {isSaving ? "Saving..." : "Save"}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                setShowBulkInput(false);
+                                setBulkMargin("");
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </>
+                        )}
                       </div>
                     )}
                   </CardToolbar>

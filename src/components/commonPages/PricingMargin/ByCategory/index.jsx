@@ -69,13 +69,34 @@ const ByCategory = () => {
   const [selectedCat, setSelectedCat] = useState("");
   const [productPricingList, setProductPricingList] = useState([]);
   const [marginPercentage, setMarginPercentage] = useState(0);
-
   const { fetchAll: getCategories } = useCrudApi(
     "/api/pricing-margin/by-category/categories"
   );
   const { fetchAll: getByCategory, create } = useCrudApi(
     "/api/pricing-margin/by-category"
   );
+
+  const { fetchById } = useCrudApi(
+    "/api/pricing-margin/by-category/get-margin"
+  );
+
+  useEffect(() => {
+    const fetchMarginForCategory = async () => {
+      if (!selectedCat) return;
+
+      try {
+        const res = await fetchById(selectedCat);
+
+        const margin = res?.data?.store_margin ?? 0;
+        setMarginPercentage(margin);
+      } catch (error) {
+        console.error("Error fetching margin:", error);
+        setMarginPercentage(0);
+      }
+    };
+
+    fetchMarginForCategory();
+  }, [selectedCat, fetchById]);
 
   /* Fetch categories only once */
   useEffect(() => {
@@ -85,7 +106,6 @@ const ByCategory = () => {
         const list = cat?.data || [];
         setCategories(list);
 
-        // Auto-select the first category
         if (list.length && !selectedCat) {
           setSelectedCat(String(list[0].id));
         }
@@ -123,7 +143,6 @@ const ByCategory = () => {
     try {
       const payload = {
         margin_type: 1,
-        store_margin: 10,
         categories: [
           {
             category_id: Number(selectedCat),
@@ -134,13 +153,34 @@ const ByCategory = () => {
 
       await create(payload);
       toast.success("Margin configuration saved successfully!");
+
+      await Promise.all([fetchUpdatedMargin(), fetchUpdatedProducts()]);
     } catch (error) {
       console.error("Error saving configuration:", error);
       toast.error("Failed to save configuration.");
     }
   };
 
-  /* Render product cards */
+  /* Fetch updated margin */
+  const fetchUpdatedMargin = async () => {
+    try {
+      const res = await fetchById(selectedCat);
+      const margin = res?.data?.store_margin ?? 0;
+      setMarginPercentage(margin);
+    } catch (error) {
+      console.error("Error refreshing margin:", error);
+    }
+  };
+
+  const fetchUpdatedProducts = async () => {
+    try {
+      const res = await getByCategory({ category_id: selectedCat });
+      setProductPricingList(res?.products || []);
+    } catch (error) {
+      console.error("Error refreshing products:", error);
+    }
+  };
+
   const renderedMarginCards = productPricingList.map((item, index) => (
     <MarginCard
       key={item?.id || `product-${index}`}
