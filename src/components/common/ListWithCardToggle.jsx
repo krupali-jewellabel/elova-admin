@@ -16,7 +16,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/common/ui/toggle-group";
-import { LayoutGrid, List, Search, X } from "lucide-react";
+import { Columns, LayoutGrid, List, Search, Settings2, X } from "lucide-react";
 import {
   ToolbarDescription,
   ToolbarTitle,
@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { DataGridColumnVisibility } from "./ui/data-grid-column-visibility";
 
 export const ListWithCardToggle = ({
   title,
@@ -88,6 +89,24 @@ export const ListWithCardToggle = ({
     );
   };
 
+  const COLUMN_VISIBILITY_KEY = `${title}-column-visibility`;
+
+  const [columnVisibility, setColumnVisibility] = useState(() => {
+    if (typeof window === "undefined") return {};
+    try {
+      return JSON.parse(localStorage.getItem(COLUMN_VISIBILITY_KEY)) || {};
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      COLUMN_VISIBILITY_KEY,
+      JSON.stringify(columnVisibility)
+    );
+  }, [columnVisibility]);
+
   const filteredData = useMemo(() => {
     if (serverSidePagination || !searchQuery) return data;
     const filterFunc = filterFunction || defaultFilterFunction;
@@ -104,7 +123,9 @@ export const ListWithCardToggle = ({
       sorting,
       rowSelection,
       columnPinning,
+      columnVisibility, // ✅ add this
     },
+    onColumnVisibilityChange: setColumnVisibility, // ✅ add this
     initialState: {
       columnPinning: {
         left: ["expand-column"],
@@ -121,10 +142,7 @@ export const ListWithCardToggle = ({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     ...(serverSidePagination
-      ? {
-          manualPagination: true,
-          pageCount,
-        }
+      ? { manualPagination: true, pageCount }
       : {
           getPaginationRowModel: getPaginationRowModel(),
           getFilteredRowModel: getFilteredRowModel(),
@@ -277,7 +295,18 @@ export const ListWithCardToggle = ({
                     </div>
                   )}
 
-                  <CardToolbar>
+                  <CardToolbar className="flex items-center gap-2">
+                    {/* Column Visibility Toggle */}
+                    <DataGridColumnVisibility
+                      table={table}
+                      trigger={
+                        <Button variant="outline" size="md">
+                          <Settings2 className="mr-2 h-4 w-4" />
+                          Columns
+                        </Button>
+                      }
+                    />
+
                     {deletePermissionIds.length > 0 && (
                       <Button
                         variant="destructive"

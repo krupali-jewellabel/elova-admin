@@ -93,6 +93,10 @@ export const MENU_SIDEBAR = [
     icon: RiStore2Line,
     children: [
       {
+        title: "Browse Other Products",
+        path: "/dashboard/product-management/browse-products",
+      },
+      {
         title: "My Products",
         children: [
           {
@@ -104,10 +108,6 @@ export const MENU_SIDEBAR = [
             path: "/dashboard/product-management/category",
           },
         ],
-      },
-      {
-        title: "Browse Other Products",
-        path: "/dashboard/product-management/browse-products",
       },
       {
         title: "Manage Collection",

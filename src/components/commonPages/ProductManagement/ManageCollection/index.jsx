@@ -68,72 +68,10 @@ const ManageCollection = () => {
 
   return (
     <div className="space-y-4">
-      {/* Header + Filters */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-[700px]">
-          {/* Collection Filter */}
-          <div className="flex items-center gap-2">
-            <label htmlFor="collection" className="text-sm font-medium w-24">
-              Collection:
-            </label>
-            <Select defaultValue="all" id="collection">
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select collection" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="collection1">Collection 1</SelectItem>
-                <SelectItem value="collection2">Collection 2</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex items-center gap-2">
-            <label htmlFor="status" className="text-sm font-medium w-24">
-              Status:
-            </label>
-            <Select defaultValue="show-all" id="status">
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="show-all">Show all</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Visibility Filter */}
-          <div className="flex items-center gap-2">
-            <label htmlFor="visibility" className="text-sm font-medium w-24">
-              Visibility:
-            </label>
-            <Select defaultValue="show-all" id="visibility">
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select visibility" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="show-all">Show all</SelectItem>
-                <SelectItem value="public">Public</SelectItem>
-                <SelectItem value="private">Private</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 mt-4 md:mt-0">
-          <Button variant="primary">Bulk Action</Button>
-          {/* <Settings className="h-5 w-5" />
-          <Button variant="outline" onClick={handleCreate}>
-            <Plus className="h-4 w-4 mr-2" /> Create Collection
-          </Button> */}
-        </div>
-      </div>
-
       {/* Collection List */}
       <ListWithCardToggle
+        title="Collection List"
+        description="Manage and view all collections"
         data={list}
         columns={columns}
         serverSidePagination

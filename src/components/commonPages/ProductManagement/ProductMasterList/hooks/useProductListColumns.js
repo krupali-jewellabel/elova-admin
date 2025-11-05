@@ -15,6 +15,15 @@ export const useProductListColumns = ({
   onClick,
   onView,
 }) => {
+  const formatDate = (date) => {
+    if (!date) return "-";
+    return new Date(date).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -42,7 +51,7 @@ export const useProductListColumns = ({
           return (
             <img
               src={productImage}
-              className="w-[50px] h-[50px] object-cover rounded"
+              className="w-[55px] h-[70px] object-cover"
               alt="product"
             />
           );
@@ -105,7 +114,7 @@ export const useProductListColumns = ({
         ),
         accessorFn: (row) => row?.base_price,
         cell: ({ row }) => {
-          return `₹${row?.original?.base_price || 0}`;
+          return `${row?.original?.base_price || 0}`;
         },
         size: 120,
       },
@@ -115,7 +124,7 @@ export const useProductListColumns = ({
           <DataGridColumnHeader title="Sales Price" column={column} />
         ),
         accessorFn: (row) => row.sales_price,
-        cell: ({ row }) => `₹${row.original.sales_price || 0}`,
+        cell: ({ row }) => `${row.original.sales_price || 0}`,
         size: 120,
       },
       {
@@ -133,10 +142,7 @@ export const useProductListColumns = ({
           <DataGridColumnHeader title="Created At" column={column} />
         ),
         accessorFn: (row) => row.created_at,
-        cell: ({ row }) =>
-          row.original.created_at
-            ? new Date(row.original.created_at).toLocaleDateString()
-            : "-",
+        cell: ({ row }) => formatDate(row.original.created_at),
         size: 160,
       },
       {
@@ -145,10 +151,7 @@ export const useProductListColumns = ({
           <DataGridColumnHeader title="Last Updated" column={column} />
         ),
         accessorFn: (row) => row.updated_at,
-        cell: ({ row }) =>
-          row.original.updated_at
-            ? new Date(row.original.updated_at).toLocaleDateString()
-            : "-",
+        cell: ({ row }) => formatDate(row.original.updated_at),
         size: 160,
       },
       {
@@ -165,7 +168,7 @@ export const useProductListColumns = ({
         header: "Actions",
         pinning: "right",
         cell: ({ row }) => (
-          <div className="flex items-center justify-center gap-[10px]">
+          <div className="flex items-center justify-center gap-[10px] bg-white">
             <Button
               variant="outline"
               mode="icon"

@@ -86,6 +86,7 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
   });
 
   const normalizedMaterials = product?.materials?.map(normalizeMaterial) ?? [];
+  const [previewImage, setPreviewImage] = React.useState(null);
 
   const columns = [
     { key: "srNo", label: "Sr No.", align: "start" },
@@ -184,25 +185,27 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
               {product?.media &&
                 product?.media.map((image, index) => {
                   const { isVideo } = useFileType(image?.url);
+
                   return (
                     <div
-                      className="w-[120px] h-[120px] md:w-[144px] md:h-[144px] p-[10px] bg-[#FCFCFC]"
+                      onClick={() => setPreviewImage(image?.url)}
+                      className="w-[120px] h-[120px] md:w-[144px] md:h-[144px] p-[10px] bg-[#FCFCFC] overflow-hidden cursor-pointer rounded-md"
                       key={index}
                     >
                       {isVideo ? (
                         <video
                           src={image?.url}
-                          className="w-full h-full object-contain"
+                          className="w-full h-full object-contain transition duration-300 hover:scale-110"
                           autoPlay
                           loop
-                          playsInline
                           muted
+                          playsInline
                         />
                       ) : (
                         <img
                           src={image?.url}
-                          className="w-full h-full object-contain"
-                          alt={`Product ${index + 1}`}
+                          className="w-full h-full object-contain transition duration-300 hover:scale-110"
+                          alt="Product"
                         />
                       )}
                     </div>
@@ -211,6 +214,18 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
             </div>
           </ScrollArea>
         </SheetBody>
+        {previewImage && (
+          <div
+            onClick={() => setPreviewImage(null)}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center cursor-zoom-out"
+          >
+            <img
+              src={previewImage}
+              className="max-w-[90vw] max-h-[60vh] object-contain border border-black/40 rounded-md"
+              alt="Preview"
+            />
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
