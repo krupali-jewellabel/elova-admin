@@ -41,14 +41,13 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Image" column={column} />
         ),
-        accessorFn: (row) => row.items[0]?.product?.image,
+        accessorFn: (row) => row.items[0]?.product_image,
         cell: ({ row }) => (
           <img
-            src={row.original.items[0]?.product?.image}
+            src={row.original.items[0]?.product_image}
             className="w-[50px] h-[50px] p-[9px] rounded-[6px]"
           />
         ),
-        enableSorting: true,
         size: 135,
       },
       {
@@ -56,9 +55,9 @@ export const useOrderListColumns = ({ onEdit, onView }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Product Name" column={column} />
         ),
-        accessorFn: (row) => row.original?.items[0]?.product?.title || "",
+        accessorFn: (row) => row.items[0]?.product_title || "",
         cell: ({ row }) => (
-          <span>{row.original?.items[0]?.product?.title || ""}</span>
+          <span>{row.original.items[0]?.product_title || ""}</span>
         ),
         size: 135,
       },
