@@ -29,10 +29,25 @@ const ByIndividual = () => {
   const [selectedProductId, setSelectedProductId] = useState(
     editData?._id || null
   );
+  const [selectedProductIds, setSelectedProductIds] = useState([]);
 
+  const handleToggleSelect = (id) => {
+    setSelectedProductIds((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedProductIds.length === list.length) {
+      setSelectedProductIds([]); // deselect all
+    } else {
+      setSelectedProductIds(list.map((item) => item.id)); // select all
+    }
+  };
   const renderStoreCardsView = (item) => (
     <ProductCard
       key={item?.id}
+      productId={item?.id}
       product_image={item?.product_image}
       design_no={item?.design_no}
       category={item?.category}
@@ -45,6 +60,18 @@ const ByIndividual = () => {
       hideRemove
       hideEdit
       hideActiveCell
+      isSelected={selectedProductIds.includes(item?.id)}
+      onToggleSelect={() => handleToggleSelect(item?.id)}
+      onClick={async () => {
+        try {
+          setSelectedProductId(item?.id);
+          const data = await fetchById(item?.id);
+          setEditData(data?.data);
+          setOpenProductDetailSheet(true);
+        } catch (err) {
+          console.error("Error opening product:", err);
+        }
+      }}
     />
   );
 
@@ -94,6 +121,16 @@ const ByIndividual = () => {
           fetchData(query);
         }}
         onRefresh={fetchData}
+        extraHeaderContent={
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={selectedProductIds.length === list.length}
+              onChange={handleSelectAll}
+            />
+            <span>Select All</span>
+          </div>
+        }
       />
 
       <ProductCardView

@@ -23,18 +23,22 @@ const ProductCard = ({
   onClick,
   hideRemove,
   hideEdit,
-  hideActiveCell
+  hideActiveCell,
+  isSelected,
+  onToggleSelect,
 }) => {
   return (
     <Card className="shadow-none mb-5">
       <div className="rounded-t-xl relative p-[17px] w-auto h-[196px] bg-[#FCFCFC]">
         <div className="absolute left-[17px]">
-          <Checkbox />
+          <Checkbox checked={isSelected} onCheckedChange={onToggleSelect} />
         </div>
-       {!hideActiveCell && <div className="absolute right-[17px] text-[14px] font-[400] flex items-center gap-[10px]">
-          {/* Active {active} */}
-          <ActiveToggleCell id={id} isActive={active} />
-        </div>}
+        {!hideActiveCell && (
+          <div className="absolute right-[17px] text-[14px] font-[400] flex items-center gap-[10px]">
+            {/* Active {active} */}
+            <ActiveToggleCell id={id} isActive={active} />
+          </div>
+        )}
         <img
           src={product_image}
           alt="product"

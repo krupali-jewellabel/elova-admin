@@ -154,9 +154,9 @@ export const ListWithCardToggle = ({
       sorting,
       rowSelection,
       columnPinning,
-      columnVisibility, 
+      columnVisibility,
     },
-    onColumnVisibilityChange: setColumnVisibility, 
+    onColumnVisibilityChange: setColumnVisibility,
     initialState: {
       columnPinning: {
         left: ["expand-column"],
@@ -326,8 +326,7 @@ export const ListWithCardToggle = ({
                     </div>
                   )}
 
-                  <CardToolbar>
-                  </CardToolbar>
+                  <div className="flex gap-3">
                     {showBulkMargin && deletePermissionIds.length > 0 && (
                       <div className="flex items-center gap-3">
                         {!showBulkInput ? (
@@ -366,32 +365,33 @@ export const ListWithCardToggle = ({
                         )}
                       </div>
                     )}
-                  <CardToolbar className="flex items-center gap-2">
-                    {/* Column Visibility Toggle */}
-                    <DataGridColumnVisibility
-                      table={table}
-                      trigger={
-                        <Button variant="outline" size="md">
-                          <Settings2 className="mr-2 h-4 w-4" />
-                          Columns
-                        </Button>
-                      }
-                    />
+                    <CardToolbar className="flex items-center gap-2">
+                      {/* Column Visibility Toggle */}
+                      <DataGridColumnVisibility
+                        table={table}
+                        trigger={
+                          <Button variant="outline" size="md">
+                            <Settings2 className="mr-2 h-4 w-4" />
+                            Columns
+                          </Button>
+                        }
+                      />
 
-                    {deletePermissionIds.length > 0 && (
+                      {/* {deletePermissionIds.length > 0 && (
                       <Button
                         variant="destructive"
                         onClick={() => setGroupDeleteDialogOpen(true)}
                       >
                         Delete {deletePermissionIds.length} permissions
                       </Button>
-                    )}
-                    {createBtn && (
-                      <div className="flex items-center justify-end">
-                        {createBtn}
-                      </div>
-                    )}
-                  </CardToolbar>
+                    )} */}
+                      {createBtn && (
+                        <div className="flex items-center justify-end">
+                          {createBtn}
+                        </div>
+                      )}
+                    </CardToolbar>
+                  </div>
                 </CardHeader>
 
                 {customCardHeader && (

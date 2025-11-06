@@ -20,9 +20,9 @@ const MarginCard = ({
     <div className="mt-13">
       <Card className="shadow-none">
         <div className="rounded-t-xl relative p-[17px] w-auto h-[196px] bg-[#FCFCFC]">
-          <div className="absolute left-[17px]">
+          {/* <div className="absolute left-[17px]">
             <Checkbox />
-          </div>
+          </div> */}
           <img
             src={productImg}
             alt="Product"
