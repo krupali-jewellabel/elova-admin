@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/common/ui/checkbox";
 import { RiDeleteBinFill } from "@remixicon/react";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
 import { toTitleCase } from "@/lib/utils";
+import { Button } from "@/components/common/ui/button";
 
 const ProductCard = ({
   id,
@@ -13,19 +14,16 @@ const ProductCard = ({
   category,
   style,
   shape,
-  salesPrice,
-  basePrice,
+  sales_price,
+  base_price,
   collection,
-  created_at,
-  updated_at,
   gender,
   active,
   onClick,
-  hideRemove,
-  hideEdit,
   hideActiveCell,
   isSelected,
   onToggleSelect,
+  togggleStatus,
 }) => {
   return (
     <Card className="shadow-none mb-5">
@@ -36,7 +34,11 @@ const ProductCard = ({
         {!hideActiveCell && (
           <div className="absolute right-[17px] text-[14px] font-[400] flex items-center gap-[10px]">
             {/* Active {active} */}
-            <ActiveToggleCell id={id} isActive={active} />
+            <ActiveToggleCell
+              id={id}
+              isActive={active}
+              toggleStatus={togggleStatus}
+            />
           </div>
         )}
         <img
@@ -84,14 +86,14 @@ const ProductCard = ({
           <div className="text-[12px] text-secondary-foreground font-[400]">
             Sales Price
             <p className="text-[14px] font-[500] text-foreground">
-              ${salesPrice}
+              ${sales_price}
             </p>
           </div>
 
           <div className="text-[12px] text-secondary-foreground font-[400]">
             Base Price
             <p className="text-[14px] font-[500] text-foreground">
-              ${basePrice}
+              ${base_price}
             </p>
           </div>
 
@@ -103,7 +105,7 @@ const ProductCard = ({
             </p>
           </div>
 
-          {created_at && (
+          {/* {created_at && (
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Created Date
               <p className="text-[14px] font-[500] text-foreground">
@@ -118,35 +120,36 @@ const ProductCard = ({
                 {updated_at}
               </p>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="flex justify-between pt-[20px]">
-          {!hideEdit && (
+          {/* {!hideEdit && (
             <div className="flex items-center gap-2">
               <Edit2 width={16} />
               <span className="text-[12px] text-secondary-foreground font-[400]">
                 Edit
               </span>
             </div>
-          )}
-          <div
-            className="flex items-center gap-2 cursor-pointer"
+          )} */}
+          <Button
+            className="w-full flex justify-center items-center gap-2 cursor-pointer"
             onClick={onClick}
+            variant="outline"
           >
-            <EyeIcon width={16} />
-            <span className="text-[12px] text-secondary-foreground font-[400]">
+            <EyeIcon width={18} />
+            <span className="text-[13px] text-secondary-foreground font-[400]">
               View
             </span>
-          </div>
-          {!hideRemove && (
+          </Button>
+          {/* {!hideRemove && (
             <div className="flex items-center gap-2 ">
               <RiDeleteBinFill width={16} />
               <span className="text-[12px] text-secondary-foreground font-[400]">
                 Remove
               </span>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </Card>

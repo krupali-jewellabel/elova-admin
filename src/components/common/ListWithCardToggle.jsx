@@ -64,7 +64,9 @@ export const ListWithCardToggle = ({
   showBulkMargin,
   onRefresh,
 }) => {
-  const [currentMode, setCurrentMode] = useState("list");
+  const [currentMode, setCurrentMode] = useState(
+    renderCardView ? "cards" : "list"
+  );
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [sorting, setSorting] = useState([{ id: "id", desc: true }]);
   const [rowSelection, setRowSelection] = useState({});

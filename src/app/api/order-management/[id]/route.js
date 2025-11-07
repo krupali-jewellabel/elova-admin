@@ -1,3 +1,4 @@
+// app/api/store-admin/order-management/view-order/[id]/route.js
 import { handleGET } from "@/lib/apiHandler";
 
 export async function GET(req, { params }) {
@@ -13,7 +14,6 @@ export async function GET(req, { params }) {
 
   return handleGET(
     `/api/store-admin/order-management/view-order/${id}`,
-    headers,
-    queryParams
+    headers
   );
 }
