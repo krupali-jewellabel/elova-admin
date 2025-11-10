@@ -6,6 +6,7 @@ export const useCrudApi = (baseUrl) => {
 
   return {
     fetchAll: useCallback(api.fetchAll, []),
+    fetchByPages: useCallback(api.fetchByPages, [api]),
     fetchById: useCallback(api.fetchById, []),
     create: useCallback(api.create, []),
     update: useCallback(api.update, []),

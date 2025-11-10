@@ -22,11 +22,7 @@ import { MapPin } from "lucide-react";
 import { cn, formatDateShort } from "@/lib/utils";
 import { ORDER_DATA } from "../constant";
 
-const ViewOrders = ({ open, onClose, orderId }) => {
-  const { fetchById } = useCrudList("/api/order-management");
-  const [orderData, setOrderData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+const ViewOrders = ({ open, onClose, orderId, orders }) => {
   const {
     Locations,
     ShippingInfo,
@@ -52,29 +48,6 @@ const ViewOrders = ({ open, onClose, orderId }) => {
     </svg>
   );
 
-  // Fetch the order by ID when sheet opens
-  useEffect(() => {
-    if (open && orderId) {
-      setLoading(true);
-      fetchById(orderId).then((res) => {
-        setOrderData(res?.data || {});
-        setLoading(false);
-      });
-    }
-  }, [open, orderId, fetchById]);
-
-  if (loading) {
-    return (
-      <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className="sm:w-[720px] inset-5 start-auto">
-          <div className="p-5 text-center">Loading order details...</div>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
-  if (!orderData) return null;
-
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className="sm:w-[720px] inset-5 start-auto h-auto rounded-lg p-0 sm:max-w-none [&_[data-slot=sheet-close]]:top-4.5 [&_[data-slot=sheet-close]]:end-5">
@@ -90,15 +63,17 @@ const ViewOrders = ({ open, onClose, orderId }) => {
                 <Card>
                   <CardHeader className="justify-start bg-muted/70 gap-9 h-auto py-5">
                     {[
-                      ["Order ID", orderData.id],
-                      ["Status", orderData.order_status],
-                      ["Order placed", formatDateShort(orderData.created_at)],
-                      ["Total", orderData.total],
-                      ["Ship to", orderData.customer_name],
+                      ["Order ID", orders?.id],
+                      ["Status", orders?.order_status],
+                      ["Order placed", formatDateShort(orders?.created_at)],
+                      ["Total", orders?.total],
                       [
-                        "Estimated Delivery",
-                        orderData.estimated_delivery || "—",
+                        "Ship to",
+                        orders?.customer?.first_name +
+                          " " +
+                          orders?.customer?.last_name,
                       ],
+                      ["Estimated Delivery", orders?.estimated_delivery || "—"],
                     ].map(([label, value], i) => (
                       <div key={i}>
                         <span className="text-xs text-secondary-foreground">
@@ -110,7 +85,7 @@ const ViewOrders = ({ open, onClose, orderId }) => {
                   </CardHeader>
 
                   <CardContent className="p-5 lg:p-7.5 space-y-5">
-                    <TwoColCard items={orderData?.items} limit={4} />
+                    <TwoColCard items={orders?.items} limit={4} />
                   </CardContent>
                 </Card>
               </div>
@@ -119,8 +94,8 @@ const ViewOrders = ({ open, onClose, orderId }) => {
             <div className="flex items-center justify-between mt-5">
               <div className="space-y-2.5">
                 <div className="flex gap-2.5">
-                  <p>{orderData?.id}</p>
-                  <Badge variant="success">{orderData?.order_status}</Badge>
+                  <p>{orders?.id}</p>
+                  <Badge variant="success">{orders?.order_status}</Badge>
                 </div>
 
                 <div className="flex gap-1">
@@ -129,7 +104,7 @@ const ViewOrders = ({ open, onClose, orderId }) => {
                       Placed
                     </span>
                     <span className="text-sm font-medium text-mono">
-                      {formatDateShort(orderData?.created_at)}
+                      {formatDateShort(orders?.created_at)}
                     </span>
                   </div>
 
@@ -142,7 +117,7 @@ const ViewOrders = ({ open, onClose, orderId }) => {
                       Customer
                     </span>
                     <span className="text-sm font-medium text-mono">
-                      {orderData?.customer_name}
+                      {orders?.customer_name}
                     </span>
                   </div>
                 </div>

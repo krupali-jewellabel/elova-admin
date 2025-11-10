@@ -27,11 +27,11 @@ export function useCrudListWithPagination(path) {
         const res = await fetchByPages({ page, limit: pageSize, search });
         setList(res.data || []);
         setPagination({
-          currentPage: res?.data.pagination.current_page || page,
-          totalPages: res?.data.pagination.last_page || 1,
-          total: res?.data.pagination.total || 0,
-          per_page: res?.data.pagination.per_page || pageSize,
-          links: res?.data.pagination.links || [],
+          currentPage: res?.meta?.current_page || page,
+          totalPages: res?.meta?.last_page || 1,
+          total: res?.meta?.total || 0,
+          per_page: res?.meta?.per_page || pageSize,
+          links: res?.meta?.links || [],
         });
         setError(null);
       } catch (err) {
@@ -45,7 +45,7 @@ export function useCrudListWithPagination(path) {
 
   useEffect(() => {
     fetchData({ page: 1, pageSize: 10 });
-  }, [fetchData]);
+  }, []);
 
   const handleDelete = async () => {
     try {

@@ -3,25 +3,35 @@
 import React, { useState, useMemo } from "react";
 import { useOrderListColumns } from "../hooks/useOrderListColumns";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
-import { useCrudList } from "@/hooks/useCrudList";
 import ViewOrders from "./ViewOrders";
+import { useCrudListWithPagination } from "@/hooks/useCrudListWithPagination";
 
 const AllOrders = () => {
-  const [orderListView, setOrderListView] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
-
+  const [openOrderDetailSheet, setOpenOrderDetailSheet] = useState(false);
   const [pageInfo, setPageInfo] = useState({ pageIndex: 0, pageSize: 10 });
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { list = [], error } = useCrudList("/api/order-management");
-
+  const {
+    list,
+    error,
+    editData,
+    setEditData,
+    fetchData,
+    fetchById,
+    pagination,
+  } = useCrudListWithPagination("/api/order-management");
+  const [selectedOrderId, setSelectedOrderId] = useState(editData?._id || null);
   const columns = useOrderListColumns({
     onEdit: (item) => {
       console.log("Edit order:", item);
     },
-    onView: (item) => {
-      setSelectedOrderId(item.id);
-      setOrderListView(true);
+    onView: async (item) => {
+      try {
+        setSelectedOrderId(item.id);
+        const data = await fetchById(item.id);
+        setEditData(data?.data);
+        setOpenOrderDetailSheet(true);
+      } catch (err) {}
     },
   });
 
@@ -41,13 +51,15 @@ const AllOrders = () => {
     });
   }, [list, searchQuery]);
 
-  const paginatedData = useMemo(() => {
-    const start = pageInfo.pageIndex * pageInfo.pageSize;
-    const end = start + pageInfo.pageSize;
-    return filteredData.slice(start, end);
-  }, [filteredData, pageInfo]);
+  const filterOptions = (data, query) => {
+    const searchLower = query.toLowerCase();
 
-  const totalPages = Math.ceil(filteredData.length / pageInfo.pageSize);
+    return data.filter((item) => {
+      const category = item?.category?.toLowerCase() || "";
+
+      return category.includes(searchLower);
+    });
+  };
 
   if (error) return <div>Error: {error}</div>;
 
@@ -55,27 +67,39 @@ const AllOrders = () => {
     <>
       <ListWithCardToggle
         title="Order List"
-        description="Manage and view all orders"
-        data={paginatedData}
+        data={list}
         columns={columns}
         pagination={pageInfo}
-        onPaginationChange={setPageInfo}
-        pageCount={totalPages}
-        totalCount={filteredData.length}
-        search={{
-          value: searchQuery,
-          onChange: (e) => {
-            setSearchQuery(e.target.value);
-            setPageInfo({ ...pageInfo, pageIndex: 0 });
-          },
-          placeholder: "Search by order ID, status, or payment...",
+        filterFunction={filterOptions}
+        filterOptions={filterOptions}
+        onPaginationChange={(updater) => {
+          let newPageInfo =
+            typeof updater === "function" ? updater(pageInfo) : updater;
+
+          if (!newPageInfo) return;
+
+          setPageInfo(newPageInfo);
+          fetchData({
+            page: newPageInfo.pageIndex + 1,
+            pageSize: newPageInfo.pageSize,
+            search: searchQuery,
+          });
+        }}
+        pageCount={pagination?.totalPages || 1}
+        totalCount={pagination?.total || 0}
+        paginationLinks={pagination?.links}
+        serverSidePagination
+        searchQuery={searchQuery}
+        onSearchChange={(query) => {
+          setSearchQuery(query);
+          fetchData(query);
         }}
       />
 
       <ViewOrders
-        open={orderListView}
-        onClose={() => setOrderListView(false)}
-        orders={list}
+        open={openOrderDetailSheet}
+        onClose={() => setOpenOrderDetailSheet(false)}
+        orders={editData}
         orderId={selectedOrderId}
       />
     </>
