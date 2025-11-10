@@ -36,10 +36,17 @@ export const CommunicationandSupportDetais = ({
               </div>
             </ToolbarHeading>
             <ToolbarActions>
-              <Button onClick={onNewTicketClick} variant="outline">
+              <Button
+                onClick={() => setIsNewTicketSheetOpen(true)}
+                variant="outline"
+              >
                 + New Ticket
               </Button>
-              <Button onClick={onNewNotificationClick} variant="outline">
+
+              <Button
+                onClick={() => setIsNewNotificationSheetOpen(true)}
+                variant="outline"
+              >
                 <Bell />
               </Button>
             </ToolbarActions>
@@ -49,7 +56,6 @@ export const CommunicationandSupportDetais = ({
         </Container>
       </Fragment>
 
-      
       <TicketCreationSheet
         isOpen={isNewTicketSheetOpen}
         onOpenChange={setIsNewTicketSheetOpen}

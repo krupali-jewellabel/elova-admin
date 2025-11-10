@@ -27,8 +27,11 @@ import {
 } from "@/components/common/ui/select";
 import { fetchGET } from "@/lib/apiHandler";
 import { useCrudApi } from "@/hooks/useCrudApi";
+import { Switch } from "@/components/common/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/common/ui/radio-group";
+import { Label } from "@/components/common/ui/label";
 
-// ✅ Validation Schema
+// Validation Schema
 const UserSchema = z.object({
   name: z.string().min(1, "User name is required"),
   email: z.string().email("Invalid email address"),
@@ -40,7 +43,7 @@ const UserSchema = z.object({
 const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
   const { create } = useCrudApi("/api/user-management");
 
-  // ✅ Use fetchAll for roles
+  // Use fetchAll for roles
   const { fetchAll: fetchRolesAPI } = useCrudApi("/api/roles");
 
   const [roles, setRoles] = useState([]);
@@ -49,14 +52,28 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
   const [departments, setDepartments] = useState([]);
   const [loadingDepartments, setLoadingDepartments] = useState(false);
 
+  const UserSchema = z.object({
+    name: z.string().min(1, "User name is required"),
+    email: z.string().email("Invalid email address"),
+    // password: z.string().min(6, "Password must be at least 6 characters"),
+    role: z.string().min(1, "Role is required"),
+    department: z.string().min(1, "Department is required"),
+
+    designation: z.string().min(1, "Designation is required"),
+
+    is_manager: z.boolean().optional(),
+  });
+
   const form = useForm({
     resolver: zodResolver(UserSchema),
     defaultValues: {
       name: "",
       email: "",
-      password: "",
+      // password: "",
       role: "",
       department: "",
+      designation: "",
+      is_manager: undefined,
     },
   });
 
@@ -88,37 +105,43 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
   useEffect(() => {
     if (editData) {
       form.reset({
-        name: editData.name || "",
-        email: editData.email || "",
-        password: "",
-        role: editData.role ? String(editData.role) : "",
-        department: editData.department || "",
+        name: editData?.name || "",
+        email: editData?.email || "",
+        // password: "",
+        role: editData?.role?.id ? String(editData.role.id) : "",
+        department: editData?.department?.id
+          ? String(editData.department.id)
+          : "",
+        designation: editData?.designation || "",
+        is_manager: editData?.is_manager ?? undefined,
       });
     } else {
       form.reset({
         name: "",
         email: "",
-        password: "",
+        // password: "",
         role: "",
         department: "",
+        designation: "",
+        is_manager: undefined,
       });
     }
   }, [editData, form]);
 
   const handleSubmit = async (values) => {
     try {
-      // ✅ Map UI → API payload
+      // Map UI → API payload
       const payload = {
         name: values.name,
         email: values.email,
         password: values.password,
         designation: values.designation || "", // if field exists
-        role_id: Number(values.role), // ✅ role → role_id
-        department_id: Number(values.department), // ✅ department → department_id
+        role_id: Number(values.role), // role → role_id
+        department_id: Number(values.department), // department → department_id
         id: editData?.id || undefined, // only for edit mode
       };
 
-      console.log("✅ FINAL PAYLOAD TO API:", payload);
+      console.log("FINAL PAYLOAD TO API:", payload);
 
       await create(payload);
 
@@ -157,14 +180,14 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
 
       console.log("DEPARTMENT API RESPONSE:", res);
 
-      // ✅ Correct array path: res.data.data
+      //  Correct array path: res.data.data
       const list = res?.data?.data || [];
 
       if (!Array.isArray(list)) {
-        console.log("⚠️ Not an array:", list);
+        console.log(" Not an array:", list);
         setDepartments([]);
       } else {
-        console.log("✅ Final Department List:", list);
+        console.log("Final Department List:", list);
         setDepartments(list);
       }
     } catch (err) {
@@ -175,7 +198,7 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
       setLoadingDepartments(false);
     }
   };
-  // ✅ Fetch departments when modal opens
+  // Fetch departments when modal opens
   useEffect(() => {
     if (open) fetchDepartments();
   }, [open]);
@@ -220,23 +243,25 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
           />
 
           {/* Password */}
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="mb-4">
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {!editData && (
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="mb-4">
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           {/* Role + Department */}
           <div className="flex flex-wrap gap-4">
@@ -311,6 +336,57 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
               )}
             />
           </div>
+
+          {/* Designation */}
+          <FormField
+            control={form.control}
+            name="designation"
+            render={({ field }) => (
+              <FormItem className="mb-4 mt-4">
+                <FormLabel>Designation</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter designation" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="is_manager"
+            render={({ field }) => (
+              <FormItem className="flex-1 min-w-[200px]">
+                <FormLabel>Manager</FormLabel>
+
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={(value) => field.onChange(value === "true")}
+                    value={
+                      field.value === true
+                        ? "true"
+                        : field.value === false
+                        ? "false"
+                        : undefined
+                    }
+                    className="flex items-center space-x-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="true" id="manager-yes" />
+                      <Label htmlFor="manager-yes">Yes</Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="false" id="manager-no" />
+                      <Label htmlFor="manager-no">No</Label>
+                    </div>
+                  </RadioGroup>
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </>
       }
     />

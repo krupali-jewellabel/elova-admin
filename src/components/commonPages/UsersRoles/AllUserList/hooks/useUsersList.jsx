@@ -108,6 +108,36 @@ export const useUsersList = ({ onEdit, onDelete, onViewPermission } = {}) => {
         meta: { skeleton: <Skeleton className="h-4 w-[125px]" /> },
       },
       {
+        id: "designation",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Designation Name" column={column} />
+        ),
+        accessorFn: (row) => row?.designation,
+        cell: ({ row }) => (
+          <span className="text-sm font-medium">
+            {row.getValue("designation")}
+          </span>
+        ),
+        size: 100,
+        enableSorting: false,
+        meta: { skeleton: <Skeleton className="h-4 w-[125px]" /> },
+      },
+      {
+        id: "is_manager",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Manager" column={column} />
+        ),
+        accessorFn: (row) => (row?.is_manager ? "Yes" : "No"),
+        cell: ({ row }) => (
+          <span className="text-sm font-medium">
+            {row.getValue("is_manager")}
+          </span>
+        ),
+        size: 60,
+        enableSorting: false,
+        meta: { skeleton: <Skeleton className="h-4 w-[125px]" /> },
+      },
+      {
         id: "action",
         header: ({ column }) => (
           <DataGridColumnHeader title="Action" column={column} />
