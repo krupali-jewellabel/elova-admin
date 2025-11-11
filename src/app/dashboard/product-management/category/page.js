@@ -1,4 +1,4 @@
-import ProductsCategories from "@/components/commonPages/ProductManagement/ProductsCategories";
+import ProductsCategories from "@/components/commonPages/ProductManagement/ProductCategories/ProductsCategories";
 import React from "react";
 
 const page = () => {

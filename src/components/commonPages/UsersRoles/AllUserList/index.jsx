@@ -10,8 +10,14 @@ import PermissionDialog from "./PermissionDialog";
 import ConfirmDialog from "@/components/common/ui/ConfirmDialog";
 
 const AllUserList = () => {
-  const { list, confirmOpen, setConfirmOpen, handleDelete, setDeleteId } =
-    useCrudList("/api/user-management");
+  const {
+    list,
+    confirmOpen,
+    setConfirmOpen,
+    handleDelete,
+    setDeleteId,
+    setList,
+  } = useCrudList("/api/user-management");
 
   const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
   const [viewingRoleId, setViewingRoleId] = useState(null);
@@ -92,6 +98,13 @@ const AllUserList = () => {
     });
   };
 
+  const handleUserCreated = (newUser) => {
+    setList((prev) => ({
+      ...prev,
+      data: [newUser, ...(prev?.data || [])],
+    }));
+  };
+
   const [editData, setEditData] = useState(null);
   const { columns, dialogOpen, setDialogOpen } = useUsersList({
     onEdit: (user) => {
@@ -161,7 +174,7 @@ const AllUserList = () => {
       <AddUserModal
         open={dialogOpen}
         onClose={handleClose}
-        onSuccess={() => console.log("User saved")}
+        onSuccess={handleUserCreated}
         editData={editData}
       />
 

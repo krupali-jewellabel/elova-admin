@@ -46,6 +46,7 @@ export function useCrudList(path) {
 
   return {
     list,
+    setList,
     loading,
     error,
     editData,
