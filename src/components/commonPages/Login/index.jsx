@@ -14,7 +14,11 @@ const Login = () => {
       >
         <div className="flex flex-col p-8 lg:p-16 gap-4">
           <div>
-            <img src={"/app/elova-jewel.png"} alt="logo" />
+            <img
+              src={"/app/elova-jewel.png"}
+              alt="logo"
+              className="xl:w-[300px] w-[230px]"
+            />
           </div>
 
           <div className="flex flex-col gap-3">

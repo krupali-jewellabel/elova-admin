@@ -9,7 +9,7 @@ export async function PUT(req, { params }) {
   const body = await req.json();
   const { id } = await params;
   return handlePUT(
-    `/api/cms/common/update-faq/${id}`,
+    `/api/super-admin/cms/common/update-faq/${id}`,
     body
   );
 }

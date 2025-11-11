@@ -28,28 +28,13 @@ const AllOrders = () => {
     onView: async (item) => {
       try {
         setSelectedOrderId(item.id);
+
         const data = await fetchById(item.id);
         setEditData(data?.data);
         setOpenOrderDetailSheet(true);
       } catch (err) {}
     },
   });
-
-  const filteredData = useMemo(() => {
-    if (!searchQuery) return list;
-    const query = searchQuery.toLowerCase();
-
-    return list.filter((item) => {
-      const orderId = item?.id?.toString().toLowerCase() || "";
-      const payment_status = item?.payment_status?.toLowerCase() || "";
-      const order_status = item?.order_status?.toLowerCase() || "";
-      return (
-        orderId.includes(query) ||
-        payment_status.includes(query) ||
-        order_status.includes(query)
-      );
-    });
-  }, [list, searchQuery]);
 
   const filterOptions = (data, query) => {
     const searchLower = query.toLowerCase();
