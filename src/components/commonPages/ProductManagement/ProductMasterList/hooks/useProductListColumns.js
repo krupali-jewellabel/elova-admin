@@ -108,23 +108,23 @@ export const useProductListColumns = ({
         size: 120,
       },
       {
-        id: "base_price",
+        id: "mrp",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Base Price" column={column} />
+          <DataGridColumnHeader title="MRP" column={column} />
         ),
-        accessorFn: (row) => row?.base_price,
+        accessorFn: (row) => row?.mrp,
         cell: ({ row }) => {
-          return `${row?.original?.base_price || 0}`;
+          return `${row?.original?.mrp || 0}`;
         },
         size: 120,
       },
       {
-        id: "salesPrice",
+        id: "srp",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Sales Price" column={column} />
+          <DataGridColumnHeader title="SRP" column={column} />
         ),
-        accessorFn: (row) => row.sales_price,
-        cell: ({ row }) => `${row.original.sales_price || 0}`,
+        accessorFn: (row) => row.srp,
+        cell: ({ row }) => `${row.original.srp || 0}`,
         size: 120,
       },
       {

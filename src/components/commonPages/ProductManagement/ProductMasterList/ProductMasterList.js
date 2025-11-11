@@ -5,7 +5,7 @@ import { ProductCardView } from "./ProductCardView";
 import ProductCard from "./ProductCard";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
 import { ContentLoader } from "@/components/common/ui/Loader/content-loader";
-import { useCrudList } from "@/hooks/useCrudList";
+import { useCrudListWithPagination } from "@/hooks/useCrudListWithPagination";
 import { toTitleCase } from "@/lib/utils";
 
 const ProductMasterList = () => {
@@ -14,65 +14,50 @@ const ProductMasterList = () => {
   const [pageInfo, setPageInfo] = useState({ pageIndex: 0, pageSize: 10 });
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filters
-  const [filters, setFilters] = useState({
-    category: "",
-    style: "",
-    shape: "",
-    collection: "",
-  });
+  const {
+    list,
+    loading,
+    error,
+    editData,
+    setEditData,
+    fetchData,
+    fetchById,
+    pagination,
+  } = useCrudListWithPagination("/api/product-management");
 
-  // Fetch full list once (client-side)
-  const { list, loading, error, editData, setEditData, fetchById } =
-    useCrudList("/api/product-management");
+  const rows =
+    list?.map((item) => ({
+      id: item.id,
+      title: item.title,
+      product_image: item.product_image,
+      design_no: item.design_no,
+      category: item.category,
+      style: item.style,
+      shape: item.shape,
+      mrp: item.mrp,
+      srp: item.srp,
+      collection: item.collection,
+      gender: item.gender,
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+    })) ?? [];
 
-  // Normalize list data
-  const rows = (list || []).map((item) => ({
-    id: item.id,
-    title: item.title,
-    product_image: item.product_image,
-    design_no: item.design_no,
-    category: item.category,
-    style: item.style,
-    shape: item.shape,
-    base_price: item.base_price,
-    sales_price: item.sales_price,
-    collection: item.collection,
-    gender: item.gender,
-    created_at: item.created_at,
-    updated_at: item.updated_at,
-  }));
-
-  // Filtering (Client-side)
+  // Filtering (client-side but applied to currently fetched data only)
   const filteredRows = useMemo(() => {
     let data = rows;
 
     if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+      const q = searchQuery.toLowerCase();
       data = data.filter(
         (r) =>
-          r.category?.toLowerCase().includes(query) ||
-          r.design_no?.toLowerCase().includes(query) ||
-          r.style?.toLowerCase().includes(query)
+          r.category?.toLowerCase().includes(q) ||
+          r.design_no?.toLowerCase().includes(q) ||
+          r.style?.toLowerCase().includes(q)
       );
     }
 
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        data = data.filter(
-          (r) => r[key]?.toLowerCase() === value.toLowerCase()
-        );
-      }
-    });
-
     return data;
-  }, [rows, searchQuery, filters]);
-
-  // CLIENT-SIDE PAGINATION
-  const start = pageInfo.pageIndex * pageInfo.pageSize;
-  const end = start + pageInfo.pageSize;
-  const paginatedData = filteredRows.slice(start, end);
-  const totalPages = Math.ceil(filteredRows.length / pageInfo.pageSize);
+  }, [rows, searchQuery]);
 
   const handleView = useCallback(
     async (product) => {
@@ -93,9 +78,7 @@ const ProductMasterList = () => {
     setSelectedProduct(null);
   };
 
-  const { columns } = useProductListColumns({
-    onView: handleView,
-  });
+  const { columns } = useProductListColumns({ onView: handleView });
 
   const renderStoreCardsView = (item) => (
     <ProductCard key={item.id} {...item} onClick={() => handleView(item)} />
@@ -104,7 +87,7 @@ const ProductMasterList = () => {
   if (loading) return <ContentLoader />;
   if (error) return <div className="text-red-500">Error: {error}</div>;
 
-  // Dropdown filter props
+  // Dropdown filters (no change)
   const buildFilterOptions = (key, label) => [
     { value: "all", label: `All ${label}` },
     ...new Map(
@@ -117,51 +100,40 @@ const ProductMasterList = () => {
     ).values(),
   ];
 
-  const filterDropdownProps = {
-    category: {
-      value: filters.category,
-      onChange: (val) =>
-        setFilters((prev) => ({ ...prev, category: val === "all" ? "" : val })),
-      options: buildFilterOptions("category", "Categories"),
-    },
-    style: {
-      value: filters.style,
-      onChange: (val) =>
-        setFilters((prev) => ({ ...prev, style: val === "all" ? "" : val })),
-      options: buildFilterOptions("style", "Styles"),
-    },
-    shape: {
-      value: filters.shape,
-      onChange: (val) =>
-        setFilters((prev) => ({ ...prev, shape: val === "all" ? "" : val })),
-      options: buildFilterOptions("shape", "Shapes"),
-    },
-    collection: {
-      value: filters.collection,
-      onChange: (val) =>
-        setFilters((prev) => ({
-          ...prev,
-          collection: val === "all" ? "" : val,
-        })),
-      options: buildFilterOptions("collection", "Collections"),
-    },
-  };
-
   return (
     <>
       <ListWithCardToggle
         title="Product Master List"
         description="All products available in the store"
-        data={paginatedData}
+        data={filteredRows}
         columns={columns}
         renderCardView={renderStoreCardsView}
         pagination={pageInfo}
-        onPaginationChange={setPageInfo}
-        pageCount={totalPages}
-        totalCount={filteredRows.length}
+        onPaginationChange={(updater) => {
+          const newPageInfo =
+            typeof updater === "function" ? updater(pageInfo) : updater;
+          setPageInfo(newPageInfo);
+          fetchData({
+            page: newPageInfo.pageIndex + 1,
+            pageSize: newPageInfo.pageSize,
+            search: searchQuery,
+          });
+        }}
+        pageCount={pagination?.totalPages || 1}
+        totalCount={pagination?.total || 0}
+        paginationLinks={pagination?.links}
+        serverSidePagination
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        filterDropdownProps={filterDropdownProps}
+        onSearchChange={(query) => {
+          setSearchQuery(query);
+          fetchData({ search: query });
+        }}
+        filterDropdownProps={{
+          category: {
+            value: "",
+            options: buildFilterOptions("category", "Categories"),
+          },
+        }}
       />
 
       <ProductCardView

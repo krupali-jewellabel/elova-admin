@@ -41,6 +41,7 @@ const UserSchema = z.object({
 });
 
 const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
+  console.log("editData", editData);
   const { create } = useCrudApi("/api/user-management");
 
   // Use fetchAll for roles
@@ -55,7 +56,7 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
   const UserSchema = z.object({
     name: z.string().min(1, "User name is required"),
     email: z.string().email("Invalid email address"),
-    // password: z.string().min(6, "Password must be at least 6 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
     role: z.string().min(1, "Role is required"),
     department: z.string().min(1, "Department is required"),
 
@@ -69,7 +70,7 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
     defaultValues: {
       name: "",
       email: "",
-      // password: "",
+      password: "",
       role: "",
       department: "",
       designation: "",
@@ -107,8 +108,8 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
       form.reset({
         name: editData?.name || "",
         email: editData?.email || "",
-        // password: "",
-        role: editData?.role?.id ? String(editData.role.id) : "",
+        password: "",
+        role: editData?.roles?.[0]?.id ? String(editData.roles[0].id) : "",
         department: editData?.department?.id
           ? String(editData.department.id)
           : "",
@@ -119,7 +120,7 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
       form.reset({
         name: "",
         email: "",
-        // password: "",
+        password: "",
         role: "",
         department: "",
         designation: "",
@@ -130,24 +131,28 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
 
   const handleSubmit = async (values) => {
     try {
-      // Map UI → API payload
       const payload = {
         name: values.name,
         email: values.email,
         password: values.password,
-        designation: values.designation || "", // if field exists
-        role_id: Number(values.role), // role → role_id
-        department_id: Number(values.department), // department → department_id
-        id: editData?.id || undefined, // only for edit mode
+        designation: values.designation || "",
+        role_id: Number(values.role),
+        department_id: Number(values.department),
+        is_manager: values.is_manager === true ? 1 : 0,
       };
 
-      console.log("FINAL PAYLOAD TO API:", payload);
+      const res = await create(payload);
 
-      await create(payload);
+      if (!res?.status) {
+        toast.error(res?.error || res?.message || "Something went wrong");
+        return;
+      }
 
       toast.success(editData ? "User updated" : "User added");
 
-      onSuccess?.();
+      // ✅ Pass the created/updated user back to parent
+      onSuccess?.(res.data);
+
       onClose();
     } catch (err) {
       toast.custom(
@@ -363,9 +368,9 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
                   <RadioGroup
                     onValueChange={(value) => field.onChange(value === "true")}
                     value={
-                      field.value === true
+                      field.value === 1
                         ? "true"
-                        : field.value === false
+                        : field.value === 0
                         ? "false"
                         : undefined
                     }
