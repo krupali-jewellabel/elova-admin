@@ -38,7 +38,6 @@ const AddDepartmentModel = ({ open, onClose, onSuccess, editData }) => {
   }, [editData, form]);
 
   const handleSubmit = async (values) => {
-    debugger;
     try {
       const payload = {
         name: values.name,

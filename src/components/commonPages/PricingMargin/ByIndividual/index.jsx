@@ -93,7 +93,6 @@ const ByIndividual = () => {
   }, []);
 
   const filterOptions = (data, query) => {
-    debugger;
     const searchLower = query.toLowerCase();
 
     return data.filter((item) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Badge } from "@/components/common/ui/badge";
 import { Button } from "@/components/common/ui/button";
 import { Checkbox } from "@/components/common/ui/checkbox";
@@ -15,15 +15,39 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/common/ui/tooltip";
+import { ProductCardView } from "../ProductMasterList/ProductCardView";
+import { toTitleCase } from "@/lib/utils";
+import { useCrudApi } from "@/hooks/useCrudApi";
 
 const ProductsGrid = ({
   products = [],
   selectedProducts = [],
-  hoveredProduct,
   setHoveredProduct,
   handleSelectAll,
   handleProductSelect,
 }) => {
+  const [productdetails, setProductDetails] = useState(null);
+  const { fetchById } = useCrudApi("/api/product-management");
+  const [openProductDetailSheet, setOpenProductDetailSheet] = useState(false);
+
+  const fetchProductDetail = async (productId) => {
+    try {
+      const res = await fetchById(productId);
+
+      const data = await res.data;
+
+      setProductDetails(data);
+      setOpenProductDetailSheet(true);
+    } catch (err) {
+      console.error("Failed to fetch product detail:", err);
+    } finally {
+    }
+  };
+
+  const handleClose = () => {
+    setOpenProductDetailSheet(false);
+  };
+
   return (
     <div className="mt-6">
       {/* Select All */}
@@ -54,11 +78,7 @@ const ProductsGrid = ({
               onMouseLeave={() => setHoveredProduct(null)}
             >
               <ImageWithFallback
-                src={
-                  hoveredProduct === product.id
-                    ? product.hoverImage
-                    : product.image
-                }
+                src={product.product_image}
                 alt={product.title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
@@ -80,9 +100,14 @@ const ProductsGrid = ({
                   size="sm"
                   variant="secondary"
                   className="rounded-lg h-8 w-8 p-0 bg-white/90 hover:bg-white shadow-md"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fetchProductDetail(product.id);
+                  }}
                 >
                   <Eye className="w-4 h-4" />
                 </Button>
+
                 <Button
                   size="sm"
                   variant="secondary"
@@ -105,16 +130,16 @@ const ProductsGrid = ({
               {/* Title + Code */}
               <div>
                 <h3 className="text-gray-900 line-clamp-1 mb-1 text-[16px]">
-                  {product.title}
+                  {toTitleCase(product.title)}
                 </h3>
                 <code className="text-[12px] px-2 py-0.5 rounded-md border border-gray-300 bg-gray-50">
-                  {product.designNumber}
+                  {product.design_no}
                 </code>
               </div>
 
               {/* Info Row */}
               <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
-                <span className="px-2 py-0.5">{product.diamondShape}</span>
+                <span className="px-2 py-0.5">{product.shape}</span>
 
                 <span className="px-2 py-0.5">{product.style}</span>
 
@@ -128,7 +153,7 @@ const ProductsGrid = ({
 
               {/* Metal Options */}
               <div className="flex flex-wrap gap-1">
-                {product.metalOptions.slice(0, 2).map((metal, index) => (
+                {product?.metal_colors?.map((metal, index) => (
                   <span
                     key={index}
                     className="text-[10px] px-2 py-0.5 rounded-md border border-gray-300 bg-gray-50"
@@ -136,12 +161,6 @@ const ProductsGrid = ({
                     {metal.replace("18K ", "").replace(" Gold", "")}
                   </span>
                 ))}
-
-                {product.metalOptions.length > 2 && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-md border border-gray-300 bg-gray-50">
-                    +{product.metalOptions.length - 2}
-                  </span>
-                )}
               </div>
               <Separator />
 
@@ -156,7 +175,7 @@ const ProductsGrid = ({
                           MRP <Info className="w-2.5 h-2.5" />
                         </span>
                         <span className="text-xs text-gray-900">
-                          ₹{(product.mrp / 1000).toFixed(0)}K
+                          ${product.mrp}
                         </span>
                       </div>
                     </TooltipTrigger>
@@ -175,7 +194,7 @@ const ProductsGrid = ({
                           PRP <Info className="w-2.5 h-2.5" />
                         </span>
                         <span className="text-xs text-green-700">
-                          ₹{(product.prp / 1000).toFixed(0)}K
+                          ${product?.prp}
                         </span>
                       </div>
                     </TooltipTrigger>
@@ -194,7 +213,7 @@ const ProductsGrid = ({
                           SRP <Info className="w-2.5 h-2.5" />
                         </span>
                         <span className="text-sm text-[#C2A676]">
-                          ₹{product.srp.toLocaleString("en-IN")}
+                          ₹{product?.srp}
                         </span>
                       </div>
                     </TooltipTrigger>
@@ -209,6 +228,12 @@ const ProductsGrid = ({
             </div>
           </Card>
         ))}
+
+        <ProductCardView
+          open={openProductDetailSheet}
+          closeProductDetailSheet={handleClose}
+          product={productdetails}
+        />
       </div>
     </div>
   );

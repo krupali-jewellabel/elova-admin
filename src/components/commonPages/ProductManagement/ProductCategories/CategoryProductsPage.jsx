@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/common/ui/breadcrumb";
 import { Button } from "@/components/common/ui/button";
-import { ToolbarActions } from "@/components/common/ui/toolbar";
 import { Plus, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import FilterChips from "./FilterChips";
@@ -17,20 +15,17 @@ import ProductsGrid from "./ProductsGrid";
 import { PRODUCTS_DATA } from "./constant";
 import ManualOrderModel from "./ManualOrderModel";
 import ShareModel from "./ShareModel";
+import { useCrudListWithPagination } from "@/hooks/useCrudListWithPagination";
+import { toTitleCase } from "@/lib/utils";
 
 const CategoryProductsPage = ({ category }) => {
-  console.log("category in page", category);
-  const capitalize = (str) => {
-    if (!str) return "";
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
-  const [products] = useState(PRODUCTS_DATA); // ← using constant file
+  const { list: products } = useCrudListWithPagination(
+    "/api/product-management"
+  );
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleSelectAll = () => {
     if (selectedProducts.length === products.length) {
@@ -89,7 +84,7 @@ const CategoryProductsPage = ({ category }) => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{capitalize(category)}</BreadcrumbPage>
+              <BreadcrumbPage>{toTitleCase(category)}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -98,7 +93,7 @@ const CategoryProductsPage = ({ category }) => {
       <div className="p-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">
-            {capitalize(category)} Products
+            {toTitleCase(category)} Products
           </h1>
           <p className="text-sm text-gray-500">{products.length} Products</p>
         </div>
@@ -123,11 +118,11 @@ const CategoryProductsPage = ({ category }) => {
       <div>
         <ProductsGrid
           products={products}
-          selectedProducts={[]}
-          hoveredProduct={null}
-          setHoveredProduct={() => {}}
-          handleSelectAll={() => {}}
-          handleProductSelect={() => {}}
+          selectedProducts={selectedProducts}
+          hoveredProduct={hoveredProduct}
+          setHoveredProduct={setHoveredProduct}
+          handleSelectAll={handleSelectAll}
+          handleProductSelect={handleProductSelect}
         />
       </div>
 
@@ -136,7 +131,7 @@ const CategoryProductsPage = ({ category }) => {
           showOrderModal={showOrderModal}
           setShowOrderModal={setShowOrderModal}
           handleCreateOrder={handleCreateOrder}
-          product={PRODUCTS_DATA[0]} // or the product user selected
+          product={PRODUCTS_DATA[0]}
         />
       </div>
 

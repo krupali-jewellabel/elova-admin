@@ -137,7 +137,6 @@ const AllUserList = () => {
       setPermissionDialogOpen(true);
     },
     onDelete: (id) => {
-      debugger;
       setDeleteId(id);
       setConfirmOpen(true);
     },

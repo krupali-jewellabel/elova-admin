@@ -112,7 +112,7 @@ export default function TicketCreationSheet({
   };
 
   // Submit
-  const handleSubmit = async (values) => {debugger
+  const handleSubmit = async (values) => {
     try {
       setLoading(true);
 

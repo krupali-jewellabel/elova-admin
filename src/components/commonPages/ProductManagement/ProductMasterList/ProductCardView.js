@@ -48,6 +48,8 @@ const ProductCardView = ({ open, closeProductDetailSheet, product }) => {
     active: "Yes",
   };
 
+  console.log('first product in card view', product);
+
   const detailsArray = [
     { text: "Design No", info: productData.design_no },
     { text: "Collection", info: toTitleCase(productData.collection) },
