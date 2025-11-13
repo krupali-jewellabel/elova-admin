@@ -3,7 +3,6 @@ import CategoryProductsPage from "@/components/commonPages/ProductManagement/Pro
 
 const page = ({ params }) => {
   const { category } = params;
-  console.log("category", category);
   return (
     <div>
       <CategoryProductsPage category={category} />

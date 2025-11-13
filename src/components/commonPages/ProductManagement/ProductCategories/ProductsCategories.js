@@ -1,94 +1,6 @@
-// "use client";
-
-// import React, { useState } from "react";
-// import { Folder, ChevronRight } from "lucide-react";
-// import { Card } from "@/components/common/ui/cards/card";
-// import {
-//   Toolbar,
-//   ToolbarDescription,
-//   ToolbarHeading,
-//   ToolbarPageTitle,
-// } from "@/components/common/ui/toolbar";
-// import {
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   BreadcrumbLink,
-//   BreadcrumbList,
-//   BreadcrumbPage,
-//   BreadcrumbSeparator,
-// } from "@/components/common/ui/breadcrumb";
-
-// export const ProductsCategories = () => {
-//   const categories = [
-//     { id: "1", name: "Rings", productCount: 148 },
-//     { id: "2", name: "Earrings", productCount: 98 },
-//     { id: "3", name: "Pendants", productCount: 76 },
-//     { id: "4", name: "Bracelets", productCount: 54 },
-//     { id: "5", name: "Necklaces", productCount: 89 },
-//     { id: "6", name: "Bangles", productCount: 42 },
-//   ];
-
-//   return (
-//     <>
-//       <div className="ml-5">
-//         <Breadcrumb>
-//           <BreadcrumbList>
-//             <BreadcrumbItem>
-//               <BreadcrumbLink href="/">Product Management</BreadcrumbLink>
-//             </BreadcrumbItem>
-//             <BreadcrumbSeparator />
-//             <BreadcrumbItem>
-//               <BreadcrumbPage>Product Categories</BreadcrumbPage>
-//             </BreadcrumbItem>
-//           </BreadcrumbList>
-//         </Breadcrumb>
-//       </div>
-//       <div className="mt-6 ml-5">
-//         <Toolbar>
-//           <ToolbarHeading>
-//             <ToolbarPageTitle
-//               text="Product Categories"
-//               className="font-semibold !text-foreground text-lg"
-//             />
-//             <ToolbarDescription className="mt-1 text-sm">
-//               Select a category to manage products
-//             </ToolbarDescription>
-//           </ToolbarHeading>
-//         </Toolbar>
-//       </div>
-//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//         {categories.map((category) => (
-//           <Card
-//             key={category.id}
-//             className="p-6 rounded-xl border border-gray-200 hover:shadow-lg hover:border-primary transition-all cursor-pointer group bg-white"
-//             onClick={() => handleCategoryClick(category.name)}
-//           >
-//             <div className="flex items-center gap-4">
-//               <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center group-hover:from-primary/20 group-hover:to-primary/10 transition-all">
-//                 <Folder className="w-8 h-8 text-primary" />
-//               </div>
-
-//               <div className="flex-1">
-//                 <h3 className="text-gray-900 mb-1 group-hover:text-primary transition-colors">
-//                   {category.name}
-//                 </h3>
-//                 <p className="text-sm">{category.productCount} Products</p>
-//               </div>
-
-//               <ChevronRight className="w-5 h-5 group-hover:text-primary transition-colors" />
-//             </div>
-//           </Card>
-//         ))}
-//       </div>
-//     </>
-//   );
-// };
-
-// export default ProductsCategories;
-
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Folder, ChevronRight } from "lucide-react";
 import { Card } from "@/components/common/ui/cards/card";
@@ -106,30 +18,57 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/common/ui/breadcrumb";
+import { useCrudApi } from "@/hooks/useCrudApi";
+import { Skeleton } from "@/components/common/ui/skeleton"; // optional for loading shimmer
+import { toTitleCase } from "@/lib/utils";
+import { toast } from "sonner";
 
 export const ProductsCategories = () => {
   const router = useRouter();
 
-  const categories = [
-    { id: "rings", name: "Rings", productCount: 148 },
-    { id: "earrings", name: "Earrings", productCount: 98 },
-    { id: "pendants", name: "Pendants", productCount: 76 },
-    { id: "bracelets", name: "Bracelets", productCount: 54 },
-    { id: "necklaces", name: "Necklaces", productCount: 89 },
-    { id: "bangles", name: "Bangles", productCount: 42 },
-  ];
+  // useCrudApi connected to your route
+  const { fetchAll } = useCrudApi("/api/pricing-margin/by-category/categories");
 
-  const handleCategoryClick = (id) => {
-    router.push(`/dashboard/product-categories/${id}`);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch categories from backend
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const res = await fetchAll();
+
+        if (res?.status && Array.isArray(res.data)) {
+          setCategories(res.data);
+        } else {
+          toast.error(res?.message || "Failed to fetch categories");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast.error("Something went wrong while loading categories");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCategories();
+  }, [fetchAll]);
+
+  const handleCategoryClick = (slug, id) => {
+    debugger;
+    router.push(`/dashboard/product-categories/${slug}?category_id=${id}`);
   };
 
   return (
     <>
+      {/* Breadcrumb */}
       <div className="ml-5">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Product Management</BreadcrumbLink>
+              <BreadcrumbLink href="/dashboard/product-management">
+                Product Management
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -139,6 +78,7 @@ export const ProductsCategories = () => {
         </Breadcrumb>
       </div>
 
+      {/* Header */}
       <div className="mt-6 ml-5">
         <Toolbar>
           <ToolbarHeading>
@@ -153,29 +93,48 @@ export const ProductsCategories = () => {
         </Toolbar>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category) => (
-          <Card
-            key={category.id}
-            className="p-6 rounded-xl border border-gray-200 transition-all cursor-pointer group bg-white hover:border-primary"
-            onClick={() => handleCategoryClick(category.id)}
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center transition-all">
-                <Folder className="w-8 h-8 text-primary" />
-              </div>
+      {/* Categories Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {loading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-xl" />
+          ))
+        ) : categories.length > 0 ? (
+          categories.map((category) => (
+            <Card
+              key={category.id}
+              onClick={() => handleCategoryClick(category.slug, category?.id)}
+              className="p-6 rounded-xl border border-gray-200 transition-all cursor-pointer group bg-white hover:border-primary hover:shadow-md"
+            >
+              <div className="flex items-center gap-4">
+                {/* Icon */}
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center transition-all">
+                  <Folder className="w-8 h-8 text-primary" />
+                </div>
 
-              <div className="flex-1">
-                <h3 className="text-gray-900 mb-1  transition-colors">
-                  {category.name}
-                </h3>
-                <p className="text-sm">{category.productCount} Products</p>
-              </div>
+                {/* Info */}
+                <div className="flex-1">
+                  <h3 className="text-gray-900 mb-1 font-medium group-hover:text-primary">
+                    {toTitleCase(category.custom_title || category.name)}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {category.total_products_count || category.product_count}{" "}
+                    Products
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Last updated {category.last_update}
+                  </p>
+                </div>
 
-              <ChevronRight className="w-5 h-5  transition-colors" />
-            </div>
-          </Card>
-        ))}
+                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
+              </div>
+            </Card>
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-500">
+            No categories found.
+          </p>
+        )}
       </div>
     </>
   );
