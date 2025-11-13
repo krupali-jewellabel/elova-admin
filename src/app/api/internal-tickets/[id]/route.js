@@ -11,8 +11,5 @@ export async function GET(req, { params }) {
     ...(token && { Authorization: token }),
   };
 
-  return handleGET(
-    `/api/store-admin/order-management/view-order/${id}`,
-    headers
-  );
+  return handleGET(`/api/store-admin/support-tickets/view/${id}`, headers);
 }

@@ -42,7 +42,7 @@ const SelectField = ({ label, value, onChange, options }) => (
 );
 
 /* -------------------- SliderField -------------------- */
-const SliderField = ({ label, value, onChange, disabled }) => (
+const SliderField = ({ label, value, onChange }) => (
   <div className="flex flex-col gap-2.5">
     <div className="flex justify-between">
       <Label>{label}</Label>
@@ -53,7 +53,6 @@ const SliderField = ({ label, value, onChange, disabled }) => (
     <Slider
       value={[value]}
       onValueChange={([val]) => onChange(val)}
-      disabled={disabled}
       max={10}
       min={0}
       step={1}
@@ -68,46 +67,42 @@ const ByCategory = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState("");
   const [productPricingList, setProductPricingList] = useState([]);
-  const [marginPercentage, setMarginPercentage] = useState(0);
+
+  // margin fields
+  const [storeMargin, setStoreMargin] = useState(0);
+  const [labourMargin, setLabourMargin] = useState(0);
+  const [diamondMargin, setDiamondMargin] = useState(0);
+
   const { fetchAll: getCategories } = useCrudApi(
     "/api/pricing-margin/by-category/categories"
   );
   const { fetchAll: getByCategory, create } = useCrudApi(
     "/api/pricing-margin/by-category"
   );
-
   const { fetchById } = useCrudApi(
     "/api/pricing-margin/by-category/get-margin"
   );
 
-  useEffect(() => {
-    const fetchMarginForCategory = async () => {
-      if (!selectedCat) return;
-
-      try {
-        const res = await fetchById(selectedCat);
-
-        const margin = res?.data?.store_margin ?? 0;
-        setMarginPercentage(margin);
-      } catch (error) {
-        console.error("Error fetching margin:", error);
-        setMarginPercentage(0);
-      }
-    };
-
-    fetchMarginForCategory();
-  }, [selectedCat, fetchById]);
-
-  /* Fetch categories only once */
+  /* -------------------- Fetch categories -------------------- */
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const cat = await getCategories();
-        const list = cat?.data || [];
-        setCategories(list);
+        const res = await getCategories();
+        const list = res?.data || [];
 
-        if (list.length && !selectedCat) {
-          setSelectedCat(String(list[0].id));
+        // Format with "All" option on top
+        const formatted = [
+          { label: "All", value: "all" },
+          ...list.map((cat) => ({
+            label: toTitleCase(cat.name),
+            value: String(cat.id),
+          })),
+        ];
+
+        setCategories(formatted);
+
+        if (!selectedCat) {
+          setSelectedCat("all");
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -117,7 +112,28 @@ const ByCategory = () => {
     fetchCategories();
   }, [getCategories]);
 
-  /* Fetch product list only when a valid category is selected */
+  /* -------------------- Fetch margin data when category changes -------------------- */
+  useEffect(() => {
+    const fetchMarginForCategory = async () => {
+      if (!selectedCat) return;
+
+      try {
+        const res = await fetchById(selectedCat);
+        const data = res?.data || {};
+
+        setLabourMargin(data.store_labour_margin ?? 0);
+        setDiamondMargin(data.store_diamond_margin ?? 0);
+      } catch (error) {
+        console.error("Error fetching margin:", error);
+        setLabourMargin(0);
+        setDiamondMargin(0);
+      }
+    };
+
+    fetchMarginForCategory();
+  }, [selectedCat, fetchById]);
+
+  /* -------------------- Fetch product list -------------------- */
   useEffect(() => {
     if (!selectedCat) return;
 
@@ -133,7 +149,7 @@ const ByCategory = () => {
     fetchProducts();
   }, [selectedCat, getByCategory]);
 
-  /* Save margin changes */
+  /* -------------------- Save margin changes -------------------- */
   const handleSaveChanges = async () => {
     if (!selectedCat) {
       toast.error("Please select a category first.");
@@ -143,12 +159,13 @@ const ByCategory = () => {
     try {
       const payload = {
         margin_type: 1,
-        categories: [
-          {
-            category_id: Number(selectedCat),
-            store_margin: marginPercentage,
-          },
-        ],
+        // categories: [
+        //   {
+            category_id: selectedCat === "all" ? "all" : Number(selectedCat),
+            store_margin: labourMargin,
+            store_diamond_margin: diamondMargin,
+        //   },
+        // ],
       };
 
       await create(payload);
@@ -161,12 +178,13 @@ const ByCategory = () => {
     }
   };
 
-  /* Fetch updated margin */
+  /* -------------------- Refresh data -------------------- */
   const fetchUpdatedMargin = async () => {
     try {
       const res = await fetchById(selectedCat);
-      const margin = res?.data?.store_margin ?? 0;
-      setMarginPercentage(margin);
+      const data = res?.data || {};
+      setLabourMargin(data.store_labour_margin ?? 0);
+      setDiamondMargin(data.store_diamond_margin ?? 0);
     } catch (error) {
       console.error("Error refreshing margin:", error);
     }
@@ -181,6 +199,7 @@ const ByCategory = () => {
     }
   };
 
+  /* -------------------- Render Cards -------------------- */
   const renderedMarginCards = productPricingList.map((item, index) => (
     <MarginCard
       key={item?.id || `product-${index}`}
@@ -199,49 +218,46 @@ const ByCategory = () => {
   ));
 
   return (
-    <>
-      <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
-        {/* LEFT PANEL */}
-        <div>
-          <Card className="mt-13 fixed w-[18%]">
-            <CardHeader>Pricing Margin Configuration</CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <SelectField
-                  label="Categories"
-                  value={selectedCat}
-                  onChange={setSelectedCat}
-                  options={categories.map((cat) => ({
-                    label: toTitleCase(cat.name),
-                    value: String(cat.id),
-                  }))}
-                />
+    <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
+      {/* LEFT PANEL */}
+      <div>
+        <Card className="mt-13 fixed w-[18%]">
+          <CardHeader>Pricing Margin Configuration</CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {/* Category Dropdown (always visible) */}
+              <SelectField
+                label="Categories"
+                value={selectedCat}
+                onChange={setSelectedCat}
+                options={categories}
+              />
 
-                {selectedCat && (
-                  <SliderField
-                    label={`${toTitleCase(
-                      categories.find((cat) => String(cat.id) === selectedCat)
-                        ?.name
-                    )} Margin (%)`}
-                    value={marginPercentage}
-                    onChange={setMarginPercentage}
-                  />
-                )}
+              <SliderField
+                label="Labour Margin (%)"
+                value={labourMargin}
+                onChange={setLabourMargin}
+              />
 
-                <div className="flex justify-end">
-                  <Button onClick={handleSaveChanges}>Save Changes</Button>
-                </div>
+              <SliderField
+                label="Diamond Margin (%)"
+                value={diamondMargin}
+                onChange={setDiamondMargin}
+              />
+
+              <div className="flex justify-end">
+                <Button onClick={handleSaveChanges}>Save Changes</Button>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* RIGHT PANEL */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-          {renderedMarginCards}
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </>
+
+      {/* RIGHT PANEL */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        {renderedMarginCards}
+      </div>
+    </div>
   );
 };
 

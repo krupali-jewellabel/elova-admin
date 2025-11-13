@@ -44,7 +44,7 @@ const ByIndividual = () => {
       setSelectedProductIds(list.map((item) => item.id)); // select all
     }
   };
-  const renderStoreCardsView = (item) => (
+  const renderStoreCardsView = (item, { isSelected, toggleSelect }) => (
     <ProductCard
       key={item?.id}
       productId={item?.id}
@@ -53,15 +53,19 @@ const ByIndividual = () => {
       category={item?.category}
       style={item?.style}
       shape={item?.shape}
-      basePrice={item?.base_price}
-      salesPrice={item?.sales_price}
+      mrp={item?.mrp}
+      srp={item?.srp}
       collection={item?.collection}
       gender={item?.gender}
       hideRemove
       hideEdit
       hideActiveCell
-      isSelected={selectedProductIds.includes(item?.id)}
-      onToggleSelect={() => handleToggleSelect(item?.id)}
+      isSelected={isSelected}
+      onToggleSelect={(e) => {
+        // stop propagation so click on checkbox doesn't trigger card onClick
+        e?.stopPropagation?.();
+        toggleSelect(e);
+      }}
       onClick={async () => {
         try {
           setSelectedProductId(item?.id);

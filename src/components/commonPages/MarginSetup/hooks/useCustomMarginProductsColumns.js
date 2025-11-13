@@ -48,11 +48,11 @@ export const useCustomMarginProductsColumns = ({
         cell: ({ row }) => (
           <img
             src={row?.original?.product_image}
-            className="w-[50px] h-[50px]"
+            className="w-[70px] h-[70px]"
           />
         ),
         enableSorting: true,
-        size: 100,
+        size: 140,
         meta: {
           skeleton: <Skeleton className="h-4 w-[125px]" />,
         },
@@ -77,12 +77,12 @@ export const useCustomMarginProductsColumns = ({
         size: 165,
       },
       {
-        id: "base_price",
+        id: "mrp",
         header: ({ column }) => (
           <DataGridColumnHeader title="Jewellabel Price" column={column} />
         ),
-        accessorFn: (row) => row?.base_price,
-        cell: ({ row }) => <span>${row.original?.base_price}</span>,
+        accessorFn: (row) => row?.mrp,
+        cell: ({ row }) => <span>${row.original?.mrp}</span>,
         size: 135,
       },
       {

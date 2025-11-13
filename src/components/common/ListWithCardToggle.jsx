@@ -39,6 +39,7 @@ import {
 } from "./ui/select";
 import { useMarginService } from "@/services/marginService";
 import { DataGridColumnVisibility } from "./ui/data-grid-column-visibility";
+import { Label } from "./ui/label";
 
 export const ListWithCardToggle = ({
   title,
@@ -73,10 +74,22 @@ export const ListWithCardToggle = ({
   const [searchQuery, setSearchQuery] = useState(externalSearchQuery || "");
   const [deletePermissionIds, setDeletePermissionIds] = useState([]);
   const [groupDeleteDialogOpen, setGroupDeleteDialogOpen] = useState(false);
-  const [showBulkInput, setShowBulkInput] = useState(false);
   const [bulkMargin, setBulkMargin] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const { updateBulkMargin } = useMarginService();
+  // const [showBulkInput, setShowBulkInput] = useState(false);
+  // const [bulkLabour, setBulkLabour] = useState("");
+  // const [bulkDiamond, setBulkDiamond] = useState("");
+
+  // Separate state for list view
+  const [showBulkInputList, setShowBulkInputList] = useState(false);
+  const [bulkLabourList, setBulkLabourList] = useState("");
+  const [bulkDiamondList, setBulkDiamondList] = useState("");
+
+  // Separate state for card view
+  const [showBulkInputCard, setShowBulkInputCard] = useState(false);
+  const [bulkLabourCard, setBulkLabourCard] = useState("");
+  const [bulkDiamondCard, setBulkDiamondCard] = useState("");
 
   const [columnPinning, setColumnPinning] = useState({
     left: ["expand-column"],
@@ -99,8 +112,12 @@ export const ListWithCardToggle = ({
     );
   };
 
-  const handleBulkSave = async () => {
-    if (!bulkMargin || deletePermissionIds.length === 0) return;
+  const handleBulkSave = async (mode) => {
+    const isListMode = mode === "list";
+    const labour = isListMode ? bulkLabourList : bulkLabourCard;
+    const diamond = isListMode ? bulkDiamondList : bulkDiamondCard;
+
+    if ((!labour && !diamond) || deletePermissionIds.length === 0) return;
 
     setIsSaving(true);
     try {
@@ -109,19 +126,31 @@ export const ListWithCardToggle = ({
         .rows.filter((row) => deletePermissionIds.includes(row.id))
         .map((row) => row.original);
 
-      const success = await updateBulkMargin(selectedProducts, bulkMargin);
+      const success = await updateBulkMargin(selectedProducts, {
+        labour,
+        diamond,
+      });
 
       if (success) {
         onRefresh?.();
 
-        setShowBulkInput(false);
-        setBulkMargin("");
+        if (isListMode) {
+          setShowBulkInputList(false);
+          setBulkLabourList("");
+          setBulkDiamondList("");
+        } else {
+          setShowBulkInputCard(false);
+          setBulkLabourCard("");
+          setBulkDiamondCard("");
+        }
+
         setRowSelection({});
       }
     } finally {
       setIsSaving(false);
     }
   };
+
   const COLUMN_VISIBILITY_KEY = `${title}-column-visibility`;
 
   const [columnVisibility, setColumnVisibility] = useState(() => {
@@ -239,9 +268,89 @@ export const ListWithCardToggle = ({
 
         {/* Card View */}
         {renderCardView && currentMode === "cards" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
-            {displayedData.map(renderCardView)}
-          </div>
+          <>
+            {/* Bulk Action Toolbar for Cards */}
+            {showBulkMargin && deletePermissionIds.length > 0 && (
+              <div className="flex items-center justify-end gap-3 mb-4">
+                {!showBulkInputCard ? (
+                  <Button
+                    variant="primary"
+                    onClick={() => setShowBulkInputCard(true)}
+                  >
+                    Bulk Action
+                  </Button>
+                ) : (
+                  <>
+                    <Label>Labour</Label>
+                    <input
+                      type="number"
+                      placeholder="margin"
+                      className="border border-gray-300 rounded-md text-2sm px-3 py-1 w-20 text-center"
+                      value={bulkLabourCard}
+                      onChange={(e) => setBulkLabourCard(e.target.value)}
+                    />
+                    <Label>Diamond</Label>
+                    <input
+                      type="number"
+                      placeholder="margin"
+                      className="border border-gray-300 rounded-md text-2sm px-3 py-1 w-20 text-center"
+                      value={bulkDiamondCard}
+                      onChange={(e) => setBulkDiamondCard(e.target.value)}
+                    />
+                    <Button
+                      variant="primary"
+                      onClick={() => handleBulkSave("card")}
+                      disabled={
+                        isSaving || (!bulkLabourCard && !bulkDiamondCard)
+                      }
+                    >
+                      {isSaving ? "Saving..." : "Save"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setShowBulkInputCard(false);
+                        setBulkLabourCard("");
+                        setBulkDiamondCard("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Cards with selection */}
+            {/* Cards with selection */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
+              {displayedData.map((item) => {
+                const idStr = String(item.id);
+                const isSelected = deletePermissionIds.includes(idStr);
+
+                const toggleSelect = (e) => {
+                  // optional: if event is passed, stop propagation so card click (open details) doesn't trigger
+                  if (e && typeof e.stopPropagation === "function")
+                    e.stopPropagation();
+
+                  setRowSelection((prev) => {
+                    const newSelection = { ...prev };
+                    if (newSelection[idStr]) delete newSelection[idStr];
+                    else newSelection[idStr] = true;
+                    return newSelection;
+                  });
+                };
+
+                // NOTE: previously wrapper toggled selection onClick. We remove toggling here,
+                // so the card's checkbox controls selection and whole-card clicks can be used for opening details.
+                return (
+                  <div key={item.id}>
+                    {renderCardView(item, { isSelected, toggleSelect })}
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
 
         {/* Table View */}
@@ -331,34 +440,51 @@ export const ListWithCardToggle = ({
                   <div className="flex gap-3">
                     {showBulkMargin && deletePermissionIds.length > 0 && (
                       <div className="flex items-center gap-3">
-                        {!showBulkInput ? (
+                        {!showBulkInputList ? (
                           <Button
                             variant="primary"
-                            onClick={() => setShowBulkInput(true)}
+                            onClick={() => setShowBulkInputList(true)}
                           >
                             Bulk Action
                           </Button>
                         ) : (
                           <>
+                            <Label>Labour</Label>
                             <input
                               type="number"
-                              placeholder="%"
-                              className="border border-gray-300 rounded-md px-3 py-1 w-20 text-center"
-                              value={bulkMargin}
-                              onChange={(e) => setBulkMargin(e.target.value)}
+                              placeholder="margin"
+                              className="border border-gray-300 rounded-md text-2sm px-3 py-1 w-20 text-center"
+                              value={bulkLabourList}
+                              onChange={(e) =>
+                                setBulkLabourList(e.target.value)
+                              }
+                            />
+                            <Label>Diamond</Label>
+                            <input
+                              type="number"
+                              placeholder="margin"
+                              className="border border-gray-300 rounded-md text-2sm px-3 py-1 w-20 text-center"
+                              value={bulkDiamondList}
+                              onChange={(e) =>
+                                setBulkDiamondList(e.target.value)
+                              }
                             />
                             <Button
                               variant="primary"
-                              onClick={handleBulkSave}
-                              disabled={isSaving || !bulkMargin}
+                              onClick={() => handleBulkSave("list")}
+                              disabled={
+                                isSaving ||
+                                (!bulkLabourList && !bulkDiamondList)
+                              }
                             >
                               {isSaving ? "Saving..." : "Save"}
                             </Button>
                             <Button
                               variant="ghost"
                               onClick={() => {
-                                setShowBulkInput(false);
-                                setBulkMargin("");
+                                setShowBulkInputList(false);
+                                setBulkLabourList("");
+                                setBulkDiamondList("");
                               }}
                             >
                               Cancel
@@ -367,6 +493,7 @@ export const ListWithCardToggle = ({
                         )}
                       </div>
                     )}
+
                     <CardToolbar className="flex items-center gap-2">
                       {/* Column Visibility Toggle */}
                       <DataGridColumnVisibility
