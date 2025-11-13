@@ -6,6 +6,11 @@ import { RiDeleteBinFill } from "@remixicon/react";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
 import { toTitleCase } from "@/lib/utils";
 import { Button } from "@/components/common/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/common/ui/tooltip";
 
 const ProductCard = ({
   id,
@@ -14,8 +19,8 @@ const ProductCard = ({
   category,
   style,
   shape,
-  sales_price,
-  base_price,
+  srp,
+  mrp,
   collection,
   gender,
   active,
@@ -29,7 +34,15 @@ const ProductCard = ({
     <Card className="shadow-none mb-5">
       <div className="rounded-t-xl relative p-[17px] w-auto h-[196px] bg-[#FCFCFC]">
         <div className="absolute left-[17px]">
-          <Checkbox checked={isSelected} onCheckedChange={onToggleSelect} />
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={(value) => {
+              // Prevent the click from opening the card
+              event?.stopPropagation();
+              onToggleSelect(value);
+            }}
+            onClick={(event) => event.stopPropagation()}
+          />
         </div>
         {!hideActiveCell && (
           <div className="absolute right-[17px] text-[14px] font-[400] flex items-center gap-[10px]">
@@ -83,18 +96,32 @@ const ProductCard = ({
             </p>
           </div>
 
-          <div className="text-[12px] text-secondary-foreground font-[400]">
-            Sales Price
-            <p className="text-[14px] font-[500] text-foreground">
-              ${sales_price}
-            </p>
+          <div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="text-[12px] text-secondary-foreground font-[400]">
+                  SRP
+                  <p className="text-[14px] font-[500] text-foreground">
+                    ${srp}
+                  </p>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>Store Retail Price - Selling price</TooltipContent>
+            </Tooltip>
           </div>
 
-          <div className="text-[12px] text-secondary-foreground font-[400]">
-            Base Price
-            <p className="text-[14px] font-[500] text-foreground">
-              ${base_price}
-            </p>
+          <div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="text-[12px] text-secondary-foreground font-[400]">
+                  MRP
+                  <p className="text-[14px] font-[500] text-foreground">
+                    ${mrp}
+                  </p>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>Market Retail Price - Suggested price</TooltipContent>
+            </Tooltip>
           </div>
 
           <div className="text-[12px] text-secondary-foreground font-[400]">
