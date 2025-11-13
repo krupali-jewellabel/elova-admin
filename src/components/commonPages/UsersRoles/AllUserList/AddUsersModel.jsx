@@ -25,38 +25,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/common/ui/select";
-import { fetchGET } from "@/lib/apiHandler";
 import { useCrudApi } from "@/hooks/useCrudApi";
-import { Switch } from "@/components/common/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/common/ui/radio-group";
 import { Label } from "@/components/common/ui/label";
 
-// Validation Schema
-const UserSchema = z.object({
-  name: z.string().min(1, "User name is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.string().min(1, "Role is required"),
-  department: z.string().min(1, "Department is required"),
-});
-
 const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
   console.log("editData", editData);
-  const { create } = useCrudApi("/api/user-management");
+  const { create, update } = useCrudApi("/api/user-management");
 
-  // Use fetchAll for roles
   const { fetchAll: fetchRolesAPI } = useCrudApi("/api/roles");
+  const { fetchAll: fetchDepartmentsAPI } = useCrudApi("/api/departments");
 
   const [roles, setRoles] = useState([]);
   const [loadingRoles, setLoadingRoles] = useState(false);
 
   const [departments, setDepartments] = useState([]);
-  const [loadingDepartments, setLoadingDepartments] = useState(false);
 
   const UserSchema = z.object({
     name: z.string().min(1, "User name is required"),
     email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    password: editData
+      ? z.string().optional() // not required in edit
+      : z.string().min(6, "Password must be at least 6 characters"),
     role: z.string().min(1, "Role is required"),
     department: z.string().min(1, "Department is required"),
 
@@ -74,11 +64,10 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
       role: "",
       department: "",
       designation: "",
-      is_manager: undefined,
+      is_manager: false,
     },
   });
 
-  //  Fetch roles when modal opens
   useEffect(() => {
     if (open) loadRoles();
   }, [open]);
@@ -87,7 +76,6 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
     try {
       setLoadingRoles(true);
 
-      // fetchAll automatically sends headers & token
       const res = await fetchRolesAPI();
 
       if (res?.data) {
@@ -102,7 +90,6 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
     }
   };
 
-  // Reset form for edit/add
   useEffect(() => {
     if (editData) {
       form.reset({
@@ -114,7 +101,7 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
           ? String(editData.department.id)
           : "",
         designation: editData?.designation || "",
-        is_manager: editData?.is_manager ?? undefined,
+        is_manager: editData?.is_manager === 1,
       });
     } else {
       form.reset({
@@ -124,7 +111,7 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
         role: "",
         department: "",
         designation: "",
-        is_manager: undefined,
+        is_manager: false,
       });
     }
   }, [editData, form]);
@@ -138,10 +125,12 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
         designation: values.designation || "",
         role_id: Number(values.role),
         department_id: Number(values.department),
-        is_manager: values.is_manager === true ? 1 : 0,
+        is_manager: values.is_manager ? 1 : 0,
       };
 
-      const res = await create(payload);
+      const res = editData
+        ? await update(editData.id, payload)
+        : await create(payload);
 
       if (!res?.status) {
         toast.error(res?.error || res?.message || "Something went wrong");
@@ -150,9 +139,7 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
 
       toast.success(editData ? "User updated" : "User added");
 
-      // ✅ Pass the created/updated user back to parent
       onSuccess?.(res.data);
-
       onClose();
     } catch (err) {
       toast.custom(
@@ -169,43 +156,27 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
     }
   };
 
-  const fetchDepartments = async () => {
-    try {
-      setLoadingDepartments(true);
-
-      const token = localStorage.getItem("authTokenStoreAdmin");
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "x-tenant-id": 5,
-        Accept: "application/json",
-      };
-
-      const res = await fetchGET("/api/departments", headers);
-
-      console.log("DEPARTMENT API RESPONSE:", res);
-
-      //  Correct array path: res.data.data
-      const list = res?.data?.data || [];
-
-      if (!Array.isArray(list)) {
-        console.log(" Not an array:", list);
-        setDepartments([]);
-      } else {
-        console.log("Final Department List:", list);
-        setDepartments(list);
-      }
-    } catch (err) {
-      console.error("Department fetch error:", err);
-      toast.error("Failed to load departments");
-      setDepartments([]);
-    } finally {
-      setLoadingDepartments(false);
-    }
-  };
-  // Fetch departments when modal opens
   useEffect(() => {
-    if (open) fetchDepartments();
+    if (!open) return;
+
+    const loadDepartments = async () => {
+      try {
+        const res = await fetchDepartmentsAPI();
+
+        const list = res?.data?.data || res?.data || [];
+
+        if (Array.isArray(list)) {
+          setDepartments(list);
+        } else {
+          setDepartments([]);
+        }
+      } catch (err) {
+        toast.error("Failed to load departments");
+        setDepartments([]);
+      }
+    };
+
+    loadDepartments();
   }, [open]);
 
   return (
@@ -366,14 +337,8 @@ const AddUserModal = ({ open, onClose, onSuccess, editData }) => {
 
                 <FormControl>
                   <RadioGroup
+                    value={field.value ? "true" : "false"}
                     onValueChange={(value) => field.onChange(value === "true")}
-                    value={
-                      field.value === 1
-                        ? "true"
-                        : field.value === 0
-                        ? "false"
-                        : undefined
-                    }
                     className="flex items-center space-x-4"
                   >
                     <div className="flex items-center space-x-2">

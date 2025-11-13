@@ -1,9 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { DataGridColumnHeader } from "@/components/common/ui/data-grid-column-header";
-import {
-  DataGridTableRowSelect,
-  DataGridTableRowSelectAll,
-} from "@/components/common/ui/data-grid-table";
+
 import { Skeleton } from "@/components/common/ui/skeleton";
 import { Button } from "@/components/common/ui/button";
 import { Edit2Icon, Eye } from "lucide-react";
@@ -80,14 +77,18 @@ export const useUsersList = ({ onEdit, onDelete, onViewPermission } = {}) => {
       //   meta: { skeleton: <Skeleton className="h-4 w-[125px]" /> },
       // },
       {
-        id: "role",
+        id: "roles",
         header: ({ column }) => (
           <DataGridColumnHeader title="Role Name" column={column} />
         ),
-        accessorFn: (row) => row?.role?.name ?? "-",
-        cell: ({ row }) => (
-          <span className="text-sm font-medium">{row.getValue("role")}</span>
-        ),
+        accessorFn: (row) => row.roles?.[0].name ?? "-",
+        cell: ({ row }) => {
+          return (
+            <span className="text-sm font-medium">
+              {row.original.roles?.[0].name}
+            </span>
+          );
+        },
         size: 100,
         enableSorting: false,
         meta: { skeleton: <Skeleton className="h-4 w-[125px]" /> },
@@ -100,7 +101,7 @@ export const useUsersList = ({ onEdit, onDelete, onViewPermission } = {}) => {
         accessorFn: (row) => row?.department?.name ?? "-",
         cell: ({ row }) => (
           <span className="text-sm font-medium">
-            {row.getValue("department")}
+            {row?.original?.department?.name}
           </span>
         ),
         size: 100,

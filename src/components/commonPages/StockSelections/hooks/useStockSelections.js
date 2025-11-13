@@ -36,6 +36,17 @@ export const useStockSelections = ({ onClick, onView }) => {
         },
       },
       {
+        id: "designno",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Design No" column={column} />
+        ),
+        accessorFn: (row) => row.designno,
+        cell: ({ row }) => {
+          return row.original.designno;
+        },
+        size: 120,
+      },
+      {
         id: "name",
         header: ({ column }) => (
           <DataGridColumnHeader title="Name" column={column} />

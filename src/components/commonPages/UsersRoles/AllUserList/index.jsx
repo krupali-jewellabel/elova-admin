@@ -17,6 +17,8 @@ const AllUserList = () => {
     handleDelete,
     setDeleteId,
     setList,
+    fetchById,
+    fetchData,
   } = useCrudList("/api/user-management");
 
   const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
@@ -98,13 +100,6 @@ const AllUserList = () => {
     });
   };
 
-  const handleUserCreated = (newUser) => {
-    setList((prev) => ({
-      ...prev,
-      data: [newUser, ...(prev?.data || [])],
-    }));
-  };
-
   const [editData, setEditData] = useState(null);
   const { columns, dialogOpen, setDialogOpen } = useUsersList({
     onEdit: (user) => {
@@ -131,7 +126,7 @@ const AllUserList = () => {
             })),
           };
         }
-        return prev; // already exists
+        return prev;
       });
 
       setPermissionDialogOpen(true);
@@ -173,7 +168,7 @@ const AllUserList = () => {
       <AddUserModal
         open={dialogOpen}
         onClose={handleClose}
-        onSuccess={handleUserCreated}
+        onSuccess={fetchData}
         editData={editData}
       />
 

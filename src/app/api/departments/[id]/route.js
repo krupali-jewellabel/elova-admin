@@ -13,6 +13,7 @@ export async function DELETE(req, { params }) {
 
     return await handleDELETE(
       `/api/store-admin/department/delete/${id}`,
+      null,
       headers
     );
   } catch (error) {
