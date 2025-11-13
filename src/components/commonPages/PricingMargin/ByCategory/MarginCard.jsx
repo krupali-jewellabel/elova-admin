@@ -7,12 +7,16 @@ const MarginCard = ({
   productImg,
   designNo,
   category,
+  diamond_base_price,
   diamondStorePrice,
   diamondSellingPrice,
+  metal_base_price,
   metalStorePrice,
   metalSellingPrice,
+  labour_base_price,
   labourStorePrice,
   labourSellingPrice,
+  total_base_price,
   totalStorePrice,
   totalSellingPrice,
 }) => {
@@ -46,13 +50,21 @@ const MarginCard = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4 w-full">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Diamond Base Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {diamond_base_price}
+              </p>
+            </div>
+
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Diamond Store Price
               <p className="text-[14px] font-[500] text-foreground">
                 {diamondStorePrice}
               </p>
             </div>
+
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Selling Price
               <p className="text-[14px] font-[500] text-foreground">
@@ -61,7 +73,13 @@ const MarginCard = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-4">
+          <div className="grid grid-cols-3 gap-4 pt-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Metal Base Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {metal_base_price}
+              </p>
+            </div>
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Metal Store Price
               <p className="text-[14px] font-[500] text-foreground">
@@ -71,12 +89,18 @@ const MarginCard = ({
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Selling Price
               <p className="text-[14px] font-[500] text-foreground">
-                {metalSellingPrice}
+                {metal_base_price}
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-4">
+          <div className="grid grid-cols-3 gap-4 pt-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Labour Base Price
+              <p className="text-[14px] font-[500] text-foreground">
+                {labour_base_price}
+              </p>
+            </div>
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Labour Store Price
               <p className="text-[14px] font-[500] text-foreground">
@@ -91,7 +115,13 @@ const MarginCard = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-4">
+          <div className="grid grid-cols-3 gap-4 pt-4">
+            <div className="text-[12px] text-secondary-foreground font-[400]">
+              Total Base Price
+              <p className="text-[14px] font-[500] text-primary">
+                {total_base_price}
+              </p>
+            </div>
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Total Store Price
               <p className="text-[14px] font-[500] text-primary">

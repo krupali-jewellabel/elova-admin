@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/common/ui/button";
 import { Plus } from "lucide-react";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
@@ -31,6 +31,33 @@ const Roles = () => {
       setEditData(item);
       setDialogOpen(true);
     },
+
+    onViewPermission: (item) => {
+      const roleId = item.id;
+
+      setViewingRoleId(roleId);
+
+      setRolePermissions((prev) => {
+        if (!prev[roleId]) {
+          return {
+            ...prev,
+            [roleId]: permissions.map((p) => ({
+              module: p.module,
+              permissions: {
+                view: p.view,
+                modify: p.modify,
+                publish: p.publish,
+                configure: p.configure,
+              },
+            })),
+          };
+        }
+        return prev;
+      });
+
+      setPermissionDialogOpen(true);
+    },
+
     onDelete: (id) => {
       setDeleteId(id);
       setConfirmOpen(true);

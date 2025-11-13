@@ -1,18 +1,3 @@
-// import { handleDELETE } from "@/lib/apiHandler";
-
-// export async function DELETE(req) {
-//   const authHeader = req.headers.get("authorization");
-
-//   const headers = {
-//     Authorization: authHeader,
-//     "Content-Type": "application/json",
-//     "x-tenant-id": 5,
-//     Accept: "application/json",
-//   };
-
-//   return handleDELETE(req, "/api/store-admin/role/delete", headers);
-// }
-
 import { handleDELETE } from "@/lib/apiHandler";
 
 export async function DELETE(req, { params }) {
@@ -20,14 +5,18 @@ export async function DELETE(req, { params }) {
     const authHeader = req.headers.get("authorization");
     const { id } = params;
 
+    const body = await req.json().catch(() => ({}));
+
     const headers = {
       Authorization: authHeader,
       "x-tenant-id": 5,
       Accept: "application/json",
+      "Content-Type": "application/json",
     };
 
     return await handleDELETE(
-      `/api/store-admin/user-management/delete/${id}`,
+      `/api/store-admin/role/delete/${id}`,
+      body,
       headers
     );
   } catch (error) {
