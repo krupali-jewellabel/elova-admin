@@ -12,20 +12,35 @@ import { Plus, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import FilterChips from "./FilterChips";
 import ProductsGrid from "./ProductsGrid";
-import { PRODUCTS_DATA } from "./constant";
 import ManualOrderModel from "./ManualOrderModel";
 import ShareModel from "./ShareModel";
 import { useCrudListWithPagination } from "@/hooks/useCrudListWithPagination";
+import { useCrudApi } from "@/hooks/useCrudApi";
 import { toTitleCase } from "@/lib/utils";
+import { toast } from "sonner";
+import { PRODUCTS_DATA } from "./constant";
+import { useSearchParams } from "next/navigation";
 
 const CategoryProductsPage = ({ category }) => {
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("category_id");
   const { list: products } = useCrudListWithPagination(
-    "/api/product-management"
+    "/api/product-management",
+    {
+      category_id: Number(categoryId),
+    }
   );
+
+  console.log("list", products);
+  const { create: createShare } = useCrudApi(
+    "/api/store-admin/product-management/share-product"
+  );
+
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSelectAll = () => {
     if (selectedProducts.length === products.length) {
@@ -41,6 +56,7 @@ const CategoryProductsPage = ({ category }) => {
     );
   };
 
+  // Manual order form state
   const [orderData, setOrderData] = useState({
     metalColor: "",
     diamondType: "",
@@ -61,19 +77,55 @@ const CategoryProductsPage = ({ category }) => {
 
   const [shareOptions, setShareOptions] = useState({
     imagesOnly: false,
-    imagesWithTitle: false,
-    includePrice: false,
+    imagesWithTitle: true,
+    includePrice: true,
     customPrice: "",
-    includeDescription: false,
+    includeDescription: true,
   });
 
-  const handleGenerateShare = () => {
-    console.log("Sharing with options:", shareOptions, selectedProducts);
-    setShowShareModal(false);
+  // Handle share product API call
+  const handleGenerateShare = async (shareType = "pdf") => {
+    try {
+      if (selectedProducts.length === 0) {
+        toast.error("Please select at least one product to share!");
+        return;
+      }
+
+      setLoading(true);
+
+      // Right now sending first selected product only
+      const productId = selectedProducts[0];
+
+      const payload = {
+        product_id: productId,
+        images_only: shareOptions.imagesOnly,
+        include_title: shareOptions.imagesWithTitle,
+        include_price: shareOptions.includePrice,
+        custom_price: shareOptions.customPrice
+          ? Number(shareOptions.customPrice)
+          : null,
+        include_description: shareOptions.includeDescription,
+        share_type: shareType,
+      };
+
+      const response = await createShare(payload);
+
+      if (response?.status) {
+        toast.success(response.message || "Share generated successfully!");
+        setShowShareModal(false);
+      } else {
+        throw new Error(response?.message || "Failed to share product");
+      }
+    } catch (error) {
+      toast.error(error.message || "Something went wrong while sharing");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
+      {/* 🔹 Breadcrumb */}
       <div className="ml-5">
         <Breadcrumb>
           <BreadcrumbList>
@@ -90,6 +142,7 @@ const CategoryProductsPage = ({ category }) => {
         </Breadcrumb>
       </div>
 
+      {/* 🔹 Header Actions */}
       <div className="p-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">
@@ -106,15 +159,17 @@ const CategoryProductsPage = ({ category }) => {
 
           <Button onClick={() => setShowOrderModal(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Create Manual Orders
+            Create Manual Order
           </Button>
         </div>
       </div>
 
+      {/* 🔹 Filters */}
       <div>
         <FilterChips />
       </div>
 
+      {/* 🔹 Product Grid */}
       <div>
         <ProductsGrid
           products={products}
@@ -126,24 +181,24 @@ const CategoryProductsPage = ({ category }) => {
         />
       </div>
 
-      <div>
-        <ManualOrderModel
-          showOrderModal={showOrderModal}
-          setShowOrderModal={setShowOrderModal}
-          handleCreateOrder={handleCreateOrder}
-          product={PRODUCTS_DATA[0]}
-        />
-      </div>
+      {/* 🔹 Manual Order Modal */}
+      <ManualOrderModel
+        showOrderModal={showOrderModal}
+        setShowOrderModal={setShowOrderModal}
+        handleCreateOrder={handleCreateOrder}
+        product={PRODUCTS_DATA[0]} // you can change this to selectedProducts[0] if you want dynamic
+      />
 
-      <div>
-        <ShareModel
-          showShareModal={showShareModal}
-          setShowShareModal={setShowShareModal}
-          shareOptions={shareOptions}
-          setShareOptions={setShareOptions}
-          handleGenerateShare={handleGenerateShare}
-        />
-      </div>
+      {/* 🔹 Share Modal */}
+      <ShareModel
+        showShareModal={showShareModal}
+        setShowShareModal={setShowShareModal}
+        shareOptions={shareOptions}
+        setShareOptions={setShareOptions}
+        handleGenerateShare={handleGenerateShare}
+        loading={loading}
+        product={products.find((p) => p.id === selectedProducts[0])}
+      />
     </>
   );
 };

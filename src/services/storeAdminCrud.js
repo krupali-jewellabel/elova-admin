@@ -62,22 +62,22 @@ export const storeAdminCrud = (baseUrl) => {
       return await res.json();
     },
 
-    fetchByPages: async (params = {}) => {
-      const { page = 1, limit = 10, search = "" } = params;
-      const queryParams = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-      });
-      if (search) queryParams.append("q", search);
-      const url = `${baseUrl}?${queryParams.toString()}`;
+    // fetchByPages: async (params = {}) => {
+    //   const { page = 1, limit = 10, search = "" } = params;
+    //   const queryParams = new URLSearchParams({
+    //     page: page.toString(),
+    //     limit: limit.toString(),
+    //   });
+    //   if (search) queryParams.append("q", search);
+    //   const url = `${baseUrl}?${queryParams.toString()}`;
 
-      const res = await fetch(url, {
-        method: "GET",
-        headers: getAuthHeaders(),
-      });
-      if (!res.ok) throw new Error(`Failed to fetch data from ${url}`);
-      return res.json();
-    },
+    //   const res = await fetch(url, {
+    //     method: "GET",
+    //     headers: getAuthHeaders(),
+    //   });
+    //   if (!res.ok) throw new Error(`Failed to fetch data from ${url}`);
+    //   return res.json();
+    // },
 
     create: async (payload) => {
       const finalPayload = {

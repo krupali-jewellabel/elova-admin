@@ -32,7 +32,7 @@ const ProductsGrid = ({
 
   const fetchProductDetail = async (productId) => {
     try {
-      const res = await fetchById(productId);
+      const res = await fetchById(productId, { category_id: selectedCategory });
 
       const data = await res.data;
 
@@ -69,7 +69,7 @@ const ProductsGrid = ({
         {products.map((product) => (
           <Card
             key={product.id}
-            className="overflow-hidden rounded-xl border hover:shadow-xl hover:border-primary transition-all group"
+            className="overflow-hidden rounded-xl border hover:shadow-xl transition-all group"
           >
             {/* Product Image */}
             <div

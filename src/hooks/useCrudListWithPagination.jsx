@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useCrudApi } from "@/hooks/useCrudApi";
 
-export function useCrudListWithPagination(path) {
+export function useCrudListWithPagination(path, extraParams = {}) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,10 +21,18 @@ export function useCrudListWithPagination(path) {
   const { fetchByPages, remove, fetchById } = useCrudApi(path);
 
   const fetchData = useCallback(
-    async ({ page = 1, pageSize = 10, search = "" } = {}) => {
+    async ({ page = 1, pageSize = 10, search = "", category_id = "" } = {}) => {
       setLoading(true);
       try {
-        const res = await fetchByPages({ page, limit: pageSize, search });
+        const body = {
+          page,
+          limit: pageSize,
+          search,
+          category_id,
+          ...extraParams,
+        };
+
+        const res = await fetchByPages(body);
         setList(res.data || []);
         setPagination({
           currentPage: res?.meta?.current_page || page,
@@ -40,7 +48,7 @@ export function useCrudListWithPagination(path) {
         setLoading(false);
       }
     },
-    [fetchByPages]
+    [fetchByPages, extraParams]
   );
 
   useEffect(() => {
