@@ -161,9 +161,9 @@ const ByCategory = () => {
         margin_type: 1,
         // categories: [
         //   {
-            category_id: selectedCat === "all" ? "all" : Number(selectedCat),
-            store_margin: labourMargin,
-            store_diamond_margin: diamondMargin,
+        category_id: selectedCat === "all" ? "all" : Number(selectedCat),
+        store_margin: labourMargin,
+        store_diamond_margin: diamondMargin,
         //   },
         // ],
       };
@@ -206,12 +206,16 @@ const ByCategory = () => {
       productImg={item?.image}
       designNo={item?.design_number}
       category={item?.category_name}
+      diamond_base_price={item?.diamond_base_price}
       diamondStorePrice={item?.diamond_store_price}
       diamondSellingPrice={item?.diamond_selling_price}
+      metal_base_price={item?.metal_base_price}
       metalStorePrice={item?.metal_store_price}
       metalSellingPrice={item?.metal_selling_price}
+      labour_base_price={item?.labour_base_price}
       labourStorePrice={item?.labour_store_price}
       labourSellingPrice={item?.labour_selling_price}
+      total_base_price={item?.total_base_price}
       totalStorePrice={item?.total_store_price}
       totalSellingPrice={item?.total_selling_price}
     />
