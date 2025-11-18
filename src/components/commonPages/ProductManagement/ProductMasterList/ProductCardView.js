@@ -20,7 +20,6 @@ import {
 import dynamic from "next/dynamic";
 import { formatDateLong, toTitleCase } from "@/lib/utils";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
-import { useCrudApi } from "@/hooks/useCrudApi";
 import { useFileType } from "@/hooks/useFileType";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 

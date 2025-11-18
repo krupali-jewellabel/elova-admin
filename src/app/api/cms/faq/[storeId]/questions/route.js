@@ -22,5 +22,5 @@ export async function POST(req) {
     "Content-Type": "application/json",
   };
   const body = await req.json();
-  return handlePOST("/api/cms/common/add-faq", body, headers);
+  return handlePOST(req, "/api/cms/common/add-faq");
 }

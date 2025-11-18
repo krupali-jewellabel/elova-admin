@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { ListWithCardToggle } from "@/components/common/ListWithCardToggle";
-import { STATIC_PAGES_DATA } from "../constant";
 import { Button } from "@/components/common/ui/button";
 import { Plus } from "lucide-react";
 import StaticPageModel from "./StaticPageModel";
 import { useStaticPageColumns } from "./hooks/useStaticPageColumns";
+import { useCrudListWithPagination } from "@/hooks/useCrudListWithPagination";
 
 const StaticPageManager = () => {
   const [previewData, setPreviewData] = useState(null);
@@ -14,6 +14,10 @@ const StaticPageManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [openDialog, setDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState(null);
+
+  const { list, pagination } = useCrudListWithPagination(
+    "/api/cms/page-manager"
+  );
 
   const columns = useStaticPageColumns({
     onFile: (row) => setPreviewData(row),
@@ -26,38 +30,34 @@ const StaticPageManager = () => {
     },
   });
 
-  const filteredData = useMemo(() => {
-    return STATIC_PAGES_DATA.filter((page) =>
-      (page.title || "").toLowerCase().includes(searchQuery.toLowerCase())
+  // 🔥 Your client-side filter function
+  const filterFunction = (data, query) => {
+    const q = query.toLowerCase();
+
+    return data.filter((item) =>
+      ["title", "category", "slug", "page_title"].some((key) =>
+        item[key]?.toString().toLowerCase().includes(q)
+      )
     );
-  }, [searchQuery]);
-
-  const paginatedData = useMemo(() => {
-    const start = pageInfo.pageIndex * pageInfo.pageSize;
-    const end = start + pageInfo.pageSize;
-    return filteredData.slice(start, end);
-  }, [filteredData, pageInfo]);
-
-  const totalPages = Math.ceil(filteredData.length / pageInfo.pageSize);
+  };
 
   return (
     <div>
       <ListWithCardToggle
         title="Static Page List"
         description="Manage your static pages here"
-        data={paginatedData}
+        data={list}
         columns={columns}
+        filterFunction={filterFunction}
         pagination={pageInfo}
         onPaginationChange={setPageInfo}
-        pageCount={totalPages}
-        totalCount={filteredData.length}
-        search={{
-          value: searchQuery,
-          onChange: (e) => {
-            setSearchQuery(e.target.value);
-            setPageInfo({ ...pageInfo, pageIndex: 0 });
-          },
-          placeholder: "Search pages...",
+        pageCount={pagination?.totalPages || 1}
+        totalCount={pagination?.total || list.length}
+        paginationLinks={pagination?.links}
+        serverSidePagination={false}
+        searchQuery={searchQuery}
+        onSearchChange={(query) => {
+          setSearchQuery(query);
         }}
         createBtn={
           <Button
@@ -66,8 +66,7 @@ const StaticPageManager = () => {
               setDialogOpen(true);
             }}
           >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Page
+            <Plus className="mr-2 h-4 w-4" /> Add Page
           </Button>
         }
       />

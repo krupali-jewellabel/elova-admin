@@ -107,9 +107,9 @@ export async function handleDELETE(apiPath, body = null, headers = {}) {
   }
 }
 
-export async function handlePATCH(req, apiPath, customHeaders = {}) {
+export async function handlePATCH(apiPath, body, customHeaders = {}) {
   try {
-    const body = await req.json();
+  
 
     const res = await fetch(`${BASE_URL}${apiPath}`, {
       method: "PATCH",

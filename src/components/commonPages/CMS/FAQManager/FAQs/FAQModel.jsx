@@ -105,7 +105,7 @@ const FAQModel = ({
     }
   }, [editData, categoryId, form]);
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values) => {debugger
     setLoading(true);
     try {
       const payload = {

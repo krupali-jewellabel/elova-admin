@@ -29,21 +29,24 @@ const ProductCard = ({
   isSelected,
   onToggleSelect,
   togggleStatus,
+  SelectCard,
 }) => {
   return (
     <Card className="shadow-none mb-5">
       <div className="rounded-t-xl relative p-[17px] w-auto h-[196px] bg-[#FCFCFC]">
-        <div className="absolute left-[17px]">
-          <Checkbox
-            checked={isSelected}
-            onCheckedChange={(value) => {
-              // Prevent the click from opening the card
-              event?.stopPropagation();
-              onToggleSelect(value);
-            }}
-            onClick={(event) => event.stopPropagation()}
-          />
-        </div>
+        {SelectCard && (
+          <div className="absolute left-[17px]">
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={(value) => {
+                // Prevent the click from opening the card
+                event?.stopPropagation();
+                onToggleSelect(value);
+              }}
+              onClick={(event) => event.stopPropagation()}
+            />
+          </div>
+        )}
         {!hideActiveCell && (
           <div className="absolute right-[17px] text-[14px] font-[400] flex items-center gap-[10px]">
             {/* Active {active} */}
@@ -106,7 +109,9 @@ const ProductCard = ({
                   </p>
                 </div>
               </TooltipTrigger>
-              <TooltipContent>Store Retail Price - Selling price</TooltipContent>
+              <TooltipContent>
+                Store Retail Price - Selling price
+              </TooltipContent>
             </Tooltip>
           </div>
 
@@ -120,7 +125,9 @@ const ProductCard = ({
                   </p>
                 </div>
               </TooltipTrigger>
-              <TooltipContent>Market Retail Price - Suggested price</TooltipContent>
+              <TooltipContent>
+                Market Retail Price - Suggested price
+              </TooltipContent>
             </Tooltip>
           </div>
 

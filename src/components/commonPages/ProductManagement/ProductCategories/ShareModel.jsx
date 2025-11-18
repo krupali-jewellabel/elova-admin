@@ -198,6 +198,46 @@ const ShareModel = ({
   const { create } = useCrudApi("/api/product-management/share-products");
 
   // Handle Generate Share
+  // const handleGenerateShare = async () => {
+  //   try {
+  //     if (!shareType) {
+  //       toast.error("Please select a share type (PDF, Link, WhatsApp, etc.)");
+  //       return;
+  //     }
+
+  //     setLoading(true);
+
+  //     // Match payload exactly to your backend API
+  //     const payload = {
+  //       product_id: product?.id,
+  //       images_only: shareOptions.imagesOnly,
+  //       include_title: shareOptions.imagesWithTitle,
+  //       include_price: shareOptions.includePrice,
+  //       custom_price: shareOptions.customPrice
+  //         ? Number(shareOptions.customPrice)
+  //         : null,
+  //       include_description: shareOptions.includeDescription,
+  //       share_type: shareType, // pdf | link | whatsapp | email
+  //     };
+
+  //     const response = await create(payload);
+
+  //     if (response?.status) {
+  //       toast.success(response.message || "Share generated successfully!");
+  //       console.log("✅ Share Response:", response.data);
+  //       setShowShareModal(false);
+  //     } else {
+  //       throw new Error(response?.message || "Failed to share product");
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Error generating share:", error);
+  //     toast.error(error.message || "Something went wrong while sharing");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // Handle Generate Share
   const handleGenerateShare = async () => {
     try {
       if (!shareType) {
@@ -207,7 +247,6 @@ const ShareModel = ({
 
       setLoading(true);
 
-      // Match payload exactly to your backend API
       const payload = {
         product_id: product?.id,
         images_only: shareOptions.imagesOnly,
@@ -217,18 +256,55 @@ const ShareModel = ({
           ? Number(shareOptions.customPrice)
           : null,
         include_description: shareOptions.includeDescription,
-        share_type: shareType, // pdf | link | whatsapp | email
+        share_type: shareType,
       };
 
       const response = await create(payload);
 
-      if (response?.status) {
-        toast.success(response.message || "Share generated successfully!");
-        console.log("✅ Share Response:", response.data);
-        setShowShareModal(false);
-      } else {
+      if (!response?.status) {
         throw new Error(response?.message || "Failed to share product");
       }
+
+      // -------------------------------------------------
+      // 🔥 ALWAYS USE THIS FRONTEND SHARE LINK FOR WHATSAPP
+      // -------------------------------------------------
+      const shareUrl = `https://admin.elovajewel.com/share/product/${product?.id}`;
+
+      // Build message text
+      const messageLines = [];
+
+      if (shareOptions.include_title && product?.title) {
+        messageLines.push(product.title);
+      }
+
+      if (shareOptions.include_price) {
+        const priceValue = shareOptions.customPrice || product?.price || "";
+        messageLines.push(`Price: ${priceValue}`);
+      }
+
+      if (shareOptions.include_description && product?.description) {
+        messageLines.push(product.description);
+      }
+
+      // Always include share URL at the end
+      messageLines.push(shareUrl);
+
+      const finalMessage = messageLines.join("\n\n");
+
+      // If WhatsApp selected
+      if (shareType === "whatsapp") {
+        const whatsappUrl =
+          "https://wa.me/?text=" + encodeURIComponent(finalMessage);
+
+        window.open(whatsappUrl, "_blank");
+        setShowShareModal(false);
+        setLoading(false);
+        return;
+      }
+
+      // Other share types (link/pdf/email etc)
+      toast.success(response.message || "Share generated successfully!");
+      setShowShareModal(false);
     } catch (error) {
       console.error("❌ Error generating share:", error);
       toast.error(error.message || "Something went wrong while sharing");

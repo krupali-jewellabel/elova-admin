@@ -38,21 +38,21 @@ export const useStaticPageColumns = ({
         size: 130,
       },
       {
-        id: "pageTitle",
+        id: "Page Title",
         header: ({ column }) => (
           <DataGridColumnHeader title="Page Title" column={column} />
         ),
-        accessorFn: (row) => row.pageTitle,
-        cell: ({ row }) => <span>{row.original.pageTitle}</span>,
+        accessorFn: (row) => row.page_title,
+        cell: ({ row }) => <span>{row.original.page_title}</span>,
         size: 165,
       },
       {
-        id: "slug",
+        id: "Page Slug",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Slug" column={column} />
+          <DataGridColumnHeader title="page_slug" column={column} />
         ),
-        accessorFn: (row) => row.slug,
-        cell: ({ row }) => <span>{row.original.slug}</span>,
+        accessorFn: (row) => row.page_slug,
+        cell: ({ row }) => <span>{row.original.page_slug}</span>,
         size: 165,
       },
 
