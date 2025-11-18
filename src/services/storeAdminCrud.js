@@ -38,18 +38,24 @@ export const storeAdminCrud = (baseUrl) => {
     },
     fetchByPages: async (params = {}) => {
       const { page = 1, limit = 10, search = "" } = params;
+
       const queryParams = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
       });
-      if (search) queryParams.append("q", search);
+
+      // FIX: use correct parameter name
+      if (search) queryParams.append("search", search);
+
       const url = `${baseUrl}?${queryParams.toString()}`;
 
       const res = await fetch(url, {
         method: "GET",
         headers: getAuthHeaders(),
       });
+
       if (!res.ok) throw new Error(`Failed to fetch data from ${url}`);
+
       return res.json();
     },
 

@@ -74,13 +74,9 @@ export const ListWithCardToggle = ({
   const [rowSelection, setRowSelection] = useState({});
   const [searchQuery, setSearchQuery] = useState(externalSearchQuery || "");
   const [deletePermissionIds, setDeletePermissionIds] = useState([]);
-  const [groupDeleteDialogOpen, setGroupDeleteDialogOpen] = useState(false);
-  const [bulkMargin, setBulkMargin] = useState("");
+
   const [isSaving, setIsSaving] = useState(false);
   const { updateBulkMargin } = useMarginService();
-  // const [showBulkInput, setShowBulkInput] = useState(false);
-  // const [bulkLabour, setBulkLabour] = useState("");
-  // const [bulkDiamond, setBulkDiamond] = useState("");
 
   // Separate state for list view
   const [showBulkInputList, setShowBulkInputList] = useState(false);
@@ -334,15 +330,12 @@ export const ListWithCardToggle = ({
               </div>
             )}
 
-            {/* Cards with selection */}
-            {/* Cards with selection */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
               {displayedData.map((item) => {
                 const idStr = String(item.id);
                 const isSelected = deletePermissionIds.includes(idStr);
 
                 const toggleSelect = (e) => {
-                  // optional: if event is passed, stop propagation so card click (open details) doesn't trigger
                   if (e && typeof e.stopPropagation === "function")
                     e.stopPropagation();
 
@@ -354,8 +347,6 @@ export const ListWithCardToggle = ({
                   });
                 };
 
-                // NOTE: previously wrapper toggled selection onClick. We remove toggling here,
-                // so the card's checkbox controls selection and whole-card clicks can be used for opening details.
                 return (
                   <div key={item.id}>
                     {renderCardView(item, { isSelected, toggleSelect })}

@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request, { params }) {
   const { is_active } = await request.json();
-  const { id } = await params;
+  const { id } = params;
+
   if (typeof is_active !== "boolean") {
     return NextResponse.json(
       { error: "Invalid input: is_active must be a boolean" },

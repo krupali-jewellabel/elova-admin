@@ -31,6 +31,10 @@ const FAQCategoriesModel = ({
   storeId,
 }) => {
   const [loading, setLoading] = useState(false);
+  // const { create, update } = useCrudApi(`/api/cms/faq/${storeId}/categories`);
+  const { create, update, fetchById, remove } = useCrudApi(
+    `/api/cms/faq/${storeId}/categories`
+  );
 
   const form = useForm({
     defaultValues,
@@ -39,35 +43,35 @@ const FAQCategoriesModel = ({
 
   const { control, setValue } = form;
 
-//   useEffect(() => {
-//     if (editData?.id) {
-//       (async () => {
-//         try {
-//           form.reset({
-//             title: editData.faq_category_title || "",
-//             description: editData.description || "",
-//             headtitle: editData.headtitle || "",
-//           });
-//         } catch (err) {
-//           toast.custom(
-//             () => (
-//               <Alert variant="mono" icon="destructive" close={false}>
-//                 <AlertIcon>
-//                   <RiErrorWarningFill />
-//                 </AlertIcon>
-//                 <AlertTitle>
-//                   {err.message || "Failed to fetch section data"}
-//                 </AlertTitle>
-//               </Alert>
-//             ),
-//             { position: "top-center" }
-//           );
-//         }
-//       })();
-//     } else {
-//       form.reset(defaultValues);
-//     }
-//   }, [editData, categoryId, form]);
+  useEffect(() => {
+    if (editData?.id) {
+      (async () => {
+        try {
+          form.reset({
+            title: editData.faq_category_title || "",
+            description: editData.description || "",
+            headtitle: editData.headtitle || "",
+          });
+        } catch (err) {
+          toast.custom(
+            () => (
+              <Alert variant="mono" icon="destructive" close={false}>
+                <AlertIcon>
+                  <RiErrorWarningFill />
+                </AlertIcon>
+                <AlertTitle>
+                  {err.message || "Failed to fetch section data"}
+                </AlertTitle>
+              </Alert>
+            ),
+            { position: "top-center" }
+          );
+        }
+      })();
+    } else {
+      form.reset(defaultValues);
+    }
+  }, [editData, categoryId, form]);
 
   const handleSubmit = async (values) => {
     setLoading(true);

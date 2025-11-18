@@ -124,6 +124,8 @@ const CouponAddDialog = ({ open, onClose, onSuccess, editData }) => {
     }
   };
 
+  const selectedType = form.watch("type");
+
   return (
     <BaseEditModal
       open={open}
@@ -193,44 +195,50 @@ const CouponAddDialog = ({ open, onClose, onSuccess, editData }) => {
           />
 
           {/* Minimum Order Amount */}
-          <FormField
-            control={form.control}
-            name="minOrderAmount"
-            render={({ field }) => (
-              <FormItem className="mb-4">
-                <FormLabel>Minimum Order Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Enter minimum order amount"
-                    value={field.value ?? ""}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Show only when Percentage is selected */}
+          {selectedType === "percentage" && (
+            <>
+              {/* Minimum Order Amount */}
+              <FormField
+                control={form.control}
+                name="minOrderAmount"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel>Minimum Order Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter minimum order amount"
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Maximum Discount Amount */}
-          <FormField
-            control={form.control}
-            name="maxDiscountAmount"
-            render={({ field }) => (
-              <FormItem className="mb-4">
-                <FormLabel>Maximum Discount Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Enter max discount amount"
-                    value={field.value ?? ""}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              {/* Maximum Discount Amount */}
+              <FormField
+                control={form.control}
+                name="maxDiscountAmount"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel>Maximum Discount Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter max discount amount"
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
 
           {/* Start Date */}
           <FormField

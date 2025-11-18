@@ -1,20 +1,7 @@
 import { handlePATCH } from "@/lib/apiHandler";
-import { NextResponse } from "next/server";
 
 export async function PATCH(request, { params }) {
-  const { is_active } = await request.json();
-  const { id } = await params;
-  if (typeof is_active !== "boolean") {
-    return NextResponse.json(
-      { error: "Invalid input: is_active must be a boolean" },
-      { status: 400 }
-    );
-  }
-
-  return handlePATCH(
-    `/api/cms/common/update-faq-category-status/${id}`,
-    {
-      is_active,
-    }
-  );
+  const { id } = params;
+  const body = await request.json();
+  return handlePATCH(`/api/cms/common/update-faq-question-status/${id}`, body);
 }
