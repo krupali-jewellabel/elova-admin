@@ -122,7 +122,9 @@ export const useStockSelections = ({ onClick, onView }) => {
             <div className="flex gap-1">
               {metals?.map((color, index) => (
                 <div
-                  key={index}
+                  key={`${
+                    row.original.product_id || row.original.variant_id || row.id
+                  }-${index}`}
                   title={color}
                   className="w-[18px] h-[18px] rounded-sm border border-gray-300"
                   style={{

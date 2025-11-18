@@ -55,7 +55,6 @@ export const ProductsCategories = () => {
   }, [fetchAll]);
 
   const handleCategoryClick = (slug, id) => {
-    debugger;
     router.push(`/dashboard/product-categories/${slug}?category_id=${id}`);
   };
 

@@ -9,29 +9,86 @@ import {
 } from "@/components/common/ui/breadcrumb";
 import { Button } from "@/components/common/ui/button";
 import { Plus, Share2 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FilterChips from "./FilterChips";
 import ProductsGrid from "./ProductsGrid";
 import ManualOrderModel from "./ManualOrderModel";
 import ShareModel from "./ShareModel";
-import { useCrudListWithPagination } from "@/hooks/useCrudListWithPagination";
 import { useCrudApi } from "@/hooks/useCrudApi";
 import { toTitleCase } from "@/lib/utils";
 import { toast } from "sonner";
 import { PRODUCTS_DATA } from "./constant";
 import { useSearchParams } from "next/navigation";
-
 const CategoryProductsPage = ({ category }) => {
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("category_id");
-  const { list: products } = useCrudListWithPagination(
-    "/api/product-management",
-    {
-      category_id: Number(categoryId),
-    }
-  );
+  const [products, setProducts] = useState([]);
 
-  console.log("list", products);
+  const { fetchAll } = useCrudApi("/api/product-management");
+
+  // useEffect(() => {
+  //   setPage(1);
+  //   loadProducts(1);
+  // }, [categoryId]);
+
+  const [filters, setFilters] = useState({
+    search: "",
+    category: "all",
+    collection: "all",
+    metal: "all",
+    sort: "newest",
+  });
+
+  const loadProducts = async (newPage = 1) => {
+    try {
+      if (!categoryId) return;
+
+      setLoadingMore(true);
+
+      const res = await fetchAll({
+        page: newPage,
+        limit: 10,
+        category_id: categoryId,
+
+        //  ADD FILTERS HERE
+        search: filters.search || "",
+        filter_category: filters.category !== "all" ? filters.category : "",
+        filter_collection:
+          filters.collection !== "all" ? filters.collection : "",
+        metal: filters.metal !== "all" ? filters.metal : "",
+        sort: filters.sort,
+      });
+
+      const newItems = res?.data || [];
+
+      if (newPage === 1) {
+        setProducts(newItems);
+      } else {
+        setProducts((prev) => [...prev, ...newItems]);
+      }
+
+      const lastPage = res?.meta?.last_page ?? 1;
+      setHasMore(newPage < lastPage);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    setPage(1);
+    loadProducts(1);
+  }, [filters]);
+  
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    loadProducts(nextPage);
+  };
+
   const { create: createShare } = useCrudApi(
     "/api/store-admin/product-management/share-product"
   );
@@ -93,7 +150,6 @@ const CategoryProductsPage = ({ category }) => {
 
       setLoading(true);
 
-      // Right now sending first selected product only
       const productId = selectedProducts[0];
 
       const payload = {
@@ -141,7 +197,6 @@ const CategoryProductsPage = ({ category }) => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-
       {/* 🔹 Header Actions */}
       <div className="p-6 flex items-center justify-between">
         <div>
@@ -164,12 +219,10 @@ const CategoryProductsPage = ({ category }) => {
         </div>
       </div>
 
-      {/* 🔹 Filters */}
       <div>
-        <FilterChips />
+        <FilterChips filters={filters} setFilters={setFilters} />
       </div>
 
-      {/* 🔹 Product Grid */}
       <div>
         <ProductsGrid
           products={products}
@@ -178,17 +231,18 @@ const CategoryProductsPage = ({ category }) => {
           setHoveredProduct={setHoveredProduct}
           handleSelectAll={handleSelectAll}
           handleProductSelect={handleProductSelect}
+          hasMore={hasMore}
+          loadingMore={loadingMore}
+          onLoadMore={handleLoadMore}
         />
       </div>
-
       {/* 🔹 Manual Order Modal */}
       <ManualOrderModel
         showOrderModal={showOrderModal}
         setShowOrderModal={setShowOrderModal}
         handleCreateOrder={handleCreateOrder}
-        product={PRODUCTS_DATA[0]} // you can change this to selectedProducts[0] if you want dynamic
+        product={PRODUCTS_DATA[0]}
       />
-
       {/* 🔹 Share Modal */}
       <ShareModel
         showShareModal={showShareModal}

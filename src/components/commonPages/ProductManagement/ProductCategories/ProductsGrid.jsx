@@ -25,6 +25,9 @@ const ProductsGrid = ({
   setHoveredProduct,
   handleSelectAll,
   handleProductSelect,
+  hasMore,
+  loadingMore,
+  onLoadMore,
 }) => {
   const [productdetails, setProductDetails] = useState(null);
   const { fetchById } = useCrudApi("/api/product-management");
@@ -33,7 +36,6 @@ const ProductsGrid = ({
   const fetchProductDetail = async (productId) => {
     try {
       const res = await fetchById(productId, { category_id: selectedCategory });
-
       const data = await res.data;
 
       setProductDetails(data);
@@ -235,6 +237,18 @@ const ProductsGrid = ({
           product={productdetails}
         />
       </div>
+
+      {hasMore && (
+        <div className="flex justify-center mt-6">
+          <Button
+            onClick={onLoadMore}
+            disabled={loadingMore}
+            className="px-6 py-2"
+          >
+            {loadingMore ? "Loading..." : "Load More"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

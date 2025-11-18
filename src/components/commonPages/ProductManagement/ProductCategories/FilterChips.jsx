@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "@/components/common/ui/cards/card";
 import { Input } from "@/components/common/ui/input";
 import {
@@ -12,13 +12,7 @@ import {
 } from "@/components/common/ui/select";
 import { Search } from "lucide-react";
 
-const FilterChips = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [collectionFilter, setCollectionFilter] = useState("all");
-  const [metalFilter, setMetalFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("newest");
-
+const FilterChips = ({ filters, setFilters }) => {
   return (
     <div>
       <Card className="p-4 rounded-xl border border-gray-200 bg-white">
@@ -29,15 +23,22 @@ const FilterChips = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={filters.search}
+                onChange={(e) =>
+                  setFilters({ ...filters, search: e.target.value })
+                }
                 className="pl-10 rounded-xl"
               />
             </div>
           </div>
 
           {/* Category Filter */}
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <Select
+            value={filters.category}
+            onValueChange={(value) =>
+              setFilters({ ...filters, category: value })
+            }
+          >
             <SelectTrigger className="rounded-xl">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
@@ -51,7 +52,12 @@ const FilterChips = () => {
           </Select>
 
           {/* Collection Filter */}
-          <Select value={collectionFilter} onValueChange={setCollectionFilter}>
+          <Select
+            value={filters.collection}
+            onValueChange={(value) =>
+              setFilters({ ...filters, collection: value })
+            }
+          >
             <SelectTrigger className="rounded-xl">
               <SelectValue placeholder="Collection" />
             </SelectTrigger>
@@ -64,7 +70,10 @@ const FilterChips = () => {
           </Select>
 
           {/* Metal Filter */}
-          <Select value={metalFilter} onValueChange={setMetalFilter}>
+          <Select
+            value={filters.metal}
+            onValueChange={(value) => setFilters({ ...filters, metal: value })}
+          >
             <SelectTrigger className="rounded-xl">
               <SelectValue placeholder="Metal" />
             </SelectTrigger>
@@ -77,7 +86,10 @@ const FilterChips = () => {
           </Select>
 
           {/* Sort */}
-          <Select value={sortBy} onValueChange={setSortBy}>
+          <Select
+            value={filters.sort}
+            onValueChange={(value) => setFilters({ ...filters, sort: value })}
+          >
             <SelectTrigger className="rounded-xl">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>

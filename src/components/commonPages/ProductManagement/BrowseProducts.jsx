@@ -32,7 +32,7 @@ const BrowseProducts = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedVariants, setSelectedVariants] = useState([]);
-
+  console.log("selectedVariamtes", selectedVariants);
   const { fetchAll: fetchCategories } = useCrudApi(
     "/api/stock-selection/categories"
   );
@@ -44,7 +44,6 @@ const BrowseProducts = () => {
   const { fetchAll: fetchProducts } = useCrudApi(
     "/api/product-management/browse-product"
   );
-  console.log("productsData", productsData);
 
   const fetchData = async () => {
     try {
@@ -265,7 +264,7 @@ const BrowseProducts = () => {
       </div>
 
       {/* Product List */}
-      <Card className="grid grid-cols-2 gap-4 w-full p-[30px] mt-[30px]">
+      <Card className="grid grid-cols-1 gap-4 w-full p-[30px] mt-[30px]">
         {loading
           ? Array.from({ length: 4 }).map((_, idx) => (
               <div key={`prod-skel-${idx}`} className="p-4">
@@ -309,7 +308,8 @@ const BrowseProducts = () => {
                     data={product?.variants}
                     columns={columns}
                     useFilteredData={useFilteredStoreData}
-                    onSelectionChange={handleVariantSelection}
+                    // onSelectionChange={handleVariantSelection}
+                    onSelectionChange={setSelectedVariants}
                   />
                 </div>
               </div>

@@ -64,6 +64,7 @@ export const ListWithCardToggle = ({
   ToolbarComponent,
   showBulkMargin,
   onRefresh,
+  onSelectionChange,
 }) => {
   const [currentMode, setCurrentMode] = useState(
     renderCardView ? "cards" : "list"
@@ -169,6 +170,15 @@ export const ListWithCardToggle = ({
     );
   }, [columnVisibility]);
 
+  useEffect(() => {
+    if (typeof onSelectionChange === "function") {
+      const selectedRows = table
+        .getSelectedRowModel()
+        .rows.map((r) => r.original);
+      onSelectionChange(selectedRows);
+    }
+  }, [rowSelection]);
+
   const filteredData = useMemo(() => {
     if (serverSidePagination || !searchQuery) return data;
     const filterFunc = filterFunction || defaultFilterFunction;
@@ -178,8 +188,11 @@ export const ListWithCardToggle = ({
   const table = useReactTable({
     columns,
     data: serverSidePagination ? data : filteredData,
-    enablePinning: true,
-    getRowId: (row) => String(row.id),
+    getRowId: (row, index) => {
+      const key = row?.variant_id ?? row?.product_id ?? row?.id ?? index;
+
+      return `row-${key}-${index}`;
+    },
     state: {
       pagination: actualPagination,
       sorting,
@@ -369,6 +382,7 @@ export const ListWithCardToggle = ({
                 columnsVisibility: true,
                 cellBorder: true,
               }}
+              onRowSelectionChange={setRowSelection}
             >
               <Card>
                 <CardHeader className="flex-col sm:flex-row items-stretch sm:items-center py-5 gap-2.5 justify-between">
