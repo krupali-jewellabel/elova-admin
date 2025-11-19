@@ -86,12 +86,12 @@ export const useCustomMarginProductsColumns = ({
         size: 135,
       },
       {
-        id: "sales_price",
+        id: "srp",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Niora Price" column={column} />
+          <DataGridColumnHeader title="Elova Price" column={column} />
         ),
-        accessorFn: (row) => row?.sales_price,
-        cell: ({ row }) => <span>${row.original?.sales_price}</span>,
+        accessorFn: (row) => row?.srp,
+        cell: ({ row }) => <span>${row.original?.srp}</span>,
         size: 135,
       },
       // {

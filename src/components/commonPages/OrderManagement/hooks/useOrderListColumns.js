@@ -11,14 +11,14 @@ import { EyeIcon } from "lucide-react";
 export const useOrderListColumns = ({ onEdit, onView }) => {
   return useMemo(
     () => [
-      {
-        accessorKey: "id",
-        header: () => <DataGridTableRowSelectAll />,
-        cell: ({ row }) => <DataGridTableRowSelect row={row} />,
-        enableSorting: false,
-        enableHiding: false,
-        size: 48,
-      },
+      // {
+      //   accessorKey: "id",
+      //   header: () => <DataGridTableRowSelectAll />,
+      //   cell: ({ row }) => <DataGridTableRowSelect row={row} />,
+      //   enableSorting: false,
+      //   enableHiding: false,
+      //   size: 48,
+      // },
       {
         id: "orderId",
         header: ({ column }) => (

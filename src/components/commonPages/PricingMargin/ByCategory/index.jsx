@@ -69,7 +69,6 @@ const ByCategory = () => {
   const [productPricingList, setProductPricingList] = useState([]);
 
   // margin fields
-  const [storeMargin, setStoreMargin] = useState(0);
   const [labourMargin, setLabourMargin] = useState(0);
   const [diamondMargin, setDiamondMargin] = useState(0);
 
