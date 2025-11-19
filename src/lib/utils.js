@@ -42,3 +42,13 @@ export const formatDateShort = (dateInput) => {
   const year = date.getFullYear();
   return `${month}/${day}/${year}`;
 };
+
+export const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    if (!file || typeof file === "string") return resolve(null);
+
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
