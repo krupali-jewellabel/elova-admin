@@ -39,7 +39,7 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
   const fileRef = useRef(null);
 
   // CRUD API hook
-  const { create, update, fetchAll } = useCrudApi("/blog/posts");
+  const { create, update, fetchAll } = useCrudApi("/api/cms/blog/5/posts");
 
   const form = useForm({
     defaultValues: {
@@ -89,6 +89,35 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
   //   }, [editData, form]);
 
   // File Upload
+
+  useEffect(() => {
+    if (editData?.id) {
+      form.reset({
+        category: editData.blog_category_id
+          ? String(editData.blog_category_id)
+          : "",
+        title: editData.title || "",
+        author: editData.author || "",
+        description: editData.description || "",
+        file: editData.file ? [{ file: editData.file }] : [],
+        is_active: Boolean(editData.is_active),
+        publishedDate: editData.publishedDate
+          ? new Date(editData.publishedDate)
+          : null,
+      });
+    } else {
+      form.reset({
+        title: "",
+        author: "",
+        category: "",
+        description: "",
+        file: [],
+        is_active: true,
+        publishedDate: null,
+      });
+    }
+  }, [editData]);
+
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files || []);
     const mapped = await Promise.all(

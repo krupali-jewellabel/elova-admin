@@ -12,8 +12,11 @@ import { Button } from "@/components/common/ui/button";
 import { Edit2Icon } from "lucide-react";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
 import { RiDeleteBin5Line } from "@remixicon/react";
+import { useCrudApi } from "@/hooks/useCrudApi";
 
-export const useBlogPostColumns = ({ onEdit, onDelete }) => {
+export const useBlogPostColumns = ({ onEdit, onDelete, storeId }) => {
+  const { toggleStatus } = useCrudApi(`/api/cms/blog/${storeId}/posts`);
+
   return useMemo(() => {
     return [
       {
@@ -85,6 +88,7 @@ export const useBlogPostColumns = ({ onEdit, onDelete }) => {
           <ActiveToggleCell
             id={row?.original?.id}
             isActive={row?.original?.is_active ?? false}
+            toggleStatus={toggleStatus}
           />
         ),
         size: 100,
@@ -94,8 +98,18 @@ export const useBlogPostColumns = ({ onEdit, onDelete }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Date" column={column} />
         ),
-        accessorFn: (row) => row?.publishedDate || "-",
-        cell: ({ row }) => row?.original?.publishedDate || "-",
+        accessorFn: (row) => row?.created_at || "-",
+        cell: ({ row }) => {
+          const value = row?.original?.created_at;
+          if (!value) return "-";
+
+          const date = new Date(value);
+          return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+        },
         size: 120,
       },
       {
