@@ -122,7 +122,7 @@ export const useManageCollectionColumns = ({
         header: "Actions",
         cell: ({ row }) => (
           <div className="flex gap-[5px]">
-            <Button
+            {/* <Button
               variant="outline"
               mode="icon"
               onClick={() => onView?.(row.original)}
@@ -135,7 +135,7 @@ export const useManageCollectionColumns = ({
               onClick={() => setEditingCell?.(row.original)}
             >
               <Edit2Icon className="h-4 w-4" />
-            </Button>
+            </Button> */}
             <Button
               variant="outline"
               mode="icon"
