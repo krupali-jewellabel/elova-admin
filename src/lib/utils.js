@@ -11,14 +11,34 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+// export function toTitleCase(str) {
+//   const lowerWords = ["and", "of", "the"];
+//   return str
+//     ?.trim()
+//     .toLowerCase()
+//     .split(" ")
+//     .map((word, index) =>
+//       lowerWords?.includes(word) && index !== 0
+//         ? word
+//         : word.charAt(0).toUpperCase() + word.slice(1)
+//     )
+//     .join(" ");
+// }
+
 export function toTitleCase(str) {
+  if (!str) return "";
+
+  // Ensure we always work with a string
+  const safe = typeof str === "string" ? str : String(str);
+
   const lowerWords = ["and", "of", "the"];
-  return str
-    ?.trim()
+
+  return safe
+    .trim()
     .toLowerCase()
-    .split(" ")
+    .split(/\s+/)
     .map((word, index) =>
-      lowerWords?.includes(word) && index !== 0
+      lowerWords.includes(word) && index !== 0
         ? word
         : word.charAt(0).toUpperCase() + word.slice(1)
     )

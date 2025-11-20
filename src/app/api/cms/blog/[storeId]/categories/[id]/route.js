@@ -6,9 +6,8 @@ export async function GET(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
-  const body = await req.json();
   const { id } = await params;
-  return handlePUT(`/api/cms/common/update-blog-category/${id}`, body);
+  return handlePUT(req, `/api/cms/common/update-blog-category/${id}`);
 }
 
 export async function DELETE(req, { params }) {

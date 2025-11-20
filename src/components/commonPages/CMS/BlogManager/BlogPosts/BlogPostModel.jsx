@@ -40,6 +40,9 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
 
   // CRUD API hook
   const { create, update, fetchAll } = useCrudApi("/api/cms/blog/5/posts");
+  const { fetchAll: fetchCategories } = useCrudApi(
+    "/api/cms/blog/5/categories"
+  );
 
   const form = useForm({
     defaultValues: {
@@ -129,6 +132,23 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
     setValue("file", mapped);
   };
 
+  // Load categories for select dropdown
+  useEffect(() => {
+    const loadCategories = async () => {
+      const res = await fetchCategories();
+
+      const list = Array.isArray(res)
+        ? res
+        : Array.isArray(res?.data)
+        ? res.data
+        : [];
+
+      setCategories(list);
+    };
+
+    loadCategories();
+  }, [fetchCategories]);
+
   // Local helper: convert a File object to Base64
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -206,11 +226,13 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
                         ) : (
                           categories
                             .filter((e) => e.is_active)
-                            .map((cat) => (
-                              <SelectItem key={cat.id} value={String(cat.id)}>
-                                {cat.title}
-                              </SelectItem>
-                            ))
+                            .map((cat) => {
+                              return (
+                                <SelectItem key={cat.id} value={String(cat.id)}>
+                                  {cat.title}
+                                </SelectItem>
+                              );
+                            })
                         )}
                       </SelectGroup>
                     </SelectContent>

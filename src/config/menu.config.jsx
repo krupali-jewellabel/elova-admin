@@ -92,6 +92,10 @@ export const MENU_SIDEBAR = [
     title: "Product Management",
     icon: RiStore2Line,
     children: [
+      // {
+      //   title: "Browse Other Products",
+      //   path: "/dashboard/product-management/browse-products",
+      // }, //Old Design Path
       {
         title: "Browse Other Products",
         path: "/dashboard/product-management/browse-products",

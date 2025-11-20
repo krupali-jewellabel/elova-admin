@@ -29,8 +29,8 @@ export const useBlogCategoriesColumns = ({ onEdit, onDelete }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Category" column={column} />
         ),
-        accessorFn: (row) => row.category,
-        cell: ({ row }) => row.original.category,
+        accessorFn: (row) => row.title,
+        cell: ({ row }) => row.original.title,
         size: 120,
       },
       {
@@ -38,8 +38,8 @@ export const useBlogCategoriesColumns = ({ onEdit, onDelete }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Description" column={column} />
         ),
-        accessorFn: (row) => row.description,
-        cell: ({ row }) => row.original.description,
+        accessorFn: (row) => row.description || "-",
+        cell: ({ row }) => row.original.description || "-",
         size: 120,
       },
       {
@@ -51,15 +51,15 @@ export const useBlogCategoriesColumns = ({ onEdit, onDelete }) => {
         cell: ({ row }) => row.original.slug,
         size: 120,
       },
-      {
-        id: "postcount",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Post Count" column={column} />
-        ),
-        accessorFn: (row) => row?.postcount || "-",
-        cell: ({ row }) => row?.original?.postcount || "-",
-        size: 120,
-      },
+      // {
+      //   id: "postcount",
+      //   header: ({ column }) => (
+      //     <DataGridColumnHeader title="Post Count" column={column} />
+      //   ),
+      //   accessorFn: (row) => row?.postcount || "-",
+      //   cell: ({ row }) => row?.original?.postcount || "-",
+      //   size: 120,
+      // },
       {
         id: "is_active",
         header: ({ column }) => (

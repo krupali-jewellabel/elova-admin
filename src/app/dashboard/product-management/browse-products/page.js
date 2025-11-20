@@ -1,8 +1,12 @@
-import BrowseProducts from "@/components/commonPages/ProductManagement/BrowseProducts";
 import React from "react";
+import CategoriesCollections from "@/components/commonPages/ProductManagement/BrowseOtherProducts/CategorieCollections";
+
+// const page = () => {
+//   return <BrowseProducts />;
+// };
 
 const page = () => {
-  return <BrowseProducts />;
+  return <CategoriesCollections />;
 };
 
 export default page;

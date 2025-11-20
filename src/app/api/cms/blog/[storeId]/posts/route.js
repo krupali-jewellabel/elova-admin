@@ -16,14 +16,19 @@ export async function GET(req, { params }) {
   }
 }
 
-export async function POST(req, { params }) {
-  try {
-    const body = await req.json();
+// export async function POST(req, { params }) {
+//   try {
+//     return handlePOST(req, `/api/cms/common/add-blog-post`, {
+//       "Content-Type": "application/json",
+//     });
+//   } catch (error) {
+//     return NextResponse.json({ error: error.message }, { status: 500 });
+//   }
+// }
 
-    return handlePOST(req, `/api/cms/common/add-blog-post`, {
-      "Content-Type": "application/json",
-    });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+export async function POST(req) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  return handlePOST(req, `/api/cms/common/add-blog-post`, headers);
 }

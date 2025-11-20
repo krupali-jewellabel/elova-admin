@@ -249,8 +249,9 @@ import { fileToBase64 } from "@/lib/utils";
 
 const defaultValues = {
   title: "",
-  file: [],
   description: "",
+  heading: "",
+  file: [],
 };
 
 const BlogCategoriesModel = ({
@@ -278,6 +279,7 @@ const BlogCategoriesModel = ({
           form.reset({
             title: editData.title || "",
             description: editData.description || "",
+            heading: editData.heading || "",
             file: editData.file ? [{ file: editData.file }] : [],
           });
         } catch (err) {
@@ -328,7 +330,7 @@ const BlogCategoriesModel = ({
         store_id: 5,
         title: values.title,
         description: values.description,
-        heading: values.heading,
+        heading: values.heading || "",
       };
 
       if (values.file?.length > 0 && values.file[0]?.file) {
