@@ -15,9 +15,15 @@ const StaticPageManager = () => {
   const [openDialog, setDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState(null);
 
-  const { list, pagination } = useCrudListWithPagination(
-    "/api/cms/page-manager"
-  );
+  const {
+    list,
+    pagination,
+    fetchData,
+    setDeleteId,
+    setConfirmOpen,
+    confirmOpen,
+    handleDelete,
+  } = useCrudListWithPagination("/api/cms/page-manager");
 
   const columns = useStaticPageColumns({
     onFile: (row) => setPreviewData(row),
@@ -26,14 +32,13 @@ const StaticPageManager = () => {
       setDialogOpen(true);
     },
     onDelete: (id) => {
-      console.log("Delete page with ID:", id);
+      setDeleteId(id); // <-- works now
+      setConfirmOpen(true); // <-- show confirmation
     },
   });
 
-  // 🔥 Your client-side filter function
   const filterFunction = (data, query) => {
     const q = query.toLowerCase();
-
     return data.filter((item) =>
       ["title", "category", "slug", "page_title"].some((key) =>
         item[key]?.toString().toLowerCase().includes(q)
@@ -56,9 +61,7 @@ const StaticPageManager = () => {
         paginationLinks={pagination?.links}
         serverSidePagination={false}
         searchQuery={searchQuery}
-        onSearchChange={(query) => {
-          setSearchQuery(query);
-        }}
+        onSearchChange={(query) => setSearchQuery(query)}
         createBtn={
           <Button
             onClick={() => {
@@ -78,15 +81,26 @@ const StaticPageManager = () => {
           if (!open) setEditRow(null);
         }}
         editRow={editRow}
+        onSuccess={fetchData}
       />
 
-      {previewData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white p-6 rounded-lg w-2/3 max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-end mb-4">
-              <Button onClick={() => setPreviewData(null)}>Close</Button>
+      {/* Delete Confirmation Modal */}
+      {confirmOpen && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+          <div className="bg-white p-5 rounded shadow w-[300px]">
+            <h2 className="font-semibold text-lg">Confirm Delete</h2>
+            <p className="text-sm mt-2">
+              Are you sure you want to delete this page?
+            </p>
+
+            <div className="flex justify-end gap-2 mt-5">
+              <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleDelete}>
+                Delete
+              </Button>
             </div>
-            <div dangerouslySetInnerHTML={{ __html: previewData.content }} />
           </div>
         </div>
       )}

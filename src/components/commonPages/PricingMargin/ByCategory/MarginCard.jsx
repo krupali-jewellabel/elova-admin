@@ -1,5 +1,6 @@
 import { Card } from "@/components/common/ui/cards/card";
 import { Checkbox } from "@/components/common/ui/checkbox";
+import { toTitleCase } from "@/lib/utils";
 import React from "react";
 
 const MarginCard = ({
@@ -45,7 +46,7 @@ const MarginCard = ({
             <div className="text-[12px] text-secondary-foreground font-[400]">
               Category
               <p className="text-[14px] font-[500] text-foreground">
-                {category}
+                {toTitleCase(category)}
               </p>
             </div>
           </div>

@@ -23,5 +23,5 @@ export async function POST(req) {
   const headers = {
     "Content-Type": "application/json",
   };
-  return handlePOST(req, "/api/cms/common/add-faq-category", body, headers);
+  return handlePOST(req, "/api/cms/common/add-faq-category", headers);
 }

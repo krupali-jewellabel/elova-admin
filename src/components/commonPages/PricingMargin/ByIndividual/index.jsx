@@ -25,23 +25,17 @@ const ByIndividual = () => {
     fetchById,
     pagination,
   } = useCrudList("/api/pricing-margin/by-product");
-  console.log("list", list);
+
   const [selectedProductId, setSelectedProductId] = useState(
     editData?._id || null
   );
   const [selectedProductIds, setSelectedProductIds] = useState([]);
 
-  const handleToggleSelect = (id) => {
-    setSelectedProductIds((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
-    );
-  };
-
   const handleSelectAll = () => {
     if (selectedProductIds.length === list.length) {
-      setSelectedProductIds([]); // deselect all
+      setSelectedProductIds([]);
     } else {
-      setSelectedProductIds(list.map((item) => item.id)); // select all
+      setSelectedProductIds(list.map((item) => item.id));
     }
   };
   const renderStoreCardsView = (item, { isSelected, toggleSelect }) => (
@@ -62,7 +56,6 @@ const ByIndividual = () => {
       hideActiveCell
       isSelected={isSelected}
       onToggleSelect={(e) => {
-        // stop propagation so click on checkbox doesn't trigger card onClick
         e?.stopPropagation?.();
         toggleSelect(e);
       }}
@@ -72,9 +65,7 @@ const ByIndividual = () => {
           const data = await fetchById(item?.id);
           setEditData(data?.data);
           setOpenProductDetailSheet(true);
-        } catch (err) {
-          console.error("Error opening product:", err);
-        }
+        } catch (err) {}
       }}
     />
   );

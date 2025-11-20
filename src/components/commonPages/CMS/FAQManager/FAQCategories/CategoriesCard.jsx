@@ -6,15 +6,17 @@ import { Button } from "@/components/common/ui/button";
 import { Card } from "@/components/common/ui/cards/card";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
 import { useCrudApi } from "@/hooks/useCrudApi";
-// import { useStoreContext } from "@/context/StoreContext";
 
 export const CategoriesCard = ({
   data,
   handleEditClick,
   handleDeleteClick,
+  storeId,
 }) => {
-//   const { storeId } = useStoreContext();
-//   const { toggleStatus } = useCrudApi(`/api/cms/faq/${storeId}/categories`);
+  // const { toggleStatus } = useCrudApi(`/api/cms/faq/${storeId}/categories`);
+  const { toggleStatus } = useCrudApi(
+    `/api/cms/common/update-faq-category-status`
+  );
 
   return (
     <Card className="p-5 rounded-xl space-y-4 justify-between">
@@ -24,7 +26,9 @@ export const CategoriesCard = ({
         <ActiveToggleCell
           id={data.id}
           isActive={data.is_active}
-        //   toggleStatus={toggleStatus}
+          toggleStatus={(id, newStatus) =>
+            toggleStatus(`${id}`, { is_active: newStatus })
+          }
         />
       </div>
       <p className="text-sm">{data.headtitle}</p>

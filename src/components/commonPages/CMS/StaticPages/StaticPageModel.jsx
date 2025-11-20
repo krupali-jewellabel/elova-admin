@@ -42,6 +42,7 @@ const StaticPageModel = ({ open, onOpenChange, editRow, onSuccess }) => {
   }, [editRow, open, form]);
 
   const handleSubmit = async (values) => {
+    debugger;
     setLoading(true);
     try {
       const payload = {
@@ -50,15 +51,35 @@ const StaticPageModel = ({ open, onOpenChange, editRow, onSuccess }) => {
         ...(isEdit && { id: editRow.id }),
       };
 
-      if (isEdit) {
-        await update(editRow.id, payload);
-        toast.success("Page updated successfully!");
-      } else {
-        await create(payload);
-        toast.success("Page created successfully!");
+      const res = isEdit
+        ? await update(editRow.id, payload)
+        : await create(payload);
+
+      if (res?.status === false) {
+        const errors = res.errors || {};
+
+        // Page title error
+        if (errors.page_title?.length) {
+          const msg = errors.page_title[0];
+          form.setError("title", { type: "server", message: msg });
+          toast.error(msg);
+        }
+
+        // Content error
+        if (errors.content?.length) {
+          const msg = errors.content[0];
+          form.setError("description", { type: "server", message: msg });
+          toast.error(msg);
+        }
+
+        // toast.error("Please fix the form errors.");
+        return;
       }
 
+      toast.success(isEdit ? "Page updated!" : "Page created!");
+
       if (onSuccess) await onSuccess();
+
       onOpenChange(false);
     } catch (err) {
       toast.error(err?.message || "Something went wrong");
@@ -66,7 +87,6 @@ const StaticPageModel = ({ open, onOpenChange, editRow, onSuccess }) => {
       setLoading(false);
     }
   };
-
   return (
     <BaseEditModal
       open={open}

@@ -156,16 +156,24 @@ const ByCategory = () => {
     }
 
     try {
-      const payload = {
-        margin_type: 1,
-        // categories: [
-        //   {
-        category_id: selectedCat === "all" ? "all" : Number(selectedCat),
-        store_margin: labourMargin,
-        store_diamond_margin: diamondMargin,
-        //   },
-        // ],
-      };
+      const payload =
+        selectedCat === "all"
+          ? {
+              margin_type: 1,
+              category_id: "all",
+              store_margin: labourMargin,
+              store_diamond_margin: diamondMargin,
+            }
+          : {
+              margin_type: 1,
+              categories: [
+                {
+                  category_id: Number(selectedCat),
+                  store_margin: labourMargin,
+                  store_diamond_margin: diamondMargin,
+                },
+              ],
+            };
 
       await create(payload);
       toast.success("Margin configuration saved successfully!");

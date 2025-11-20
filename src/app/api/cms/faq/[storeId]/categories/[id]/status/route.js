@@ -1,7 +1,10 @@
 import { handlePATCH } from "@/lib/apiHandler";
 
 export async function PATCH(request, { params }) {
+  const { is_active } = await request.json();
   const { id } = params;
-  const body = await request.json();
-  return handlePATCH(`/api/cms/common/update-faq-question-status/${id}`, body);
+
+  return handlePATCH(`/api/cms/common/update-faq-category-status/${id}`, {
+    is_active,
+  });
 }

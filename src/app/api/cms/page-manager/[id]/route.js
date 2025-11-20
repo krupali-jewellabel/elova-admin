@@ -1,9 +1,8 @@
 import { handleDELETE, handlePUT } from "@/lib/apiHandler";
 
 export async function PUT(req, { params }) {
-  const body = await req.json();
   const { id } = await params;
-  return handlePUT(`/api/cms/common/static-pages/${id}`, body);
+  return handlePUT(req, `/api/cms/common/static-pages/${id}`);
 }
 
 export async function DELETE(req, { params }) {
