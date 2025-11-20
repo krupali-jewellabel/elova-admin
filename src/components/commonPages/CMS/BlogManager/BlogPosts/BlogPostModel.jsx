@@ -39,7 +39,7 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
   const fileRef = useRef(null);
 
   // CRUD API hook
-  const { create, update, fetchAll } = useCrudApi("/api/cms/blog/5/posts");
+  const { create, update } = useCrudApi("/api/cms/blog/5/posts");
   const { fetchAll: fetchCategories } = useCrudApi(
     "/api/cms/blog/5/categories"
   );
@@ -57,41 +57,6 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
   });
 
   const { setValue } = form;
-
-  // Prefill data on edit
-  //   useEffect(() => {
-  //     if (editData?.id) {
-  //       form.reset({
-  //         category: editData.blog_category_id
-  //           ? String(editData.blog_category_id)
-  //           : "",
-  //         title: editData.title || "",
-  //         author: editData.author || "",
-  //         description: editData.description || "",
-  //         file: editData.file
-  //           ? Array.isArray(editData.file)
-  //             ? editData.file
-  //             : [{ file: editData.file }]
-  //           : [],
-  //         is_active: !!editData.is_active,
-  //         publishedDate: editData.publishedDate
-  //           ? new Date(editData.publishedDate)
-  //           : null,
-  //       });
-  //     } else {
-  //       form.reset({
-  //         title: "",
-  //         author: "",
-  //         category: "",
-  //         description: "",
-  //         file: [],
-  //         is_active: true,
-  //         publishedDate: null,
-  //       });
-  //     }
-  //   }, [editData, form]);
-
-  // File Upload
 
   useEffect(() => {
     if (editData?.id) {
@@ -187,7 +152,7 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
       }
 
       onClose();
-      onSuccess?.();
+      onSuccess();
     } catch (err) {
       toast.error(err?.message || "Something went wrong");
     } finally {
