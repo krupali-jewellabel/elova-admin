@@ -107,7 +107,7 @@ const ByIndividual = () => {
         data={list}
         columns={columns}
         filterOptions={filterOptions}
-        renderCardView={renderStoreCardsView}
+        // renderCardView={renderStoreCardsView}
         searchQuery={searchQuery}
         showBulkMargin
         onSearchChange={(query) => {

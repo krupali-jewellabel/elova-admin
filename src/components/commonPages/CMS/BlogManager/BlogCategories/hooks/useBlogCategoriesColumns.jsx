@@ -12,8 +12,11 @@ import { Button } from "@/components/common/ui/button";
 import { Edit2Icon } from "lucide-react";
 import ActiveToggleCell from "@/components/common/ui/ActiveToggleCell";
 import { RiDeleteBin5Line } from "@remixicon/react";
+import { useCrudApi } from "@/hooks/useCrudApi";
 
-export const useBlogCategoriesColumns = ({ onEdit, onDelete }) => {
+export const useBlogCategoriesColumns = ({ onEdit, onDelete, storeId }) => {
+  const { toggleStatus } = useCrudApi(`/api/cms/blog/${storeId}/categories`);
+
   return useMemo(() => {
     return [
       {
@@ -68,8 +71,9 @@ export const useBlogCategoriesColumns = ({ onEdit, onDelete }) => {
         accessorFn: (row) => row?.is_active ?? false,
         cell: ({ row }) => (
           <ActiveToggleCell
-            id={row?.original?.id}
-            isActive={row?.original?.is_active ?? false}
+            id={row.original.id}
+            isActive={row.original.is_active}
+            toggleStatus={toggleStatus}
           />
         ),
         size: 100,

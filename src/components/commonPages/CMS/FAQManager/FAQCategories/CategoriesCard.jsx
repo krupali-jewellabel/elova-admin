@@ -14,9 +14,7 @@ export const CategoriesCard = ({
   storeId,
 }) => {
   // const { toggleStatus } = useCrudApi(`/api/cms/faq/${storeId}/categories`);
-  const { toggleStatus } = useCrudApi(
-    `/api/cms/common/update-faq-category-status`
-  );
+  const { toggleStatus } = useCrudApi(`/api/cms/faq/${storeId}/categories`);
 
   return (
     <Card className="p-5 rounded-xl space-y-4 justify-between">
@@ -26,9 +24,7 @@ export const CategoriesCard = ({
         <ActiveToggleCell
           id={data.id}
           isActive={data.is_active}
-          toggleStatus={(id, newStatus) =>
-            toggleStatus(`${id}`, { is_active: newStatus })
-          }
+          toggleStatus={(id, newStatus) => toggleStatus(id, newStatus)}
         />
       </div>
       <p className="text-sm">{data.headtitle}</p>
