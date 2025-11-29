@@ -7,11 +7,16 @@ import {
   DataGridTableRowSelectAll,
 } from "@/components/common/ui/data-grid-table";
 import { Skeleton } from "@/components/common/ui/skeleton";
-import { Button } from "@/components/common/ui/button";
-import { Edit2Icon, EyeIcon } from "lucide-react";
 import { Badge, BadgeDot } from "@/components/common/ui/badge";
 
 export const useReturnRepairColumns = () => {
+  const STATUS_MAP = {
+    submitted: { label: "Submitted", variant: "info" },
+    in_progress: { label: "In Progress", variant: "warning" },
+    completed: { label: "Completed", variant: "success" },
+    rejected: { label: "Rejected", variant: "danger" },
+  };
+
   return useMemo(
     () => [
       {
@@ -23,14 +28,14 @@ export const useReturnRepairColumns = () => {
         size: 48,
       },
       {
-        id: "returnId",
+        id: "orderId",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Return ID" column={column} />
+          <DataGridColumnHeader title="Order ID" column={column} />
         ),
-        accessorFn: (row) => row.returnId,
+        accessorFn: (row) => row.order_id,
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{row.original.returnId}</span>
+            <span className="text-sm font-medium">{row.original.order_id}</span>
           </div>
         ),
         enableSorting: true,
@@ -40,78 +45,89 @@ export const useReturnRepairColumns = () => {
         },
       },
       {
-        id: "relatedOrderId",
+        id: "image",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Related Order ID" column={column} />
+          <DataGridColumnHeader title="Image" column={column} />
         ),
-        accessorFn: (row) => row.relatedOrderId,
+        accessorFn: (row) => row.files?.[0] || null,
+        cell: ({ row }) => {
+          const img = row.original.files?.[0];
+          return img ? (
+            <img
+              src={img}
+              className="w-[80px] h-[80px] rounded-md object-cover"
+            />
+          ) : (
+            <span className="text-muted-foreground">N/A</span>
+          );
+        },
+        enableSorting: false,
+        size: 135,
+      },
+      {
+        id: "fullName",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Full Name" column={column} />
+        ),
+        accessorFn: (row) => row.full_name,
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">
-              {row.original.relatedOrderId}
+              {row.original.full_name}
             </span>
           </div>
         ),
         enableSorting: true,
         size: 135,
       },
-      // {
-      //   id: "storeName",
-      //   header: ({ column }) => (
-      //     <DataGridColumnHeader title="Store Name" column={column} />
-      //   ),
-      //   accessorFn: (row) => row.storeName,
-      //   cell: ({ row }) => <span>{row.original.storeName}</span>,
-      //   size: 135,
-      // },
       {
-        id: "reason",
+        id: "phoneNumber",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Reason" column={column} />
+          <DataGridColumnHeader title="Phone Number" column={column} />
         ),
-        accessorFn: (row) => row.reason,
-        cell: ({ row }) => <span>{row.original.reason}</span>,
+        accessorFn: (row) => row.phone_number,
+        cell: ({ row }) => <span>{row.original.phone_number}</span>,
+        size: 120,
+      },
+      {
+        id: "email",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Email" column={column} />
+        ),
+        accessorFn: (row) => row.email,
+        cell: ({ row }) => <span>{row.original.email}</span>,
         size: 135,
       },
       {
-        id: "image",
+        id: "JewelryType",
         header: ({ column }) => (
-          <DataGridColumnHeader title="Image" column={column} />
+          <DataGridColumnHeader title="Jewelry Type" column={column} />
         ),
-        accessorFn: (row) => row.image,
-        cell: ({ row }) => (
-          <img src={row.original.image} className="w-[80px] h-[80px]" />
+        accessorFn: (row) => row.jewellery_type,
+        cell: ({ row }) => row.original.jewellery_type,
+        size: 110,
+      },
+      {
+        id: "preferredAction",
+        header: ({ column }) => (
+          <DataGridColumnHeader title="Preferred Action" column={column} />
         ),
-        enableSorting: true,
+        accessorFn: (row) => row.preferred_action,
+        cell: ({ row }) => <span>{row.original.preferred_action}</span>,
         size: 135,
       },
       {
-        id: "product",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Product" column={column} />
-        ),
-        accessorFn: (row) => row.product,
-        cell: ({ row }) => row.original.product,
-        size: 135,
-      },
-      {
-        id: "charge",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Charge" column={column} />
-        ),
-        accessorFn: (row) => row.charge,
-        cell: ({ row }) => <span>{row.original.charge}</span>,
-        size: 135,
-      },
-      {
-        id: "returnStatus",
+        id: "status",
         header: ({ column }) => (
           <DataGridColumnHeader title="Return Status" column={column} />
         ),
-        accessorFn: (row) => row.returnStatus,
+        accessorFn: (row) => {
+          const value = row.status;
+          return STATUS_MAP[value] || null;
+        },
         cell: ({ row }) => {
-          const status = row.original.returnStatus;
-          return status?.label ? (
+          const status = row.getValue("status");
+          return status ? (
             <Badge
               size="lg"
               variant={status.variant}
@@ -124,57 +140,30 @@ export const useReturnRepairColumns = () => {
             <span className="text-muted-foreground">N/A</span>
           );
         },
-        size: 135,
+        size: 125,
       },
-      {
-        id: "resolutionType",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Resolution Type" column={column} />
-        ),
-        accessorFn: (row) => row.resolutionType,
-        cell: ({ row }) => <span>{row.original.resolutionType}</span>,
-        size: 135,
-      },
-      {
-        id: "productCondition",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Product Condition" column={column} />
-        ),
-        accessorFn: (row) => row.productCondition,
-        cell: ({ row }) => <span>{row.original.productCondition}</span>,
-        size: 135,
-      },
-      {
-        id: "orderChannel",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Order Channel" column={column} />
-        ),
-        accessorFn: (row) => row.orderChannel,
-        cell: ({ row }) => <span>{row.original.orderChannel}</span>,
-        size: 135,
-      },
-      {
-        id: "action",
-        header: ({ column }) => (
-          <DataGridColumnHeader title="Action" column={column} />
-        ),
-        accessorFn: (row) => row.orderChannel,
-        cell: ({ row }) => (
-          <div className="flex gap-[10px]">
-            <Button mode="icon" variant="outline">
-              <Edit2Icon />
-            </Button>
+      // {
+      //   id: "action",
+      //   header: ({ column }) => (
+      //     <DataGridColumnHeader title="Action" column={column} />
+      //   ),
+      //   accessorFn: (row) => row.orderChannel,
+      //   cell: ({ row }) => (
+      //     <div className="flex gap-[10px]">
+      //       <Button mode="icon" variant="outline">
+      //         <Edit2Icon />
+      //       </Button>
 
-            <Button
-              mode="icon"
-              variant="outline"
-              onClick={() => handleView(row.original)}
-            >
-              <EyeIcon />
-            </Button>
-          </div>
-        ),
-      },
+      //       <Button
+      //         mode="icon"
+      //         variant="outline"
+      //         onClick={() => handleView(row.original)}
+      //       >
+      //         <EyeIcon />
+      //       </Button>
+      //     </div>
+      //   ),
+      // },
     ],
     []
   );

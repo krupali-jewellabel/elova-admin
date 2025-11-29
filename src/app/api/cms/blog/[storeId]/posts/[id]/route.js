@@ -7,7 +7,7 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
   const { id } = params;
-  const payload = await req.json().catch(() => ({}));
+  // const payload = await req.json().catch(() => ({}));
   return handlePUT(`/api/cms/common/update-blog/${id}`, payload);
 }
 

@@ -27,7 +27,7 @@ export const ProductsCategories = () => {
   const router = useRouter();
 
   // useCrudApi connected to your route
-  const { fetchAll } = useCrudApi("/api/pricing-margin/by-category/categories");
+  const { fetchAll } = useCrudApi("/api/product-management/product-details");
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,14 @@ export const ProductsCategories = () => {
         const res = await fetchAll();
 
         if (res?.status && Array.isArray(res.data)) {
-          setCategories(res.data);
+          const formatted = res.data.map((item) => ({
+            id: item.category_id,
+            name: item.category_name,
+            slug: item.category_name.toLowerCase(),
+            product_count: item.total,
+          }));
+
+          setCategories(formatted);
         } else {
           toast.error(res?.message || "Failed to fetch categories");
         }
@@ -119,9 +126,6 @@ export const ProductsCategories = () => {
                   <p className="text-sm text-gray-500">
                     {category.total_products_count || category.product_count}{" "}
                     Products
-                  </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    Last updated {category.last_update}
                   </p>
                 </div>
 

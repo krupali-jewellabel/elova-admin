@@ -65,8 +65,8 @@ export const useBlogPostColumns = ({ onEdit, onDelete, storeId }) => {
         header: ({ column }) => (
           <DataGridColumnHeader title="Category" column={column} />
         ),
-        accessorFn: (row) => row.category,
-        cell: ({ row }) => row.original.category || "-",
+        accessorFn: (row) => row?.blog_category?.title || "-",
+        cell: ({ row }) => row?.original?.blog_category?.title || "-",
         size: 120,
       },
       {

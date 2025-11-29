@@ -15,20 +15,17 @@ export const ORDERS_LIST_DATA = [
 
 export const RETURN_REPAIR_DATA = [
   {
-    returnId: "A1234567",
-    relatedOrderId: "A1234567",
-    storeName: "Niora",
-    reason: "Damaged",
+    orderId: "A1234567",
     image: "/images/products/product-ring.png",
-    product: "Ring",
-    charge: "₹0",
+    fullName: "John Doe",
+    phoneNumber: "+1 234 567 890",
+    email: "elova@admin.com",
+    jewelryType: "Ring",
+    productCondition: "New",
     returnStatus: {
       label: "Approved",
       variant: "success",
     },
-    resolutionType: "Replace",
-    productCondition: "New",
-    orderChannel: "Website",
   },
 ];
 

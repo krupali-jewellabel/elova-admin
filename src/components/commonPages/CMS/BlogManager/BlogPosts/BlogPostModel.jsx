@@ -132,12 +132,13 @@ const BlogPostModel = ({ open, onClose, onSuccess, editData }) => {
     setLoading(true);
     try {
       const payload = {
+        store_id: 5,
         blog_category_id: Number(values.category),
         title: values.title,
         author: values.author,
         description: values.description,
         file: values.file?.[0]?.file || null,
-        is_active: values.is_active,
+        status: values.is_active ? 1 : 0,
         publishedDate: values.publishedDate
           ? format(new Date(values.publishedDate), "yyyy-MM-dd")
           : null,
